@@ -1,0 +1,292 @@
+2019-07-17 13:26:00,596|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10038 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:26:00,599|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:26:00,603|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:26:07,927|INFO|main|StatisticsTest|Started StatisticsTest in 8.557 seconds (JVM running for 11.397)
+2019-07-17 13:27:15,283|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10043 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:27:15,284|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:27:15,287|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:27:20,798|INFO|main|StatisticsTest|Started StatisticsTest in 6.37 seconds (JVM running for 8.773)
+2019-07-17 13:27:44,986|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10050 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:27:44,987|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:27:45,005|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:27:52,149|INFO|main|StatisticsTest|Started StatisticsTest in 8.273 seconds (JVM running for 11.002)
+2019-07-17 13:45:32,229|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10074 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:45:32,230|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:45:32,234|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:45:38,035|INFO|main|StatisticsTest|Started StatisticsTest in 6.783 seconds (JVM running for 8.793)
+2019-07-17 13:46:18,345|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10077 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:46:18,347|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:46:18,350|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:46:24,061|INFO|main|StatisticsTest|Started StatisticsTest in 6.654 seconds (JVM running for 8.306)
+2019-07-17 13:47:55,171|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10084 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:47:55,171|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:47:55,174|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:48:02,458|INFO|main|StatisticsTest|Started StatisticsTest in 8.316 seconds (JVM running for 10.091)
+2019-07-17 13:48:31,231|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10088 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:48:31,232|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:48:31,236|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:48:38,561|INFO|main|StatisticsTest|Started StatisticsTest in 8.726 seconds (JVM running for 10.992)
+2019-07-17 13:51:10,330|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10096 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:51:10,331|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:51:10,334|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:51:16,243|INFO|main|StatisticsTest|Started StatisticsTest in 6.843 seconds (JVM running for 8.948)
+2019-07-17 13:52:44,245|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10103 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:52:44,246|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:52:44,275|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:52:52,595|INFO|main|StatisticsTest|Started StatisticsTest in 9.463 seconds (JVM running for 11.918)
+2019-07-17 13:53:50,241|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10107 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:53:50,241|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:53:50,244|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:53:56,293|INFO|main|StatisticsTest|Started StatisticsTest in 7.547 seconds (JVM running for 9.71)
+2019-07-17 13:55:40,828|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10111 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:55:40,829|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:55:40,831|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:55:48,423|INFO|main|StatisticsTest|Started StatisticsTest in 8.698 seconds (JVM running for 11.12)
+2019-07-17 13:56:17,077|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10115 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:56:17,077|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:56:17,081|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:56:23,410|INFO|main|StatisticsTest|Started StatisticsTest in 7.384 seconds (JVM running for 9.373)
+2019-07-17 13:56:46,685|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10119 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:56:46,686|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:56:46,690|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:56:53,570|INFO|main|StatisticsTest|Started StatisticsTest in 8.181 seconds (JVM running for 10.35)
+2019-07-17 13:57:26,752|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10123 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:57:26,753|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:57:26,756|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:57:33,324|INFO|main|StatisticsTest|Started StatisticsTest in 8.104 seconds (JVM running for 10.875)
+2019-07-17 13:58:23,643|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10127 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:58:23,643|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:58:23,646|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:58:30,385|INFO|main|StatisticsTest|Started StatisticsTest in 7.732 seconds (JVM running for 9.637)
+2019-07-17 13:59:29,013|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10130 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:59:29,014|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:59:29,019|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 13:59:36,909|INFO|main|StatisticsTest|Started StatisticsTest in 8.892 seconds (JVM running for 11.471)
+2019-07-17 13:59:56,326|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10135 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 13:59:56,326|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 13:59:56,331|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:00:02,306|INFO|main|StatisticsTest|Started StatisticsTest in 6.97 seconds (JVM running for 9.136)
+2019-07-17 14:03:41,312|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10152 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:03:41,313|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:03:41,317|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:03:47,336|INFO|main|StatisticsTest|Started StatisticsTest in 7.293 seconds (JVM running for 9.747)
+2019-07-17 14:05:52,397|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10157 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:05:52,397|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:05:52,400|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:05:58,866|INFO|main|StatisticsTest|Started StatisticsTest in 7.904 seconds (JVM running for 10.557)
+2019-07-17 14:09:19,566|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10165 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:09:19,568|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:09:19,575|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:09:26,243|INFO|main|StatisticsTest|Started StatisticsTest in 7.994 seconds (JVM running for 10.331)
+2019-07-17 14:15:16,012|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10174 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:15:16,013|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:15:16,016|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:15:23,382|INFO|main|StatisticsTest|Started StatisticsTest in 8.288 seconds (JVM running for 10.642)
+2019-07-17 14:18:18,187|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10187 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:18:18,189|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:18:18,193|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:18:25,204|INFO|main|StatisticsTest|Started StatisticsTest in 7.993 seconds (JVM running for 10.439)
+2019-07-17 14:20:48,466|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10195 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:20:48,467|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:20:48,473|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:20:55,905|INFO|main|StatisticsTest|Started StatisticsTest in 8.489 seconds (JVM running for 10.736)
+2019-07-17 14:21:33,267|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10198 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:21:33,268|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:21:33,270|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:21:41,090|INFO|main|StatisticsTest|Started StatisticsTest in 9.409 seconds (JVM running for 11.876)
+2019-07-17 14:25:17,507|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10209 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:25:17,508|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:25:17,513|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:25:24,303|INFO|main|StatisticsTest|Started StatisticsTest in 7.814 seconds (JVM running for 10.696)
+2019-07-17 14:26:18,184|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10212 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:26:18,184|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:26:18,187|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:26:25,199|INFO|main|StatisticsTest|Started StatisticsTest in 8.284 seconds (JVM running for 11.365)
+2019-07-17 14:27:05,022|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10216 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:27:05,022|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:27:05,025|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:27:10,619|INFO|main|StatisticsTest|Started StatisticsTest in 6.517 seconds (JVM running for 8.538)
+2019-07-17 14:27:29,359|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10219 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:27:29,359|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:27:29,365|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:27:38,846|INFO|main|StatisticsTest|Started StatisticsTest in 11.44 seconds (JVM running for 16.662)
+2019-07-17 14:35:33,325|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10231 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:35:33,326|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:35:33,328|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:35:39,550|INFO|main|StatisticsTest|Started StatisticsTest in 7.233 seconds (JVM running for 9.992)
+2019-07-17 14:37:29,748|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10236 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:37:29,750|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:37:29,753|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:37:37,175|INFO|main|StatisticsTest|Started StatisticsTest in 8.537 seconds (JVM running for 11.356)
+2019-07-17 14:38:04,986|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10240 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:38:04,987|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:38:04,991|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:38:11,310|INFO|main|StatisticsTest|Started StatisticsTest in 7.383 seconds (JVM running for 9.124)
+2019-07-17 14:39:18,423|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10246 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:39:18,424|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:39:18,441|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:39:25,953|INFO|main|StatisticsTest|Started StatisticsTest in 8.865 seconds (JVM running for 10.808)
+2019-07-17 14:39:46,636|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10249 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:39:46,636|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:39:46,640|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:39:52,834|INFO|main|StatisticsTest|Started StatisticsTest in 7.202 seconds (JVM running for 9.909)
+2019-07-17 14:41:17,136|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10254 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:41:17,137|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:41:17,143|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:41:23,406|INFO|main|StatisticsTest|Started StatisticsTest in 7.645 seconds (JVM running for 10.137)
+2019-07-17 14:45:54,825|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10261 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:45:54,825|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:45:54,829|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:46:00,640|INFO|main|StatisticsTest|Started StatisticsTest in 6.681 seconds (JVM running for 8.608)
+2019-07-17 14:46:54,341|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10265 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:46:54,343|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:46:54,347|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:47:05,151|INFO|main|StatisticsTest|Started StatisticsTest in 12.251 seconds (JVM running for 14.611)
+2019-07-17 14:47:27,363|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10273 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:47:27,364|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:47:27,378|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:47:34,525|INFO|main|StatisticsTest|Started StatisticsTest in 8.42 seconds (JVM running for 11.069)
+2019-07-17 14:48:54,087|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10281 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:48:54,088|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:48:54,091|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:49:01,162|INFO|main|StatisticsTest|Started StatisticsTest in 8.477 seconds (JVM running for 11.328)
+2019-07-17 14:51:35,344|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10288 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:51:35,346|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:51:35,351|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:51:41,490|INFO|main|StatisticsTest|Started StatisticsTest in 7.122 seconds (JVM running for 8.952)
+2019-07-17 14:52:01,724|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10292 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:52:01,725|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:52:01,727|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:52:09,104|INFO|main|StatisticsTest|Started StatisticsTest in 8.315 seconds (JVM running for 10.493)
+2019-07-17 14:52:38,559|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10298 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:52:38,560|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:52:38,567|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:52:46,088|INFO|main|StatisticsTest|Started StatisticsTest in 8.83 seconds (JVM running for 11.238)
+2019-07-17 14:54:02,343|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10302 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:54:02,344|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:54:02,346|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:54:08,448|INFO|main|StatisticsTest|Started StatisticsTest in 6.909 seconds (JVM running for 9.395)
+2019-07-17 14:54:26,154|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10308 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:54:26,154|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:54:26,158|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:54:31,929|INFO|main|StatisticsTest|Started StatisticsTest in 6.735 seconds (JVM running for 8.601)
+2019-07-17 14:55:28,959|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10315 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 14:55:28,960|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 14:55:28,964|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 14:55:35,003|INFO|main|StatisticsTest|Started StatisticsTest in 7.125 seconds (JVM running for 9.321)
+2019-07-17 15:07:12,432|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10355 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:07:12,433|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:07:12,436|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:07:20,172|INFO|main|StatisticsTest|Started StatisticsTest in 8.777 seconds (JVM running for 11.281)
+2019-07-17 15:13:53,943|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10363 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:13:53,944|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:13:53,947|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:14:00,671|INFO|main|StatisticsTest|Started StatisticsTest in 7.658 seconds (JVM running for 9.408)
+2019-07-17 15:14:29,377|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10366 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:14:29,378|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:14:29,382|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:14:34,778|INFO|main|StatisticsTest|Started StatisticsTest in 6.424 seconds (JVM running for 8.222)
+2019-07-17 15:20:13,334|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10380 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:20:13,335|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:20:13,337|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:20:20,319|INFO|main|StatisticsTest|Started StatisticsTest in 8.057 seconds (JVM running for 10.887)
+2019-07-17 15:22:23,240|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10390 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:22:23,241|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:22:23,243|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:22:28,486|INFO|main|StatisticsTest|Started StatisticsTest in 6.073 seconds (JVM running for 7.717)
+2019-07-17 15:23:01,017|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10394 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:23:01,017|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:23:01,021|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:23:08,295|INFO|main|StatisticsTest|Started StatisticsTest in 8.377 seconds (JVM running for 10.569)
+2019-07-17 15:40:14,245|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10415 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:40:14,246|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:40:14,250|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:40:20,622|INFO|main|StatisticsTest|Started StatisticsTest in 7.528 seconds (JVM running for 9.753)
+2019-07-17 15:40:44,211|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10420 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:40:44,212|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:40:44,217|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:40:50,371|INFO|main|StatisticsTest|Started StatisticsTest in 7.112 seconds (JVM running for 8.861)
+2019-07-17 15:41:14,016|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10424 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:41:14,016|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:41:14,018|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:41:19,503|INFO|main|StatisticsTest|Started StatisticsTest in 6.408 seconds (JVM running for 8.317)
+2019-07-17 15:47:27,685|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10472 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:47:27,685|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:47:27,688|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:47:34,107|INFO|main|StatisticsTest|Started StatisticsTest in 7.408 seconds (JVM running for 9.851)
+2019-07-17 15:48:12,819|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10479 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:48:12,819|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:48:12,822|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:48:18,283|INFO|main|StatisticsTest|Started StatisticsTest in 6.394 seconds (JVM running for 8.33)
+2019-07-17 15:52:40,145|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10485 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:52:40,145|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:52:40,151|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:52:46,264|INFO|main|StatisticsTest|Started StatisticsTest in 7.094 seconds (JVM running for 9.059)
+2019-07-17 15:56:56,427|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10493 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:56:56,427|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:56:56,430|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:57:01,923|INFO|main|StatisticsTest|Started StatisticsTest in 6.368 seconds (JVM running for 8.068)
+2019-07-17 15:58:21,576|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10497 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 15:58:21,577|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 15:58:21,579|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 15:58:27,173|INFO|main|StatisticsTest|Started StatisticsTest in 6.331 seconds (JVM running for 8.061)
+2019-07-17 16:00:04,305|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10502 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:00:04,306|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:00:04,314|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:00:11,314|INFO|main|StatisticsTest|Started StatisticsTest in 7.89 seconds (JVM running for 9.897)
+2019-07-17 16:01:50,752|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10523 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:01:50,754|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:01:50,757|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:01:57,118|INFO|main|StatisticsTest|Started StatisticsTest in 7.428 seconds (JVM running for 11.294)
+2019-07-17 16:03:49,882|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10534 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:03:49,882|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:03:49,885|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:03:55,741|INFO|main|StatisticsTest|Started StatisticsTest in 6.684 seconds (JVM running for 9.121)
+2019-07-17 16:04:41,582|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10538 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:04:41,583|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:04:41,585|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:04:47,081|INFO|main|StatisticsTest|Started StatisticsTest in 6.366 seconds (JVM running for 8.282)
+2019-07-17 16:06:37,538|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10542 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:06:37,538|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:06:37,543|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:06:43,288|INFO|main|StatisticsTest|Started StatisticsTest in 6.775 seconds (JVM running for 8.839)
+2019-07-17 16:07:02,629|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10546 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:07:02,630|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:07:02,633|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:07:08,506|INFO|main|StatisticsTest|Started StatisticsTest in 7.044 seconds (JVM running for 9.752)
+2019-07-17 16:14:21,284|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10556 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:14:21,286|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:14:21,289|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:14:27,171|INFO|main|StatisticsTest|Started StatisticsTest in 6.695 seconds (JVM running for 8.447)
+2019-07-17 16:16:00,312|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10560 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:16:00,312|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:16:00,315|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:16:05,717|INFO|main|StatisticsTest|Started StatisticsTest in 6.33 seconds (JVM running for 8.12)
+2019-07-17 16:21:30,439|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10582 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:21:30,452|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:21:30,460|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:21:38,407|INFO|main|StatisticsTest|Started StatisticsTest in 9.221 seconds (JVM running for 11.088)
+2019-07-17 16:22:24,816|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10587 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:22:24,817|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:22:24,819|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:22:30,494|INFO|main|StatisticsTest|Started StatisticsTest in 7.05 seconds (JVM running for 10.034)
+2019-07-17 16:29:54,480|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10595 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:29:54,482|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:29:54,486|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:30:02,079|INFO|main|StatisticsTest|Started StatisticsTest in 8.477 seconds (JVM running for 11.422)
+2019-07-17 16:31:22,310|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10600 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:31:22,310|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:31:22,313|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:31:31,447|INFO|main|StatisticsTest|Started StatisticsTest in 10.458 seconds (JVM running for 13.81)
+2019-07-17 16:32:14,133|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10604 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:32:14,133|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:32:14,136|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:32:20,223|INFO|main|StatisticsTest|Started StatisticsTest in 7.224 seconds (JVM running for 9.275)
+2019-07-17 16:33:02,311|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10609 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:33:02,312|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:33:02,315|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:33:08,078|INFO|main|StatisticsTest|Started StatisticsTest in 6.679 seconds (JVM running for 8.566)
+2019-07-17 16:33:30,872|INFO|main|StatisticsTest|Starting StatisticsTest on Kexuans-Air with PID 10613 (started by kexuanliu in /Users/kexuanliu/projects/crm)
+2019-07-17 16:33:30,872|DEBUG|main|StatisticsTest|Running with Spring Boot v2.0.3.RELEASE, Spring v5.0.7.RELEASE
+2019-07-17 16:33:30,876|INFO|main|StatisticsTest|No active profile set, falling back to default profiles: default
+2019-07-17 16:33:36,628|INFO|main|StatisticsTest|Started StatisticsTest in 6.726 seconds (JVM running for 8.494)
