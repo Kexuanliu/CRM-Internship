@@ -1,0 +1,37 @@
+.plan-title {
+    background-color: #FFFFFF;
+    line-height: 1.47058824;
+    font-size: 17px;
+    overflow: hidden;
+    position: relative;
+}
+.weui-cells:before,.receiver-box:after, .receiver-box:before {
+    border: none;
+}
+.top-bar {
+    background: #ffffff;
+    text-align: center;
+    padding: 10px 15px;
+}
+.pull-left {
+    float: left!important;
+}
+.pull-right {
+    float: right!important;
+}
+.visit-type-sel{
+    background: #ffffff;
+    border-top: solid 2px #DDDDDD;
+}
+.receiver-box {
+    width: auto;
+    padding: 5px 15px;
+}
+.receiver-name {
+    font-size: 12px;
+}
+.addVisit-img {
+    padding: 8px 15px;
+    width: 25px;
+    height: 25px;
+}
