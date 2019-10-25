@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>数据导出</title>
+    <link rel="stylesheet" href="/weui.css">
+    <link rel="stylesheet" href="/example.css"/>
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/weui.min.js"></script>
+    <script src="/common.js"></script>
+    <script src="/clipboard.min.js"></script>
+    <style>
+        .top-bar {
+            background: #FFFFFF;
+            text-align: center;
+            padding: 7px 10px;
+            font-size: 18px;
+        }
+
+        .center-box {
+            text-align: center;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .navi-bar {
+            z-index: 9999;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .subTitle {
+            margin-left: 30px; font-size: 16px; padding-top: 40px; float: left;
+        }
+
+        .copyPasteButton {
+            margin-left: 88px;
+            margin-top: 20px;
+            width: 200px;
+            height: 47px;
+            line-height: 26px;
+            border-radius: 30px;
+            background-color: rgba(56, 164, 242, 1);
+            color: rgba(255, 255, 255, 1);
+            font-size: 18px;
+            text-align: center;
+            font-weight: lighter;
+            border: 1px solid rgba(255, 255, 255, 0);
+
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div class="weui-tab">
+        <div class="navi-bar">
+            <div class="top-bar center-box">
+                <span class="pull-left" onclick="back()">
+                    <img src="/images/back_icon.svg" style="margin-top: 7px; margin-left: 10px">
+                </span>
+                <span style="margin-top: 3px;">导出数据</span>
+            </div>
+        </div>
+    </div>
+    <div style="height: 45px;"></div>
+    <div style="background-color: white; height: 650px">
+        <p class="subTitle" style="font-weight: bold;">第一步：</p>
+        <p style="float: left; margin-left: 3px; padding-top: 41px; opacity: 0.8">复制下载链接</p>
+        <p id="setLink" v-text="link" style="word-break: break-all; padding-top: 70px; margin-left: 30px; margin-right: 70px; font-size: 14px; opacity: 0.5"></p>
+        <input type="button" name="button" class="copyPasteButton" value="复制下载链接" data-clipboard-action="copy" data-clipboard-target="#setLink">
+        <div>
+        <p class="subTitle" style="font-weight: bold; margin-top: 10px">第二步：</p>
+        <p style="float: left; margin-left: 3px; margin-top: 51px; opacity: 0.8; word-break: break-all;">把链接粘贴到电脑或手机浏览器中下载</p>
+        </div>
+        <img src="/images/copyLink.png" style="margin-left: 30px; margin-right: 25px; width: 320px; height: 223px; margin-top: 30px">
+    </div>
+</div>
+
+</body>
+</html>
+<script src="/statisticsExport.js"></script>

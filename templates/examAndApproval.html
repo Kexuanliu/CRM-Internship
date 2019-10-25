@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>审批</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css"/>
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/organization/examAndApproval.js"></script>
+    <style>
+        .pull-left{
+            float: left!important;
+        }
+        .pull-right{
+            float: right!important;
+        }
+        .top-bar{
+            font-size: 18px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: solid 1px #DDDDDD ;
+            padding-left:15px;padding-right:15px;padding-top: 8px;padding-bottom: 8px
+        }
+        .center-box{
+            text-align: center;
+        }
+        .select-bar{
+            position: relative;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .customer-item{
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+        .weui-cells{
+            margin-top: 0;
+            padding: 0px;
+        }
+
+        .projectApply{
+            margin-top: 0;
+            border: none;
+            padding: 4px 0 4px 15px;
+        }
+        .usr-img{
+            position: relative;
+            margin-right: 10px;
+            /*padding-left: 30px;*/
+            width: 25px;
+            display: block;
+
+        }
+        .narvi-bar {
+            z-index: 9999;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+        .center-ele{
+            font-size: 18px;
+            color: rgb(51,51,51);
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div id="examAndApprovalVue">
+    <div class="page navbar js_show">
+        <div class="page__bd">
+            <div class="narvi-bar">
+                <div class="top-bar center-box" style="border: hidden">
+                    <span class="pull-left" style="color: rgb(61, 168, 244); font-size: 16px;"
+                          @click="back">返回</span>
+                    <span class="center-ele">审批</span>
+                </div>
+            </div>
+
+            <div class="weui-tab__panel" style="padding-top: 44px">
+
+                <div class="blank" style="margin:20% auto auto auto; text-align:center; "
+                     v-if="applyList.length === 0 & projectApplyList.length===0 ">
+                    <p>
+                        <img src="/images/project/no_project.svg"/>
+                    </p>
+                    <p style="color: #CCCCCC; font-size: small">目前没有相关信息</p>
+                </div>
+
+
+                <div v-for="apply in applyList" :apply="apply">
+                    <div v-if="apply.applyType == 'ENCLOSURE_APPLY'">
+                        <enclosure-apply-component :apply="apply"></enclosure-apply-component>
+                    </div>
+                    <div v-else-if="apply.applyType == 'ENCLOSURE_DELAY_APPLY'">
+                        <enclosure-delay-apply-component :apply="apply"></enclosure-delay-apply-component>
+                    </div>
+                    <div v-else>
+
+                    </div>
+                </div>
+
+                <div v-for="projectApply in projectApplyList">
+                    <div class="weui-cells" style="padding-top: 10px">
+                        <div class="weui-cell" style="font-size: 14px; background: #FFF5F5F5;">
+                            <div class="weui-cell__bd center-box" v-text="projectApply.applyTime"></div>
+                        </div>
+                        <div class="weui-cell" style="font-size: 16px;">
+                            <div class="weui-cell__hd">启动申请 : </div>
+                            <div class="weui-cell__bd">{{projectApply.customerName}}-{{projectApply.deptName}}-{{projectApply.projectName}}</div>
+                        </div>
+                        <div class="weui-cell projectApply" style="color: #888888; font-size: 14px;">
+                            <div class="weui-cell__hd">申请人 : &nbsp;</div>
+                            <div class="weui-cell__bd" v-text="projectApply.applyerName"></div>
+                        </div>
+                        <div class="weui-cell projectApply" style="color: #888888; font-size: 14px;">申请内容 :</div>
+                        <div class="weui-cell" style="color: #888888; font-size: 14px; border-bottom: solid #F5F5F5;">
+                            <p style="width: auto;" v-text="projectApply.content"></p>
+                        </div>
+                        <div class="weui-cell">
+                            <a :href="'/project/projectCheck?projectId='+ projectApply.projectId" class="weui-btn weui-btn_mini weui-btn-default" style="margin-right: 10px; background: #38A4F2; height: 33px; padding-bottom: 8px;">
+                                <span style="color: #FFFFFF; font-size: 14px;"> 查看项目详情</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script type="text/x-template" id="enclosureApplyComponent">
+    <div class="weui-cells">
+        <div class="weui-cell" style="text-align: center;border-top: solid 1px gainsboro">
+            <span v-text="apply.applyTime"></span>
+        </div>
+        <div style="padding-left: 15px">
+            <p>
+                <span>圈地申请：</span>
+                <span v-text="apply.customerName"></span>
+                <span>-</span>
+                <span v-text="apply.deptName"></span>
+            </p>
+            <p>
+                <span>申请人：</span>
+                <span v-text="apply.applyUserName"></span>
+            </p>
+            <p>申请内容：</p>
+            <p v-text="apply.applyDetails"></p>
+        </div>
+        <div class="weui-cell" style="padding: 8px 20px;">
+            <div class="weui-flex__item" style="text-align: center;">
+                <div class="placeholder" style="text-align: center;">
+                    <a @click="applyDecline(apply.applyType,apply.applyId)"
+                       class="weui-btn weui-btn_warn" style="margin-right: 10px;">不通过</a>
+                </div>
+            </div>
+            <div class="weui-flex__item" style="text-align: center;">
+                <div class="placeholder">
+                    <a @click="applyAgree(apply.applyType,apply.applyId)"
+                       class="weui-btn weui-btn_primary" style="margin-left: 10px;">通过</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-template" id="enclosureDelayApplyComponent">
+    <div class="weui-cells" style="padding-top: 10px">
+        <div class="weui-cell" style="text-align: center">
+            <span v-text="apply.applyTime"></span>
+        </div>
+        <div style="padding-left: 15px">
+            <p>
+                <span>延期申请：</span>
+                <span v-text="apply.customerName"></span>
+                <span>-</span>
+                <span v-text="apply.deptName"></span>
+            </p>
+            <p>
+                <span>申请人：</span>
+                <span v-text="apply.applyUserName"></span>
+            </p>
+            <p>申请内容：</p>
+            <p v-text="apply.applyDetails"></p>
+        </div>
+        <div class="weui-cell" style="padding: 8px 20px;">
+            <div class="weui-flex__item" style="text-align: center;">
+                <div class="placeholder" style="text-align: center;">
+                    <a @click="applyDecline(apply.applyType,apply.applyId)"
+                       class="weui-btn weui-btn_plain-default" style="margin-right: 10px;">不通过</a>
+                </div>
+            </div>
+            <div class="weui-flex__item" style="text-align: center;">
+                <div class="placeholder">
+                    <a @click="applyAgree(apply.applyType,apply.applyId)"
+                       class="weui-btn weui-btn_plain-primary" style="margin-left: 10px;">通过</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+</html>

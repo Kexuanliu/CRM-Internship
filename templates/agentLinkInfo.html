@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>代理商联系人信息</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/customer/agentLinkInfo.js?v=20190321"></script>
+    <script src="/organization/showOrganization.js?v=20190323" charset="utf-8"></script>
+    <style>
+        .top-bar {
+            background: #FFFFFF;
+            font-size: 18px;
+            text-align: center;
+            padding: 8px 15px;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            padding: 0px;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .top-bar {
+            font-size: 18px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: solid 1px #DDDDDD;
+            padding: 8px 15px;
+        }
+
+        .select-bar {
+            position: relative;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .customer-item {
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            padding: 0px;
+        }
+
+        .usr-img {
+            position: relative;
+            margin-right: 10px;
+            padding-left: 30px;
+            width: 25px;
+            display: block;
+
+        }
+
+        .weui-tabbar {
+            position: fixed;
+        }
+
+        .introduce {
+            margin: 25px 15px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="customerVue" class="page navbar js_show">
+
+        <div id="editnDialog" style="display: none;" v-show="showEditDialog">
+            <div class="weui-mask" @click="cancelEditEvent"></div>
+            <div class="add-journal">
+                <div class="weui-actionsheet__menu" style="border-radius: 0.33em">
+                    <a @click="editCustomer">
+                        <div class="weui-actionsheet__cell add-journal-item">编辑联系人</div>
+                    </a>
+                    <a @click="delCustomer">
+                        <div class="weui-actionsheet__cell add-journal-item"
+                             style="border-top: 1px solid #e5e5e5;">删除联系人
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="js_dialog" id="iosDialog2" style="opacity: 1;display: none" v-show="showErrMsg">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div class="weui-dialog__bd" v-text="errMsg"></div>
+                <div class="weui-dialog__ft">
+                    <a @click="showErrMsg=false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <span onclick="backToList()" class="pull-left">
+                <img src="/images/back_icon.svg"/></span>
+            <span class="center" style="padding-left: 4px" th:text="${linkName}
+"></span>
+            <input type="hidden" id="linkUserId" th:value="${linkUserId}">
+            <input type="hidden" id="userType" th:value="${userType}">
+            <span @click="clickEditButton" class="pull-right" style="padding-left: 18px;" v-show="showEditButton">
+                                <img src="/images/journal/更多操作.png" width="18px"/>
+                            </span>
+        </div>
+
+        <div class="weui-tab" style="margin-top: 0px;">
+            <div class="weui-tab__panel">
+
+                <div id="tab1" class="weui-tab__content" style="display: block;">
+                    <div class="weui-cells">
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">职位</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkPosition}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">性别</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkGeneral}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">手机</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkMobile}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">座机</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkPhone}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">邮箱</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkMail}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">微信</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkWeixin}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">QQ</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${linkQQ}"></label>
+                            </div>
+                        </div>
+
+                        <div class="weui-media-box weui-media-box_text">
+                            <h1 class="weui-media-box__title">背景</h1>
+                            <p class="weui-media-box__desc" th:text="${linkBg}" style="-webkit-line-clamp:10"></p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    function backToList() {
+        history.back();
+    }
+</script>

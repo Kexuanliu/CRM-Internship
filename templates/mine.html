@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>账号信息</title>
+
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <script src="/vue.v2.5.13.js"></script>
+
+    <script src="/mine.js"></script>
+    <style>
+        .top-bar {
+            background: #FFFFFF;
+            text-align: center;
+            padding: 7px 10px;
+            font-size: 18px;
+        }
+
+        .center-box {
+            text-align: center;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .navi-bar {
+            z-index: 9999;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .weui-middle-bar{
+            display:-webkit-box;
+            display:-webkit-flex;
+            display:flex;
+            position:absolute;
+            z-index:500;
+            width:100%;
+        }
+
+        .weui-tabbar__icon2{
+            width: 40px;
+            height: 40px;
+        }
+
+        .small-font{
+            font-size:14px;
+            color: #888888;
+        }
+    </style>
+</head>
+<body>
+<div id="mineVue">
+
+
+    <div id="mine" style="display: none;" v-show="show==='myCompany'">
+        <div class="weui-tab">
+            <div class="navi-bar">
+                <!--<div id="titleBar4" class="weui-navbar top-bar" style="height: 28px; padding: 10px 10px;">-->
+                <!--<span class="pull-left">-->
+                <!--<img src="/images/back_icon.svg" style="margin-top:7px;"/></span>-->
+                <!--<span class="center" style="font-size: 22px; margin-top: 1px">我的账户</span>-->
+
+                <!--</div>-->
+
+
+                <div class="top-bar center-box">
+                    <span style="margin-top: 3px;">我的账户</span>
+                </div>
+            </div>
+            <div class="weui-tab__panel"  style="padding-bottom: 0">
+                <div style="height: 34px"></div>
+                <div class="weui-panel weui-panel_access">
+                    <div class="weui-panel__bd" style=" height: 90px;margin-top: 0px">
+                        <a href="javascript:;" class="weui-media-box weui-media-box_appmsg"
+                           style=" height: 90px; padding: 0px ;">
+                            <div class="weui-media-box__hd" style=" height: 90px;width: 90px; margin-right: 0px; ">
+                                <img src="/images/journal/defaultUserIcon.png"
+                                     style="width: 60px;height: 60px;  line-height: 5px;padding:15px"
+                                     alt=""
+                                     class="weui-tabbar__icon">
+                            </div>
+                            <div class="weui-media-box__bd" style="margin-right: 2em;">
+                                <p style="color: #333333;font-size: 16px">
+                                <p>{{realName}}
+                                </p>
+                                <p><span>账号：</span><span>{{tel}}</span></p>
+
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="weui-cells" style="height: 110px">
+                    <div class="weui-cell" style="height: 10px" href="javascript:;">
+                        <div class="weui-cell__bd">
+                            <p class="small-font">更多功能</p>
+                        </div>
+                    </div>
+                    <div class="weui-middle-bar">
+                        <a href="/project/projectList" class="weui-tabbar__item">
+                            <img src="/images/bottom/project.svg" class="weui-tabbar__icon2">
+                            <p class="weui-tabbar__label">项目</p>
+                        </a>
+                        <a href="/project/mission" class="weui-tabbar__item">
+                            <img src="/images/bottom/support.svg" class="weui-tabbar__icon2">
+                            <p class="weui-tabbar__label">项目支持</p>
+                        </a>
+                        <a href="/statistics/index" class="weui-tabbar__item">
+                            <img src="/images/bottom/statistic.svg" class="weui-tabbar__icon2">
+                            <p class="weui-tabbar__label">统计</p>
+                        </a>
+                        <a href="#" class="weui-tabbar__item">
+                            <img src="/images/bottom/judge.svg" class="weui-tabbar__icon2">
+                            <p class="weui-tabbar__label">审批</p>
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="weui-cells" v-if="tag1">
+                    <div class="weui-cell" style="height: 10px" href="javascript:;">
+                        <div class="weui-cell__bd">
+                            <p class="small-font">管理员功能</p>
+                        </div>
+                    </div>
+
+                </div>
+                <company v-for="company in myCompany":company="company">
+                    
+                </company>
+                  </div>
+                        <div v-if="tag3">
+                            <div class="weui-cell" style="height: 10px">
+                                <div class="weui-cell__bd">
+                                    <label class="weui-label" style="float: left;color: grey;font-size:large ;width:120px">待审核</label>
+                                </div>
+                             </div>
+                        </div>
+                  <div v-for="company in myCompany">
+                 <div v-if="!company.isAdmin">
+                    <div class="weui-media-box weui-media-box_small-appmsg" v-if="company.status==='PENDING'">
+                        <div class="weui-cells" style="border-top: solid 1px gainsboro">
+                            <a class="weui-cell weui-cell_access" href="javascript:;">
+                                <div class="weui-cell__hd"><img
+                                        src="/images/公司.svg" alt=""
+                                        style="width:40px;margin-right:5px;display:block">
+                                </div>
+                                <div class="weui-cell__bd weui-cell_primary">
+                                    <h4>{{company.companyName}}</h4>
+                                    <p>&nbsp;</p>
+                                </div>
+                                <span class="weui-cell__ft"></span>
+
+                            </a>
+                        </div>
+                      </div>
+                  </div>
+                  </div>
+
+                <!--<div class="weui-cells">-->
+
+                    <!--<div class="page__bd page__bd_spacing" @click="dropOut">-->
+                        <!--<a href="javascript:;" class="weui-btn weui-btn_primary">退出登录</a>-->
+                    <!--</div>-->
+
+                <!--</div>-->
+                <div class="weui-cells">
+                    <a class="weui-cell weui-cell_access" href="javascript:;" @click="dropOut">
+                        <div class="weui-cell__bd">
+                            <p>退出登录</p>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="addCompany" style="display: none;" v-show="show==='addCompany'">
+        <div class="weui-tab">
+            <div class="weui-navbar">
+                <div id="titleBar5" class="weui-navbar__item top-bar" style="height: 28px; padding: 10px 10px;">
+                            <span @click="back1" class="pull-left">
+                                <img src="/images/back_icon.svg" style="margin-top:7px;"/></span>
+                    <span class="center" style="font-size: 22px; margin-top: 1px">加入公司</span>
+
+                    <span style="color: dodgerblue;float: right;font-size: 18px; margin-top: 1px"
+                          @click="submit"> 提交 &nbsp; </span>
+
+                </div>
+            </div>
+            <div class="weui-tab__panel">
+
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__bd" id="demo">
+                            <input class="weui-input" type="text" placeholder="" name="input" v-model="name"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cells">
+                    <div class="weui-cells__title">搜索结果</div>
+
+                    <div class="weui-cells weui-cells_radio" id="companyList">
+
+                        <!--<div class="blank" style="margin:20% auto auto auto; text-align:center; "-->
+                             <!--v-if="companyList.length === 0  ">-->
+                            <!--<p>-->
+                                <!--<img src="/images/project/no_project.svg"/>-->
+                            <!--</p>-->
+                            <!--<p style="color: #CCCCCC; font-size: small">请输入恰当关键词进行搜索</p>-->
+                        <!--</div>-->
+
+
+
+                        <label class="weui-cell weui-check__label" v-for="company in companyList">
+                            <div class="weui-cell__bd">
+                                <p>{{company.companyName}}</p>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <input type="radio" class="weui-check" :value="company.companyName"
+                                    v-model="name">
+                                <span class="weui-icon-checked"></span>
+                            </div>
+                        </label>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <navfooter></navfooter>
+    </div>
+
+</div>
+
+
+</body>
+<template id="company3">
+<div class="weui-media-box weui-media-box_small-appmsg" v-if="company.isAdmin">
+
+    <div>
+		<div class="weui-cells weui-cell_access">
+			<a class="weui-cell weui-cell_access" href="javascript:;"
+				@click="staffAudit(company.companyId)">
+				<div class="weui-cell__bd">
+					<p>
+						人员审核&nbsp;<span>(</span> <span style="color: #3DA8F4">{{(company.applyStaff)}}</span>
+						<span>)</span>
+					</p>
+				</div>
+				<div class="weui-cell__ft"></div>
+			</a> <a class="weui-cell weui-cell_access"
+				:href="'/member?companyId='+company.companyId">
+				<div class="weui-cell__bd">
+					<p>
+						</span>上下级管理
+					</p>
+				</div>
+				<div class="weui-cell__ft"></div>
+			</a> <a class="weui-cell weui-cell_access"
+				@click="toMessage(company.companyId)">
+				<div class="weui-cell__bd">
+					<p>
+						消息&nbsp; <span>(</span> <span style="color: #3DA8F4">{{(company.message)}}</span>
+						<span>)</span>
+					</p>
+				</div>
+				<div class="weui-cell__ft"></div>
+			</a>
+        </div>
+	</div>
+</div>
+</template>
+</html>
+<script src="/navFooter.js"></script>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>填写日志</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css?v=20190617"/>
+    <link rel="stylesheet" href="/example.css"/>
+    <link rel="stylesheet" href="/common.css?v=20190617">
+    <style type="text/css">
+        .weui-cells {
+            margin-top: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/editJournal.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/weui.min.js"></script>
+    <script src="/common.js?v=20190620"></script>
+    <script src="/journal/editJournal.js?v=20190705"></script>
+
+
+</head>
+
+<body >
+<div id="editJournalVue">
+    <input id="journalType" type="hidden" th:value="${journalType}">
+    <input id="journalId" type="hidden" th:value="${journalId}">
+    <input id="repairDate" type="hidden"  th:value="${repairDate}">
+    <div v-show="showPage === 'journalPage'" id="journalPage">
+        <!--顶部-->
+        <div class="top-bar fix-item">
+            <span @click="backToList" class="pull-left"><img src="/images/back_icon.svg" style="margin-top:3px"/></span>
+            <span class="center" v-text="editTitle" style="font-size: 18px"></span>
+        </div>
+        <div style="height: 45px"></div>
+        <div v-show = "repairTs !== null">
+            <a class="weui-cell weui-cell_access" @click="showDatePicker">
+                <div class="weui-cell__bd">
+                    <p><span style="color: red">*</span>日期</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <span v-text="preDate"></span>
+                </div>
+            </a>
+        </div>
+
+        <!---->
+        <div v-for="(visit, index) in visits" :key="'visits_' + index" class="weui-cells weui-cells_form">
+            <div class="noBorder"></div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <label>今日联系&nbsp;{{index+1}}</label>
+                </div>
+                <div @click="deleteVisit(index)" v-if="index>0">
+                    <span class="red-text">删除</span>
+                </div>
+            </div>
+            <div class="weui-cell" @click="addVisitContacts(index)">
+                <div class="weui-cell__bd">
+                    <label>联系客户</label>
+                </div>
+                <div>
+                    <span v-text="calcVisitCustomerName(visit)" class="chosenSpan" v-show="calcVisitCustomerName(visit)!='无'"></span>
+                    <span  v-show="calcVisitCustomerName(visit)=='无'" class="defaultSpan">无</span>
+                    <span><img src="/images/next_page.svg"/></span>
+                </div>
+            </div>
+            <div class="weui-cell" @click="chooseOpportunity(index)">
+                <div class="weui-cell__bd">
+                    <label>相关商机/项目</label>
+                </div>
+                <div>
+                    <span v-text="calculateOpportunityName(visit.opportunityId)" v-show="visit.opportunityId>0" class="chosenSpan"></span>
+                    <span v-show="!visit.opportunityId" class="defaultSpan">请选择</span>
+                    <span><img src="/images/next_page.svg"/></span>
+                </div>
+            </div>
+            <!--正常-->
+            <div class="weui-cell weui-cell_access">
+                <div class="weui-cell__bd">
+                    <label>联系类型</label>
+                </div>
+                <div class= "weui-cell__bd">
+                    <select class="weui-select chosenSpan selectDirRlt" v-model="visit.visitType">
+                        <option value="PHONE">电话联系</option>
+                        <option value="NORMAL_VISIT">普通拜访</option>
+                        <option value="TRAN_VISIT">培训拜访</option>
+                        <option value="ACCOMPANY_VISIT">陪同拜访</option>
+                        <option value="COMPANY_RECEPTION">公司接待</option>
+                        <option value="OTHER">其他</option>
+                    </select>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </div>
+
+            <div class="weui-cell weui-cell_access">
+                <div class="weui-cell__bd">
+                    <label>沟通时长</label>
+                </div>
+                <div class= "weui-cell__bd">
+                    <select class="weui-select chosenSpan selectDirRlt" v-model="visit.contactType">
+                        <option value="2">大于10分钟</option>
+                        <option value="1">小于等于10分钟</option>
+                        <option value="0">无沟通</option>
+                    </select>
+                </div>
+                <div class= "weui-cell__ft"></div>
+            </div>
+
+            <div class="weui-cell weui-cell_access" v-show="showOutType(visit.visitType)">
+                <div class="weui-cell__bd">
+                    <label>外出</label>
+                </div>
+                <div class= "weui-cell__bd">
+                    <select class="weui-select chosenSpan selectDirRlt" v-model="visit.outType">
+                        <option value="1">市内</option>
+                        <option value="2">市外</option>
+                    </select>
+                </div>
+                <div class= "weui-cell__ft"></div>
+            </div>
+            <div class="weui-cell weui-cell_access" v-show="showOutType(visit.visitType)">
+                <div class="weui-cell__bd">
+                    <label>拜访事由</label>
+                </div>
+                <div class= "weui-cell__bd">
+                    <input type="text" class="weui-input" placeholder="请输入此次拜访的事由" v-model="visit.outReason"/>
+                </div>
+            </div>
+
+            <div class="weui-cell">
+                <div class="plan-title"><p>联系过程及结果</p></div>
+            </div>
+            <div class="weui-cells weui-cells_form" style="margin-top: 0;">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" rows="4" v-model="visit.visitResult" placeholder="输入联系结果"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottomBorder"></div>
+
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell weui-cell_vcode">
+                <div class="weui-cell__bd" @click="addVisit">
+                    <img class="weui-vcode-img addVisit-img" src="/images/journal/plus.png" style="padding: 8px 0"/>
+                    <label>添加今日联系</label>
+                </div>
+            </div>
+        </div>
+        <!---->
+        <div class="topBottomBorder"></div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="plan-title"><p>与客户无关工作</p></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" rows="4" v-model="other"
+                              :placeholder="summaryPlaceHolder"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="topBottomBorder"></div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="plan-title"><p>明日计划</p></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" rows="4" v-model="plan"
+                              :placeholder="planPlaceHolder"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="topBottomBorder"></div>
+        <div class="weui-footer" style="padding:7px 15px;background: white">
+            <button @click="submitJournal" class="weui-btn weui-btn_primary">提交</button>
+        </div>
+    </div>
+    <!--拜访客户-->
+		<div v-show="showPage === 'selectContacts'" id="selectContacts">
+			<div class="top-bar">
+				<span @click="cancelSelectContacts"
+					style="color: rgb(61, 168, 244); font-size: 16px;"
+					class="pull-left">取消</span> <span>选择拜访客户</span> <span
+					@click="confirmSelectContacts"
+					style="color: rgb(61, 168, 244); font-size: 16px;"
+					class="pull-right">完成</span>
+			</div>
+
+            <div class="weui-navbar" style="position: relative;height: 40px;background-color: #F9F9F9;
+                            font-size: 15px; color: #999999;">
+                <div class="weui-navbar__item weui-bar__item_on"
+                     style="border-bottom: inset rgba(56, 164, 242, 1); color: rgba(56, 164, 242, 1)">
+                    院校
+                </div>
+                <div class="weui-navbar__item " @click="goAgentlList">
+                    代理商
+                </div>
+            </div>
+
+            <div class="weui-cells weui-cells_form">
+				<div class="weui-search-bar" id="searchBar">
+					<div class="weui-search-bar__form">
+						<div class="weui-search-bar__box">
+							<i class="weui-icon-search"></i> <input type="search"
+								class="weui-search-bar__input" id="searchInput" placeholder="搜索"
+								v-model="searchWord" required=""> <a href="javascript:"
+								class="weui-icon-clear" id="searchClear" @click="clear"></a>
+						</div>
+						<label class="weui-search-bar__label" id="searchText"
+							@click="text"
+							style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+							<i class="weui-icon-search"></i> <span>搜索</span>
+						</label>
+					</div>
+					<a href="javascript:" class="weui-search-bar__cancel-btn"
+						id="searchCancel" @click="cancel">取消</a>
+				</div>
+
+				<div class="weui-cells searchbar-result" id="searchResult" style="display: none">
+					<div v-for="(customer, index) in ccustomers" :key="'scustomers_' + index">
+						<div class="weui-cell" @click="changeContactsFold2(index)">
+							<span class="pull-left" style="padding-right: 10px;">
+								<img :src="setImgPath2(index)" id="customer.name+'_simg'" />
+							</span>
+							<span class="pull-left" v-text="customer.name"></span>
+						</div>
+						<div v-show="customer.contactsFold" class="weui-cells_checkbox"
+							style="padding-left: 10px">
+							<bbb v-on:transfer_value="onTransferValue"
+								v-for="cc in customer.depts" v-bind:ccc="cc"></bbb>
+						</div>
+					</div>
+				</div>
+				<div v-show="showOrganization">
+					<div class="weui-cells" v-for="(customer, index) in customers"
+						:key="'customers_' + index">
+						<div class="weui-cell" @click="changeContactsFold(index)">
+							<div class="weui-cell__bd">
+								<label v-text="customer.name"></label>
+							</div>
+							<div>
+								<img :src="setImgPath(index)" id="customer.name+'_img'" />
+							</div>
+						</div>
+						<div v-show="!customer.contactsFold" class="weui-cells_checkbox" style="padding-left: 10px">
+							<ddd v-on:transfer_value="onTransferValue"
+								v-for="cc in customer.depts" v-bind:ccc="cc"></ddd>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+    <!--选择代理商-->
+    <div v-show="showPage === 'selectAgentLinks'" id="selectAgentLinks">
+        <div class="top-bar">
+				<span @click="cancelSelectContacts"
+                      style="color: rgb(61, 168, 244); font-size: 16px;"
+                      class="pull-left">取消</span> <span>选择拜访客户</span> <span
+                @click="confirmSelectContacts"
+                style="color: rgb(61, 168, 244); font-size: 16px;"
+                class="pull-right">完成</span>
+        </div>
+
+        <div class="weui-navbar" style="position: relative;height: 40px;background-color: #F9F9F9;
+                            font-size: 15px; color: #999999;">
+            <div class="weui-navbar__item " @click="goSchoolList">
+                院校
+            </div>
+            <div class="weui-navbar__item weui-bar__item_on"
+                 style="border-bottom: inset rgba(56, 164, 242, 1); color: rgba(56, 164, 242, 1)">
+                代理商
+            </div>
+        </div>
+
+        <div class="weui-search-bar">
+            <div class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="text" class="weui-search-bar__input"
+                           placeholder="搜索" v-model="serachAgentWord">
+                </div>
+            </div>
+        </div>
+
+        <div class="customers">
+            <div class="weui-cells" v-for="(cust, index) in filterAgentList">
+                <div class="weui-cell" @click="changeAgentSubFold(cust)">
+                    <div class="weui-cell__bd">
+                        <span class="pull-left" style="padding-right: 10px;">
+                            <img :src="cust.imgPath">
+                        </span>
+                        <span class="pull-left" v-text="cust.crmAgent.companyName"
+                              style="padding-right: 5px;color: #333333;font-size: 16px"></span>
+                    </div>
+                </div>
+                <div class="customer-item" v-show="cust.showSub">
+                    <div class="weui-cells weui-cells_radio" v-show="cust.showSub">
+                        <label class="weui-cell weui-check__label" v-for="contact in cust.crmAgentLinkList"
+                               :id="contact.realName" style="margin-left: 15px;">
+                            <div class="weui-cell__hd">
+                                <img :src="checkGender(contact.linkGeneral)" style="width: 18px;height: 19px"
+                                     class="usr-img">
+                            </div>
+                            <div class="weui-cell__bd">
+                                <span v-text="contact.linkName" style="color: #333333;font-size: 16px"></span>
+                                <span v-text="contact.linkPosition"
+                                      style="color: #B2B2B2;font-size: 13px;border:solid thin"></span>  <!-- 职位 -->
+                            </div>
+                            <div class="weui-cell__ft">
+                                <input type="checkbox" v-model="chosenAgentLinkTmp" :value="contact"/>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div v-show="showPage === 'selectVisitType'" id="selectVisitType">
+        <div class="top-bar">
+            <span @click="cancelSelectVisitType" style="color: rgb(61, 168, 244); font-size: 16px;" class="pull-left">取消</span>
+            <span>选择联系类型</span>
+            <span @click="confirmSelectVisitType" style="color: rgb(61, 168, 244); font-size: 16px;" class="pull-right">完成</span>
+        </div>
+
+        <div class="weui-cells_radio visit-type-sel" style="background:#ffffff;">
+
+            <label class="weui-cell weui-check__label" for="phone">
+                <div class="weui-cell__bd">
+                    <p>电话联系</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="phone" :value="'PHONE'" v-model="visitTypeTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+
+            <label class="weui-cell weui-check__label" for="normal_visit">
+                <div class="weui-cell__bd">
+                    <p>普通拜访</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="normal_visit" :value="'NORMAL_VISIT'" v-model="visitTypeTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="tran_visit">
+                <div class="weui-cell__bd">
+                    <p>培训拜访</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="tran_visit" :value="'TRAN_VISIT'" v-model="visitTypeTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="accompany_visit">
+                <div class="weui-cell__bd">
+                    <p>陪同拜访</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="accompany_visit" :value="'ACCOMPANY_VISIT'" v-model="visitTypeTmp" >
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="comapany_reception">
+                <div class="weui-cell__bd">
+                    <p>公司接待</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="comapany_reception" :value="'COMPANY_RECEPTION'" v-model="visitTypeTmp" >
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="other">
+                <div class="weui-cell__bd">
+                    <p>其他</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="other" :value="'OTHER'" v-model="visitTypeTmp" >
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+        </div>
+    </div>
+
+    <div v-show="showPage === 'selectContactType'" id="selectContactType">
+        <div class="top-bar">
+            <span @click="cancelSelectContactType" style="color: rgb(61, 168, 244); font-size: 16px;" class="pull-left">取消</span>
+            <span>选择沟通时长</span>
+            <span @click="confirmSelectContactType" style="color: rgb(61, 168, 244); font-size: 16px;" class="pull-right">完成</span>
+        </div>
+
+        <div class="weui-cells_radio visit-type-sel" style="background:#ffffff;">
+
+            <label class="weui-cell weui-check__label" for="aboveTen">
+                <div class="weui-cell__bd">
+                    <p>大于10分钟</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="aboveTen" :value="2" v-model="contactTypeTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+
+            <label class="weui-cell weui-check__label" for="tenMinute">
+                <div class="weui-cell__bd">
+                    <p>小于等于10分钟</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="tenMinute" :value="1" v-model="contactTypeTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+
+            <label class="weui-cell weui-check__label" for="noContact">
+                <div class="weui-cell__bd">
+                    <p>无沟通</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" id="noContact" :value="0" v-model="contactTypeTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+            </label>
+
+        </div>
+    </div>
+
+
+    <div v-show="showPage === 'selectOpportunity'" id="selectOpportunity">
+        <div class="top-bar">
+            <span @click="cancelSelectOpportunity" style="color: rgb(61, 168, 244); font-size: 16px;" class="pull-left">取消</span>
+            <span>选择商机</span>
+            <span @click="confirmSelectOpportunity" style="color: rgb(61, 168, 244); font-size: 16px;" class="pull-right">完成</span>
+        </div>
+
+        <div class="weui-search-bar">
+            <div class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="text" class="weui-search-bar__input"
+                           placeholder="搜索" v-model="searchOppWord">
+                </div>
+            </div>
+            <a href="javascript:" class="weui-search-bar__cancel-btn"
+               @click="cancelSearchOpp">取消</a>
+        </div>
+
+
+        <div class="weui-cells_radio" style="background:#ffffff;">
+            <label class="weui-cell weui-check__label" v-for="(opportunity, index) in filterOppList">
+                <div class="weui-cell__bd">
+                    <label class="weui-media-box__title">{{opportunity.opportunityName}}</label>
+                    <p class="weui-media-box__desc" style="font-size: 12px;color: #888888;">
+                        {{opportunity.showInfo}}
+                    </p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="opportunity"
+                           :value="opportunity.opportunityId" v-model="opportunityTmp">
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <!--<span style="float:right;margin-top: 7px" @click="showDetailResult(index)">&nbsp;-->
+                                <!--<img src="/images/opportunity/editOpportunity.svg"/>-->
+                <!--</span>-->
+            </label>
+            <div v-show="filterOppList.length==0" style="text-align: center" class="defaultSpan">
+                您拜访的客户尚未创建商机
+            </div>
+			</div>
+    </div>
+
+
+    <div id="saleStage" v-show="showPage === 'saleStage'" style="display: none">
+            <div class="top-bar" style="height: 40px">
+            <span @click="chooseBack" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:10px;margin-left: 10px"/></span>
+                <span class="center" style="height: 40px;display: inline-block ;padding-top: 5px;">选择销售阶段</span>
+                <span class="pull-right" style="margin-top: 7px; color: #28b3ff"
+                      @click="done1"> 完成 &nbsp; </span>
+            </div>
+            <div class="weui-cells weui-cells_radio">
+                <label class="weui-cell weui-check__label" v-for="(stage, index) in stages">
+                    <div class="weui-cell__hd">
+                        <img :src="'/images/opportunity/'+ ind[index] +'Stage.svg' " style="margin-right: 10px"/>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p v-text="stage"></p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check"
+                               :value="ind[index] "
+                               v-model="selStage">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+                <label class="weui-cell weui-check__label">
+                    <div class="weui-cell__hd">
+                        <img src="/images/opportunity/loseOrder.svg" style="margin-right: 10px"/>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p>输单</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check"
+                               value="F"
+                               v-model="selStage">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+      <div id="modificationOppo" v-show="showPage ==='modif'">
+
+        <div class="center-box">
+
+            <div id="basicInfo">
+                <div class="top-bar">
+            <span @click="modifBack2" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:5px;"/></span>
+                    <span class="center" style="margin-top: 3px;">编辑商机</span>
+                    <span class="pull-right" style="margin-top: 0px; color: #28b3ff"
+                          @click="detailSubmit"> 完成 &nbsp; </span>
+                </div>
+
+                <div class="list">
+                    <div class="weui-cells">
+                        <div class="weui-cell">基本信息</div>
+                        <label style="margin-left: 15px"><span style="color: red">*</span>制作内容</label>
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" placeholder="请填写制作内容" v-model="content">
+                            </div>
+                        </div>
+                        <a class="weui-cell weui-cell_access" @click="showDatePicker">
+                            <div class="weui-cell__bd">
+                                <p><span style="color: red">*</span>预估挂标日期</p>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <span v-text="preDate"></span>
+                            </div>
+                        </a>
+                        <a class="weui-cell weui-cell_access" @click="deliverDatePicker">
+                            <div class="weui-cell__bd">
+                                <p><span style="color: red">*</span>交付日期</p>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <span v-text="deliverDate"></span>
+                            </div>
+                        </a>
+                        <a class="weui-cell weui-cell_access" @click="selSaleStage">
+                            <div class="weui-cell__bd">
+                                <p><span style="color: red">*</span>销售阶段</p>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <span v-text="saleStage"></span>
+                            </div>
+                        </a>
+
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label class="weui-label"><span
+                                    style="color: red">*</span>金额(元)</label></div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="number" placeholder="请输入项目金额" v-model="amount">
+                            </div>
+                        </div>
+                        <a class="weui-cell weui-cell_access">
+                             <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>客户及联系人</p>
+                                        <p style="color: grey">
+                                            <!--<span v-text="contact.customerName+'-'+contact.departmentName+'-'+contact.typeName+'-'+contact.realName"></span>-->
+                                            <span v-if="contact.customerName === undefined"></span>
+                                            <span v-else>{{contact.customerName}}-</span>
+                                            <span v-if="contact.topDeptName ===undefined"></span>
+                                            <span v-else>{{contact.topDeptName}}-</span>
+                                            <span v-if="contact.subDeptName ===undefined"></span>
+                                            <span v-else>{{contact.subDeptName}}-</span>
+                                            <span v-if="contact.type === undefined"></span>
+                                            <span v-else>{{contact.type}}-</span>
+                                            <span v-if="contact.contactsName ===undefined"></span>
+                                            <span v-else>{{contact.contactsName}}</span>
+                                        </p>
+                                    </div>
+
+                        </a>
+
+                        <label style="margin-left: 15px"><span style="color: red">*</span>商机名称</label>
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" v-model="opportunityName" placeholder="请输入商机名称">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--BEGIN toast-->
+                <div id="toast" style="display: none;">
+                    <div class="weui-mask_transparent"></div>
+                    <div class="weui-toast">
+                        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                        <p class="weui-toast__content">修改成功</p>
+                    </div>
+                </div>
+                <!--end toast-->
+            </div>
+
+
+        </div>
+    </div>
+    <div style="display:none" id="draftDiv">
+        <div class="weui-mask" id="iosMask" style="opacity: 1;"></div>
+        <div class="weui-actionsheet weui-actionsheet_toggle" id="iosActionsheet">
+            <div class="weui-actionsheet__title">
+                <p class="weui-actionsheet__title-text">是否要保存草稿？</p>
+            </div>
+            <div class="weui-actionsheet__menu">
+                <div class="weui-actionsheet__cell" @click="saveDraft">保存</div>
+                <div class="weui-actionsheet__cell" style="color:#FF0000;" @click="doToList">不保存</div>
+            </div>
+            <div class="weui-actionsheet__action">
+                <div class="weui-actionsheet__cell" id="iosActionsheetCancel" @click="cancelBackToList">取消</div>
+            </div>
+        </div>
+    </div>
+    <div class="js_dialog" id="iosDialog2" style="opacity: 1;" v-show="showErrMsg">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__bd" v-text="errMsg"></div>
+            <div class="weui-dialog__ft">
+                <a @click="showErrMsg = false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<template id="customer3">
+    <div class="weui-cells">
+            <div class="weui-cell">
+    <div class="weui-cell__bd">
+            <div class="weui-cell__bd"  :id="ccc.deptName" >
+                <span class="pull-left" @click="changeSubFold(ccc.enclosureStatus)" style="padding-right: 10px;">
+                    <img :src="imgPath">
+                </span>
+                <span class="pull-left" @click="changeSubFold(ccc.enclosureStatus)" v-text="ccc.deptName"
+                      style="padding-right: 5px;color: #333333;font-size: 16px" ></span>   <!-- 机构名字 -->
+                <span class="pull-left" v-text="addNumBrackets(ccc.contactNumber,ccc.enclosureStatus)"
+                      style="color: #333333;font-size: 16px" ></span>                     <!--  机构人员个数 -->
+               
+            </div>
+        </div>
+        </div>
+        <div class="weui-cells" v-show="showSub" v-if="ccc.enclosureStatus!='ENCLOSURE'">
+            <div class="weui-cell" v-for="contact in ccc.contactsList" :id="contact.realName">
+                <div class="weui-cell__hd" >
+                    <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                </div>        <!-- 男女头像标记 -->
+                <div class="weui-cell__bd">
+                    <span v-text="contact.realName" style="color: #333333;font-size: 16px" ></span> <!-- 用户名 -->
+                    <span v-text="addTypeName(contact)" :id="'type_name_label_'+contact.contactsId"
+                        style="color: #B2B2B2;font-size: 13px;border:solid thin"></span>  <!-- 职位 -->
+                </div>
+                <div class="weui-cell__ft">
+                            <input type="checkbox" v-model="chosenContactsTmp":value="contact"/>
+                 </div>
+            </div>
+		<div class="weui-cells" style="padding-left: 30px">
+		<div v-if="showApply">
+			 <ddd v-on:transfer_value="onTransferValue" v-for="dd in ccc.departmentList"  v-bind:ccc="dd"></ddd>
+		</div>
+		<div v-else>
+		     <bbb v-on:transfer_value="onTransferValue" v-for="dd in ccc.departmentList"  v-bind:ccc="dd"></bbb>
+		</div>
+		</div>
+	</div>
+    </div>
+</template>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:value="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>新建商机</title>
+    <link rel="stylesheet" href="/weui.css?v=20190617"/>
+    <link rel="stylesheet" href="/example.css"/>
+    <link rel="stylesheet" href="/common.css?v=20190617">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/weui.min.js"></script>
+    <script src="/common.js?v=20190618"></script>
+    <script src="/newSale.js?v=20190722"></script>
+    <style>
+        .top-bar {
+            background: #FFFFFF;
+            text-align: center;
+            padding: 10px 10px;
+            font-size: large;
+        }
+
+        .customers .weui-cells {
+            margin-top: 0;
+        }
+
+        .weui-input {
+            width:85%;
+            float: right;
+            text-align: right;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .center-box {
+            font-size: large;
+            height: 40px;
+        }
+
+        .customer-item {
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .usr-img {
+            position: relative;
+            margin-right: 10px;
+            padding-left: 30px;
+            width: 25px;
+            display: block;
+        }
+
+        #basicInfo .weui-cell__ft{
+            width:55%;
+        }
+
+        .plan-title {
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .finishBtn{
+            margin-top: 0px; color: #28b3ff;padding-right: 15px;
+        }
+
+        .radioSpan {
+            margin-left: 15px;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+
+<div id="saleVue" class="center-box">
+
+    <div class="top-bar fix-item" v-show="showPage === 'basicInfo'">
+            <span @click="back" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:5px;"/></span>
+        <span class="center" style="margin-top: 3px;">新建商机</span>
+        <span class="pull-right finishBtn"
+              @click="add"> 完成 &nbsp; </span>
+    </div>
+
+    <div id="basicInfo" v-show="showPage === 'basicInfo'">
+        <div style="height: 45px"></div>
+        <div class="list">
+            <div  class="weui-cells">
+                <a class="weui-cell weui-cell_access" @click="selAgent">
+                    <div class="weui-cell__bd">
+                        <p>代理商及联系人</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <span v-text="agentLinkShow"></span>
+                    </div>
+                </a>
+            </div>
+            <div class="weui-cells">
+                <a class="weui-cell weui-cell_access" @click="selCustomer">
+                    <div class="weui-cell__bd">
+                        <p><span style="color: red">*</span>学院及二级学院</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <span v-text="shcoolShow"></span>
+                    </div>
+                </a>
+                <a class="weui-cell weui-cell_access" @click="selCustomerLink(1)">
+                    <div class="weui-cell__bd">
+                        <p><span style="color: red">*</span>决策者</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <span v-text="makeContact"></span>
+                    </div>
+                </a>
+                <a class="weui-cell weui-cell_access" @click="selCustomerLink(2)">
+                    <div class="weui-cell__bd">
+                        <p><span style="color: red">*</span>负责人</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <span v-text="chargeContact"></span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="weui-cells weui-cell_access">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><span style="color: red">*</span><label>商机名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="text" placeholder="请输入商机名称" v-model="opportunityName"/>
+                    </div>
+                </div>
+
+                <div class="weui-cells-short" style="margin-top: 0">
+                    <div class="plan-title"> <p style="margin: 10px 15px"><span style="color: red">*</span>详细产品</p></div>
+                    <div class="weui-cells_form">
+                        <textarea style="margin-left: 15px" class="weui-textarea" placeholder="请填写项目内容" rows="2" v-model="content"></textarea>
+                    </div>
+                </div>
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><span style="color: red">*</span><label>是否包含学呗</label></div>
+                    <div class="weui-cell__bd">
+                          <span class="radioSpan">
+                            <input type="radio" value="2" id="notContainXuebei" name="containXuebei"
+                                   v-model="containXuebei">
+                        <label for="notContainXuebei">否</label>
+                        </span>
+                        <span class="radioSpan" style="margin-right: 25px">
+                               <input type="radio" value="1" id="containXuebei" name="containXuebei"
+                                      v-model="containXuebei">
+                        <label for="containXuebei">是</label>
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><span style="color: red">*</span><label>金额(元)</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="number" placeholder="请输入项目金额" v-model="amount">
+                    </div>
+                </div>
+
+                <a class="weui-cell weui-cell_access">
+                    <div class="weui-cell__bd">
+                        <p><span style="color: red">*</span>项目资金来源</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <select class="weui-select chosenSpan selectDirRlt" v-model="moneyFrom">
+                            <option value="specificFund">专项资金</option>
+                            <option value="provincialFinance">省财政</option>
+                            <option value="school">校内</option>
+                        </select>
+                    </div>
+                </a>
+
+
+                <a class="weui-cell weui-cell_access" @click="showDatePicker">
+                    <div class="weui-cell__bd">
+                        <p>预估挂标日期</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <span v-text="preDate"></span>
+                    </div>
+                </a>
+                <a class="weui-cell weui-cell_access">
+                    <div class="weui-cell__bd">
+                        <p><span style="color: red">*</span>销售阶段</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <select class="weui-select chosenSpan selectDirRlt" v-model="lastStage">
+                            <option v-for="item in stageList" :value="item.item">{{item.value}}</option>
+                            </select>
+                    </div>
+                </a>
+                <a class="weui-cell weui-cell_access" @click="deliverDatePicker">
+                    <div class="weui-cell__bd">
+                        <p>交付日期</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <span v-text="deliverDate"></span>
+                    </div>
+                </a>
+                <!--<a class="weui-cell weui-cell_access" @click="selCustomer">-->
+                    <!--<div class="weui-cell__bd">-->
+                        <!--<p><span style="color: red">*</span>客户及联系人</p>-->
+                        <!--<p style="color: grey" v-text="contact"></p>-->
+                    <!--</div>-->
+                    <!--<div class="weui-cell__ft"></div>-->
+                <!--</a>-->
+            </div>
+        </div>
+
+        <!--BEGIN toast-->
+        <div id="toast" style="display: none;">
+            <div class="weui-mask_transparent"></div>
+            <div class="weui-toast">
+                <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                <p class="weui-toast__content">新建成功</p>
+            </div>
+        </div>
+        <!--end toast-->
+    </div>
+
+    <!--代理商与联系人-->
+    <div id="agentLink" v-show="showPage === 'agentContact'" style="display: none">
+        <div class="top-bar fix-item">
+            <span @click="backToInfo" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:8px;"/></span>
+            <span class="center" style="margin-top: 3px;">选择代理商及联系人</span>
+            <span class="pull-right finishBtn"
+                  @click="chooseAgent"> 完成 &nbsp;
+            </span>
+        </div>
+        <div style="height: 55px"></div>
+        <div class="weui-search-bar">
+            <div class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="text" class="weui-search-bar__input"
+                           placeholder="搜索" v-model="serachAgentWord">
+                </div>
+            </div>
+        </div>
+
+        <div class="customers">
+            <div class="weui-cells" v-for="(cust, index) in filterAgentList">
+                <div class="weui-cell" @click="changeAgentSubFold(cust)">
+                    <div class="weui-cell__bd">
+                        <span class="pull-left" style="padding-right: 10px;">
+                            <img :src="cust.imgPath">
+                        </span>
+                        <span class="pull-left" v-text="cust.crmAgent.companyName"
+                              style="padding-right: 5px;color: #333333;font-size: 16px"></span>
+                    </div>
+                </div>
+                <div class="customer-item" v-show="cust.showSub">
+                    <div class="weui-cells weui-cells_radio" v-show="cust.showSub">
+                        <label class="weui-cell weui-check__label" v-for="contact in cust.crmAgentLinkList" :id="contact.realName">
+                            <div class="weui-cell__hd">
+                                <img :src="checkGender(contact.linkGeneral)" style="width: 18px;height: 19px" class="usr-img">
+                            </div>
+                            <div class="weui-cell__bd">
+                                <span v-text="contact.linkName" style="color: #333333;font-size: 16px"></span>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <input type="radio" class="weui-check" name="radio"
+                                       :value="contact.totalName" v-model="agentInfo.total">
+                                <span class="weui-icon-checked"></span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--院校选择-->
+    <div id="customerContact" v-show="showPage === 'customerContact'" style="display: none">
+        <div class="top-bar fix-item">
+            <span @click="backToInfo" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:8px;"/></span>
+            <span class="center" style="margin-top: 3px;">选择院校</span>
+            <span class="pull-right finishBtn"
+                  @click="chooseSchool"> 完成 &nbsp;
+            </span>
+        </div>
+        <div style="height: 55px"></div>
+        <div class="weui-search-bar">
+            <div class="weui-search-bar__form">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="text" class="weui-search-bar__input"
+                           placeholder="搜索" v-model="searchSchoolWord">
+                </div>
+            </div>
+        </div>
+
+        <div class="customers">
+            <div class="weui-cells" v-for="(cust, index) in filterSchoolList">
+                <div class="weui-cell" @click="changeSubFold(cust)">
+                    <div class="weui-cell__bd" :id="cust.customerName">
+                        <span class="pull-left" style="padding-right: 10px;">
+                            <img :src="cust.imgPath">
+                        </span>
+                        <span class="pull-left" v-text="cust.customerName"
+                              style="padding-right: 5px;color: #333333;font-size: 16px"></span>
+                    </div>
+                </div>
+                <div class="customer-item" v-show="cust.showSub" style="padding-left: 20px">
+                    <div class="weui-cells weui-cells_radio" v-show="cust.showSub">
+                        <label class="weui-cell weui-check__label" v-for="contact in cust.contacts"
+                               :id="contact.realName">
+                            <div class="weui-cell__bd">
+                                <span v-text="contact.deptName" style="color: #333333;font-size: 16px"></span>
+                            </div>
+                            <div class="weui-cell__ft" @click="clickSchool(contact)">
+                                <input type="radio" class="weui-check" name="radio"
+                                       :value="sumName(cust.customerName,contact.deptName)"
+                                       v-model="schoolInfo.schoolTotal">
+                                <span class="weui-icon-checked"></span>
+                            </div>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="js_dialog" id="iosDialog2" style="opacity: 1;" v-show="showErrMsg">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__bd" v-text="errMsg"></div>
+            <div class="weui-dialog__ft">
+                <a @click="showErrMsg = false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+            </div>
+        </div>
+    </div>
+
+    <!--院校联系人选择-->
+    <div id="customerContactList" v-show="showPage === 'customerContactList'" style="display: none">
+        <div class="top-bar fix-item">
+            <span @click="backToInfo" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:8px;"/></span>
+            <span class="center" style="margin-top: 3px;">选择联系人</span>
+            <span class="pull-right finishBtn"
+                  @click="done2"> 完成 &nbsp;
+            </span>
+        </div>
+        <div class="customers">
+            <div style="height: 55px"></div>
+            <div class="weui-cells">
+                <div class="weui-cells weui-cells_radio">
+                    <label class="weui-cell weui-check__label" v-for="contact in schoolInfo.makeLinks"
+                           :id="contact.realName">
+                        <div class="weui-cell__hd">
+                            <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span v-text="contact.realName" style="color: #333333;font-size: 16px"></span>
+                            <span style="padding-left: 5px;color: #B2B2B2;font-size: 13px; border: solid thin;"
+                                  v-if="contact.typeName != undefined">{{contact.typeName}}</span>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input type="radio" class="weui-check" name="radio"
+                                   :value="contact.totalName" v-model="temp">
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="customerContactList2" v-show="showPage === 'customerContactList2'" style="display: none">
+        <div class="top-bar fix-item">
+            <span @click="backToInfo" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:8px;"/></span>
+            <span class="center" style="margin-top: 3px;">选择联系人</span>
+            <span class="pull-right finishBtn"
+                  @click="done2"> 完成 &nbsp;
+            </span>
+        </div>
+        <div class="customers">
+            <div style="height: 55px"></div>
+            <div class="weui-cells">
+                <div class="weui-cells weui-cells_radio">
+                    <label class="weui-cell weui-check__label" v-for="contact in schoolInfo.chargeLinks"
+                           :id="contact.realName">
+                        <div class="weui-cell__hd">
+                            <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span v-text="contact.realName" style="color: #333333;font-size: 16px"></span>
+                            <span style="padding-left: 5px;color: #B2B2B2;font-size: 13px; border: solid thin;"
+                                  v-if="contact.typeName != undefined">{{contact.typeName}}</span>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input type="radio" class="weui-check" name="radio"
+                                   :value="contact.totalName" v-model="temp">
+                            <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script type="text/x-template" id="customer">
+    <div class="weui-cells">
+        <div class="weui-cell" @click="confirmSchool(customer)">
+            <div class="weui-cell__bd" :id="customer.deptName">
+                <span class="pull-left" style="padding-right: 10px;">
+                    <img :src="imgPath">
+                </span>
+                <span class="pull-left" v-text="customer.deptName"
+                      style="padding-right: 5px;color: #333333;font-size: 16px"></span>
+                <span class="pull-left" v-text="addNumBrackets(customer.contactNumber)"
+                      style="color: #333333;font-size: 16px"></span>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/x-template" id="customerList">
+    <div class="weui-cells">
+        <div class="weui-cells weui-cells_radio" v-show="showSub">
+            <label class="weui-cell weui-check__label" v-for="contact in customer.contactsList" :id="contact.realName">
+                <div class="weui-cell__hd">
+                    <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                </div>
+                <div class="weui-cell__bd">
+                    <span v-text="contact.realName" style="color: #333333;font-size: 16px"></span>
+                    <span style="padding-left: 5px;color: #B2B2B2;font-size: 13px; border: solid thin;"
+                          v-if="contact.typeName != undefined">{{contact.typeName}}</span>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="radio"
+                           :value="contact.totalName" v-model="customerInfo">
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <div class="weui-cells" style="padding-left: 30px">
+                <customer v-for="subCustomer in customer.departmentList" :customer="subCustomer"
+                          v-on:transfer_value="onTransferValue"></customer>
+            </div>
+        </div>
+    </div>
+</script>
+
+</html>

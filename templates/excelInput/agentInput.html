@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>添加客户信息</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/editJournal.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/sample.js"></script>
+    <script src="/common.js"></script>
+    <script src="/excelInput/agentInput.js?v=20190709"></script>
+    <style>
+        .btnWarp {
+            text-align: center;
+            padding: 25px 68px;
+            font-size: 16px;
+        }
+
+        .spanWarp {
+            text-align: center;
+            padding: 25px 15px;
+            font-size: 14px;
+            color: #888888;
+        }
+
+        .errorSpanWarp {
+            text-align: left;
+            padding: 25px 15px;
+            font-size: 14px;
+            color: #888888;
+        }
+
+        .weui-btn {
+            font-size: 16px;
+        }
+
+        .bluebtn {
+            border-color: #199BFE;
+            color: #199BFE;
+        }
+
+        .finishBtn {
+            margin-top: 0px;
+            color: #28b3ff;
+        }
+
+        .importSpan {
+            color: #E51C23;
+        }
+
+        .errorList {
+            margin-top: 30px;
+            font-size: 13px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="agentInputVue">
+    <div v-show="showType == 'showMain'">
+        <div class="top-bar fix-item">
+            <span @click="backToList" class="pull-left"><img src="/images/back_icon.svg" style="margin-top:3px"/></span>
+            <span class="center" style="font-size: 18px">excel导入{{editTitle}}</span>
+            <span class="pull-right finishBtn"
+                  @click="jumpToHistory"> 导入历史
+            </span>
+        </div>
+
+        <div>
+            <div class="btnWarp" style="margin-top: 75px">
+                <button @click="downloadTmp()" class="weui-btn weui-btn_plain-default bluebtn">第一步：下载excel示例</button>
+            </div>
+            <div class="btnWarp">
+                <input type="file" style="display: none" id="excelFile" @change="uploadExcel()">
+                <button @click="chooseFile()" class="weui-btn weui-btn_primary">第二步：上传我的excel表格</button>
+            </div>
+            <div class="spanWarp">
+                <span>提示:iPhone用户不支持在手机上操作，请在电脑上用浏览器打开crm.walkclass.com来导入</span>
+            </div>
+
+            <div class="errorSpanWarp" v-show="res.show">
+                <span style="color: #259B24">{{res.successCount}}</span>个{{editTitle}}导入成功, <span class="importSpan">{{res.failCount}}</span>个{{editTitle}}导入失败<br/>
+                <span style="color: #B2B2B2;font-size: 12px">导入时间：{{res.finishTime}}</span>
+
+                <div class="errorList" v-show="res.errorList.length>0">
+                    <span style="font-weight: bold;color: #888888">
+                       导入失败的{{editTitle}}:
+                    </span><br/>
+                    <div v-for="(item,index) in res.errorList" style="margin-bottom: 15px">
+                        {{index + 1}}.<span class="importSpan">【第{{item.row}}行】{{item.name}}</span>{{item.errorMsg}}
+                    </div>
+                </div>
+                <button class="weui-btn weui-btn_plain-default" style="width: 90px;font-size: 13px" @click="clearErrorList" v-show="res.show">清除记录</button>
+            </div>
+        </div>
+    </div>
+
+    <div v-show="showType == 'showHistory'">
+        <div class="top-bar fix-item">
+            <span @click="backToMainPage" class="pull-left"><img src="/images/back_icon.svg"
+                                                                 style="margin-top:3px"/></span>
+            <span class="center" style="font-size: 18px">{{editTitle}}导入历史</span>
+        </div>
+
+        <div style="background: white;font-size: 15px;color: black;  text-align: left; padding:25px 15px">
+            <div v-for="item in histortyList" style="margin: 15px 0px">
+                <div style="color: #888888;font-size: 14px">{{translateDate(item.time)}}导入成功的</div>
+                <div v-for="name in item.res">
+                    {{name}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingToast" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">数据加载中</p>
+        </div>
+    </div>
+    <div class="js_dialog" id="iosDialog2" style="opacity: 1;" v-show="showErrMsg">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__bd" v-text="errMsg"></div>
+            <div class="weui-dialog__ft">
+                <a @click="showErrMsg = false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

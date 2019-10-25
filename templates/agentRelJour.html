@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>客户</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/customer/agentRelJour.js?v=20190319"></script>
+    <style>
+        .center-box {
+            text-align: center;
+        }
+
+        .top-bar {
+            text-align: center;
+            background: #FFFFFF;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .weui-media-box__hd img{
+            width: 36px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="customerVue"  class="page tabbar js_show">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            <div class="weui-tab">
+                <input type="hidden" id="agentId" th:value="${agentId}">
+                <input type="hidden" id="companyName" th:value="${companyName}">
+
+                <div style="display: none" v-show="showAddJournalDialog">
+                    <div class="weui-mask" @click="cancelAddCustomerEvent"></div>
+                </div>
+
+                <div class="page navbar js_show">
+                    <div id="titleBar" v-show="titleBar">
+                        <div class="navbar">
+                            <div class="top-bar" style="height: 28px; padding: 10px 10px;">
+                            <span @click="backToInfo" class="pull-left">
+                                <img src="/images/back_icon.svg" style="margin-top:7px;"/></span>
+                                <span class="center" style="font-size: 22px; margin-top: 1px" th:text="${companyName}"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="js_dialog" id="iosDialog2" style="opacity: 1;display: none" v-show="showErrMsg">
+                        <div class="weui-mask"></div>
+                        <div class="weui-dialog">
+                            <div class="weui-dialog__bd" v-text="errMsg"></div>
+                            <div class="weui-dialog__ft">
+                                <a @click="showErrMsg=false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weui-tab__panel">
+                        <div class="panel">
+
+                            <div class="weui-navbar" style="position: relative;height: 40px;background-color: #F9F9F9;
+                            font-size: 15px; color: #999999;">
+                                <div class="weui-navbar__item weui-bar__item_on"  style="border-bottom: inset rgba(56, 164, 242, 1); color: rgba(56, 164, 242, 1)" >
+                                    跟进记录
+                                </div>
+                                <div class="weui-navbar__item " @click="goOpp"  >
+                                    相关商机
+                                </div>
+                            </div>
+
+                            <div id="loadingToast" style="display:none;">
+                                <div class="weui-mask_transparent"></div>
+                                <div class="weui-toast">
+                                    <i class="weui-loading weui-icon_toast"></i>
+                                    <p class="weui-toast__content">数据加载中</p>
+                                </div>
+                            </div>
+                            <div class="blank" style="margin:20% auto auto auto; text-align:center; "
+                                 v-if="journalList.length === 0">
+                                <p>
+                                    <img src="/images/journal/日志空.svg"/>
+                                </p>
+                                <p style="color: #CCCCCC; font-size: small">没有相关日志</p>
+                            </div>
+
+                            <div class="journal-box" v-for="journal in journalList">
+                                <div class="weui-panel__bd" style=" height: 40px">
+                                    <a href="javascript:;" class="weui-media-box weui-media-box_appmsg"
+                                       style=" height: 40px; padding: 0px;">
+                                        <div class="weui-media-box__hd"
+                                             style=" height: 40px;width: 40px; margin-right: 0px; ">
+                                            <img src="/images/journal/defaultUserIcon.png"
+                                                 style="width: 34px;height: 34px; margin-right: 1em; line-height: 5px"
+                                                 alt=""
+                                                 class="weui-tabbar__icon"><!-- 头像 -->
+                                        </div>
+                                        <div class="weui-media-box__bd">
+                                            <label class="weui-media-box__title" style="color: #333333;font-size: 16px">{{journal.createName}}</label>
+                                            <!-- 我的日报 于剑的日报 -->
+                                            <p class="weui-media-box__desc" style="color: rgb(153, 153, 153); font-size: 12px;">
+                                                {{translateTime(journal.createTs)}}
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="weui-form-preview">
+                                    <div class="weui-form-preview__bd"
+                                         style="padding-top: 20px;padding-left:5px;line-height: 20px;">
+                                        <div class="weui-form-preview__item">
+                                            <label class="weui-form-preview__label"
+                                                   style="float:left;color: #555555;font-size: 14px"
+                                                   v-text="'今日联系' + ':'"></label>
+                                            <div class="weui-form-preview__value">
+                                              <span style="float: left;text-align:left;color: #555555;font-size: 14px"
+                                                    v-text="journal.showInfo"></span>
+                                            </div>
+                                        </div>
+                                        <div class="weui-form-preview__item">
+                                            <label class="weui-form-preview__label"
+                                                   style="float:left;color: #555555;font-size: 14px"
+                                            >联系类型:</label>
+                                            <div class="weui-form-preview__value">
+                                                  <span style="float: left;text-align:left;color: #555555;font-size: 14px"
+                                                        v-text="translateVisitType(journal.visitType)"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="weui-form-preview__item">
+                                            <label class="weui-form-preview__label"
+                                                   style="float:left;color: #555555;font-size: 14px"
+                                            >联系结果:</label>
+                                            <div class="weui-form-preview__value">
+                                                  <span style="float: left;text-align:left;color: #555555;font-size: 14px"
+                                                        v-text="journal.visitResult"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a v-show="hasMore" @click="loadMore" href="javascript:;"
+                               class="weui-btn weui-btn_plain-default load_more-btn">加载更多</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="weui-tabbar" style="height: 50px;font-size: 15px; background: #FFFFFF">
+            <a href="javascript:;" class="weui-tabbar__item "  @click="backToInfo">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/信息1.png" alt="" class="weui-tabbar__icon"  style="width: 23px;height: 27px;">
+                    </span>
+                <p class="weui-tabbar__label">代理商信息</p>
+            </a>
+            <a class="weui-tabbar__item weui-bar__item_on" @click="orgDisplay()" >
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/相关2.svg" alt="" class="weui-tabbar__icon">
+                    </span>
+                <p class="weui-tabbar__label">相关</p>
+            </a>
+        </div>
+    </div>
+
+
+</div>
+</body>
+
+</html>

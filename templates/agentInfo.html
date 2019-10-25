@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>代理商信息</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/customer/agentInfo.js?v=20190321"></script>
+    <script src="/organization/showOrganization.js?v=20190323" charset="utf-8"></script>
+    <style>
+        .top-bar {
+            background: #FFFFFF;
+            font-size: 18px;
+            text-align: center;
+            padding: 8px 15px;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+        .pull-right{
+            float: right !important;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            padding: 0px;
+        }
+
+        .pull-left{
+            float: left!important;
+        }
+        .pull-right{
+            float: right!important;
+        }
+        .top-bar{
+            font-size: 18px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: solid 1px #DDDDDD ;
+            padding: 8px 15px;
+        }
+        .select-bar{
+            position: relative;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .customer-item{
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+        .weui-cells{
+            margin-top: 0;
+            padding: 0px;
+        }
+        .usr-img{
+            position: relative;
+            margin-right: 10px;
+            padding-left: 30px;
+            width: 25px;
+            display: block;
+
+        }
+        .weui-tabbar{
+            position: fixed;
+        }
+        .introduce{
+            margin: 25px 15px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="customerVue" class="page navbar js_show">
+
+        <div id="editnDialog" style="display: none;" v-show="showEditDialog">
+            <div class="weui-mask" @click="cancelEditEvent"></div>
+            <div class="add-journal">
+                <div class="weui-actionsheet__menu" style="border-radius: 0.33em">
+                    <a @click="editCustomer">
+                        <div class="weui-actionsheet__cell add-journal-item">编辑代理商</div>
+                    </a>
+                    <a @click="delCustomer"  v-show="showEditButton">
+                        <div class="weui-actionsheet__cell add-journal-item"
+                             style="border-top: 1px solid #e5e5e5;">删除代理商
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="js_dialog" id="iosDialog2" style="opacity: 1;display: none" v-show="showErrMsg">
+            <div class="weui-mask"></div>
+            <div class="weui-dialog">
+                <div class="weui-dialog__bd" v-text="errMsg"></div>
+                <div class="weui-dialog__ft">
+                    <a @click="showErrMsg=false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <span onclick="backToList()" class="pull-left">
+                <img src="/images/back_icon.svg" /></span>
+            <span class="center" style="padding-left: 4px" th:text="${companyName}
+"></span>
+            <input type="hidden" id="agentId" th:value="${agentId}">
+            <input type="hidden" id="userType" th:value="${userType}">
+            <input type="hidden" id="companyName" th:value="${companyName}">
+            <span @click="clickEditButton" class="pull-right" style="padding-left: 18px;">
+                                <img src="/images/journal/更多操作.png" width="18px"/>
+                            </span>
+        </div>
+
+        <div class="weui-tab" style="margin-top: 0px;">
+            <div class="weui-tab__panel">
+
+                <div id="tab1" class="weui-tab__content" style="display: block;">
+                    <div class="weui-cells">
+                        <div class="weui-media-box weui-media-box_text">
+                            <h1 class="weui-media-box__title">代理商简介</h1>
+                            <p class="weui-media-box__desc" th:text="${profile}" style="-webkit-line-clamp:10"></p>
+                        </div>
+
+                    <div class="weui-cell weui-cell_access">
+                        <label class="weui-label">官方网址</label>
+                        <div class="weui-cell__bd">
+                            <a th:href="${website}" th:text="${website}"></a>
+                        </div>
+                        </div>
+                    <div class="weui-cell weui-cell_access">
+                        <label class="weui-label">客户来源</label>
+                        <div class="weui-cell__bd">
+                            <label th:text="${customerFrom}"></label>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <label class="weui-label">合作意向</label>
+                        <div class="weui-cell__bd">
+                            <label th:text="${cooperation}"></label>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <label class="weui-label">客户等级</label>
+                        <div class="weui-cell__bd">
+                            <label th:text="${customerLevel}"></label>
+                        </div>
+                    </div>
+                    <div class="weui-cell weui-cell_access">
+                        <label class="weui-label">合作模式</label>
+                        <div class="weui-cell__bd">
+                            <label th:text="${cooperationType}"></label>
+                        </div>
+                    </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">销售区域</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${area}"></label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="weui-cells">
+                    <!--这里展示联系人信息-->
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">联系人</label>
+                            <div class="weui-cell__bd" v-show="showMainBar">
+                                <span class="pull-right" style="color: rgb(61, 168, 244); font-size: 16px;" @click="addLinker()">
+                                    <img src="/images/journal/plus.png" height="24px">
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell" v-for="contact in agentLinkUser" :id="contact.realName"
+                             @click="toContactDetail(contact.linkUserId)">
+                            <div class="weui-cell__hd">
+                                <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                            </div>        <!-- 男女头像标记 -->
+                            <div class="weui-cell__bd">
+                                <span v-text="contact.linkName" style="color: #333333;font-size: 16px"></span> <!-- 用户名 -->
+                                <span v-text="contact.linkPosition"
+                                      style="color: #B2B2B2;font-size: 13px;border:solid thin"></span>  <!-- 职位 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div id="tab2" class="weui-tab__content">
+                </div>
+
+                <!-- loading toast -->
+                <div id="loadingToast" style="display:none;">
+                    <div class="weui-mask_transparent"></div>
+                    <div class="weui-toast">
+                        <i class="weui-loading weui-icon_toast"></i>
+                        <p class="weui-toast__content">数据加载中</p>
+                    </div>
+                </div>
+            </div>
+
+        <div class="weui-tabbar" style="height: 50px;font-size: 15px; background: #FFFFFF">
+            <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/信息2.png" alt="" class="weui-tabbar__icon"  style="width: 23px;height: 27px;">
+                    </span>
+                <p class="weui-tabbar__label">代理商信息</p>
+            </a>
+            <a class="weui-tabbar__item" @click="orgDisplay()">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/相关1.svg" alt="" class="weui-tabbar__icon">
+                    </span>
+                <p class="weui-tabbar__label">相关</p>
+            </a>
+        </div>
+        </div>
+</div>
+</body>
+</html>
+<script>
+    function backToList() {
+        location.href = '/customer/agentList';
+    }
+</script>

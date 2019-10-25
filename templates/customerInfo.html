@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>客户信息</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/customer/customerInfo.js?v=20190719"></script>
+    <script src="/organization/showOrganization.js?v=20190719" charset="utf-8"></script>
+    <style>
+        .top-bar {
+            background: #FFFFFF;
+            font-size: 18px;
+            text-align: center;
+
+            padding: 8px 15px;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+        .pull-right{
+            float: right !important;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            padding: 0px;
+        }
+
+        .pull-left{
+            float: left!important;
+        }
+        .pull-right{
+            float: right!important;
+        }
+        .top-bar{
+            font-size: 18px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: solid 1px #DDDDDD ;
+            padding: 8px 15px;
+        }
+        .select-bar{
+            position: relative;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .customer-item{
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+        .weui-cells{
+            margin-top: 0;
+            padding: 0px;
+        }
+        .usr-img{
+            position: relative;
+            margin-right: 10px;
+            padding-left: 30px;
+            width: 25px;
+            display: block;
+
+        }
+        .weui-tabbar{
+            position: fixed;
+        }
+        .introduce{
+            margin: 25px 15px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div id="customerVue" class="page navbar js_show">
+
+
+        <div v-show="showPage === 'showApply'">
+            <div class="top-bar center-box">
+                <span class="pull-left" @click="applyQuit()">取消</span>
+                <span class="center-ele">申请{{applyDeptName}}</span>
+                <span class="pull-right" @click="applySubmit()">提交</span>
+            </div>
+            <div class="weui-cells">
+                <div class="weui-cell">
+                    <p>申请理由</p>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea class="weui-textarea" placeholder="请输入文本" rows="5" v-model="submitReasons"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="js_dialog" id="submitDialog" style="opacity: 1;" v-show="showSubmitDialog">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__bd">
+                        <h1>提示</h1>
+                    </div>
+                    <div class="weui-dialog__bd">
+                        <p>"{{applyDeptName}}"申请成功</p>
+                    </div>
+                    <div class="weui-dialog__ft">
+                        <a @click="submitDialogCheck()" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-show="showPage === 'showOpenSeaWarning' ">
+            <div class="top-bar center-box">
+                <span class="pull-left" @click="openSea2Organization()"><</span>
+                <span class="center-ele">客户进入公海警告</span>
+                <span class="pull-right">@@</span>
+            </div>
+            <div class="page__bd page__bd_spacing">
+                <div class="weui-cells">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <img src="">
+                        </div>
+                        <div class="weui-cell_bd">
+                            <span>{{warningDetails.leftTime}}小时后，{{warningDetails.warnedOrganization}}将自动进入公海</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weui-cells" style="margin-top: 20px">
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <span>{{warningDetails.warnedOrganization}}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <span>创建时间 : </span>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span>{{warningDetails.createdTime}}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <span>跟进次数 : </span>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span>{{warningDetails.times}}</span>
+                        </div>
+                    </div>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <span>最后跟进 : </span>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <span>{{warningDetails.lastTime}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-cells" style="margin-top: 20px">
+                    <div class="weui-cell">
+                        <div class="weui-cells">
+                            <span>调入公海的原因</span>
+
+                            <ul>
+                                <li><span>原因一</span></li>
+                                <li><span>原因二</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <a href="javascript:;" class="weui-btn weui-btn_primary" style="margin-top: 30px">申请延期</a>
+            </div>
+        </div>
+
+        <div v-show="showPage != 'showApply'">
+            <div id="editnDialog" v-show="showEditDialog">
+                <div class="weui-mask" @click="cancelEditEvent"></div>
+                <div class="add-journal">
+                    <div class="weui-actionsheet__menu" style="border-radius: 0.33em">
+                        <a @click="editCustomer">
+                            <div class="weui-actionsheet__cell add-journal-item">编辑院校</div>
+                        </a>
+                        <a @click="delCustomer"  v-show="showEditButton">
+                            <div class="weui-actionsheet__cell add-journal-item"
+                                 style="border-top: 1px solid #e5e5e5;">删除院校
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="js_dialog" id="iosDialog2" style="opacity: 1;display: none" v-show="showErrMsg">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__bd" v-text="errMsg"></div>
+                    <div class="weui-dialog__ft">
+                        <a @click="showErrMsg=false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-bar" v-show="showMainBar">
+            <span onclick="backToList()" class="pull-left">
+                <img src="/images/back_icon.svg" /></span>
+                <span class="center" style="padding-left: 4px" th:text="${customerName}"></span>
+                <input type="hidden" id="customerId" th:value="${customerId}">
+                <input type="hidden" id="userType" th:value="${userType}">
+
+                <span @click="clickEditButton" class="pull-right" style="padding-left: 18px;">
+                                <img src="/images/journal/更多操作.png" width="18px"/>
+                            </span>
+                <span @click="clickSearchButton" class="pull-right" style="padding-left: 18px">
+                                <i class="weui-icon-search" style="color:#2DB3E5;font-size: 15px;"></i>
+                            </span>
+            </div>
+
+
+            <div class="top-bar" v-show="showSearchBar">
+            <span @click="backToMain()" class="pull-left">
+                <img src="/images/back_icon.svg"/></span>
+
+                <span class="center" style="padding-left: 4px">搜索</span>
+            </div>
+
+            <div class="top-bar" v-show="showIntroduce">
+            <span @click="backToMainFromIntroduce()" class="pull-left">
+                <img src="/images/back_icon.svg"/></span>
+
+                <span class="center" style="padding-left: 4px">院校简介</span>
+            </div>
+
+
+            <div class="weui-search-bar" id="searchBar" v-show="showSearchBar">
+                <div class="weui-search-bar__form">
+                    <div class="weui-search-bar__box">
+                        <i class="weui-icon-search"></i>
+                        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="选择院校/专业/联系人"
+                               v-model="searchWord" required="">
+                        <a href="javascript:" class="weui-icon-clear" id="searchClear" @click="clear"></a>
+                    </div>
+                    <label class="weui-search-bar__label" id="searchText" @click="text"
+                           style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                        <i class="weui-icon-search"></i>
+                        <span>搜索</span>
+                    </label>
+                </div>
+                <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel" @click="cancel">取消</a>
+            </div>
+
+            <div class="weui-tab" style="margin-top: 0px;">
+
+                <div class="weui-tab__panel" style="background: #FFFFFF" v-show="showIntroduce">
+                    <div class="introduce">
+                        <p class="weui-media-box__desc" th:text="${profile}" style="-webkit-line-clamp:100"></p>
+                    </div>
+
+                </div>
+
+                <div class="weui-tab__panel" style="background: #FFFFFF" v-show="showMainPanel">
+
+                    <div id="tab1" class="weui-tab__content" style="display: block;" v-show="showMainBar">
+
+                        <div class="weui-media-box weui-media-box_text">
+                            <h1 class="weui-media-box__title">简介</h1>
+                            <p class="weui-media-box__desc" th:text="${profile}" style="-webkit-line-clamp:4"
+                               @click="clickShowIntroduce"></p>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">官网</label>
+                            <div class="weui-cell__bd">
+                                <a th:href="${website}" th:text="${website}"></a>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">学校类型</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${customerType}"></label>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">客户来源</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${customerFrom}"></label>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">销售区域</label>
+                            <div class="weui-cell__bd">
+                                <label th:text="${area}"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--这里开始组织机构展示-->
+
+                    <div class="page__bd">
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">组织架构</label>
+                            <div class="weui-cell__bd" v-show="showMainBar">
+                                <span class="pull-right" style="color: rgb(61, 168, 244); font-size: 16px;" @click="toModifyPage()">编辑</span>
+                            </div>
+                        </div>
+
+                        <div class="weui-cells searchbar-result" id="searchResult" style="display: none;">
+                            <bbb v-for="customerB in scustomerList" v-bind:bbb="customerB"></bbb>
+                        </div>
+                        <div>
+                            <div v-show="showOrganization">
+                                <div class="customer-item">
+                                    <div v-if="customerList.length != 0">
+                                        <customer v-for="customer in customerList" v-bind:customer2="customer"></customer>
+                                    </div>
+                                    <div v-else>
+                                        <div style=" text-align: center; background-color: #F8F8F8; padding: 40px 0px;">
+                                            <img src="/images/customer/develop.svg">
+                                            <p style="color: #888888;">
+                                                <br> 还未添加组织机构
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="js_dialog" id="iosDialog" style="opacity: 1;display: none" v-show="showApplyDialog">
+                                <div class="weui-mask"></div>
+                                <div class="weui-dialog">
+                                    <div class="weui-dialog__bd">
+                                        <h1>提示</h1>
+                                    </div>
+                                    <div class="weui-dialog__bd">
+                                        <p>是否申请"{{applyDeptName}}"</p>
+                                    </div>
+                                    <div class="weui-dialog__ft">
+                                        <a @click="dialogCheck()" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+                                        <a @click="dialogQuit()" class="weui-dialog__btn weui-dialog__btn_default">取消</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--这里结束组织机构展示-->
+
+                </div>
+                <div id="tab2" class="weui-tab__content">
+                </div>
+
+                <!-- loading toast -->
+                <div id="loadingToast" style="display:none;">
+                    <div class="weui-mask_transparent"></div>
+                    <div class="weui-toast">
+                        <i class="weui-loading weui-icon_toast"></i>
+                        <p class="weui-toast__content">数据加载中</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weui-tabbar" style="height: 50px;font-size: 15px; background: #FFFFFF">
+                <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/信息2.png" alt="" class="weui-tabbar__icon"  style="width: 23px;height: 27px;">
+                    </span>
+                    <p class="weui-tabbar__label">院校信息</p>
+                </a>
+                <a class="weui-tabbar__item" @click="orgDisplay()">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/统计2.png" alt="" class="weui-tabbar__icon">
+                    </span>
+                    <p class="weui-tabbar__label">统计信息</p>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+<template id="customerB3">
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd" :id="bbb.deptName">
+                <span class="pull-left" @click="changeSubFold(bbb.enclosureStatus)" style="padding-right: 10px;">
+                    <img :src="imgPath">
+                </span>
+                <span class="pull-left" @click="changeSubFold(bbb.enclosureStatus)" v-text="bbb.deptName"
+                      style="padding-right: 5px;color: #333333;font-size: 16px"></span>   <!-- 机构名字 -->
+                <span class="pull-left" v-text="addNumBrackets(bbb.contactNumber,bbb.enclosureStatus)"
+                      style="color: #333333;font-size: 16px"></span>                     <!--  机构人员个数 -->
+                <span class="pull-left" v-text="addMineBrackets(bbb.enclosureStatus,bbb.applyName)"
+                      style="padding-left:5px;color:#38A4F2;font-size:14px;"></span>     <!-- 机构所属 是不是我的 -->
+                <span class="pull-left" v-text="addApplyingBrackets(bbb.enclosureStatus,bbb.applyName)"
+                      style="padding-left:5px;color:#38A4F2;font-size:14px;"></span>
+                <span class="pull-left" v-text="addEnclosureBrackets(bbb.enclosureStatus)"
+                      style="padding-left:5px;color:#999999;font-size:14px;"></span>
+                <span class="pull-left" v-text="addNormalBrackets(bbb.enclosureStatus)"
+                      style="padding-left:5px;color:#38A4F2;font-size:14px;"
+                      @click="apply(bbb.deptName, bbb.deptId)"></span>
+                <span class="pull-left" v-text="addOpenSeaWarning(bbb.openSeaWarning)"
+                      style="color: #FF0000;padding-left: 5px;font-size: 13px"
+                      @click="openSeaWarning(bbb.openSeaWarning)"></span>
+            </div>
+
+        </div>
+        <div class="weui-cells" v-show="showSub" v-if="bbb.enclosureStatus!='ENCLOSURE'">
+            <div class="weui-cell" v-for="contact in bbb.contactsList" :id="contact.realName"
+                 @click="toContactDetail(contact.contactsId)">
+                <div class="weui-cell__hd">
+                    <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                </div>        <!-- 男女头像标记 -->
+                <div class="weui-cell__bd">
+                    <span v-text="contact.realName" style="color: #333333;font-size: 16px"></span> <!-- 用户名 -->
+                    <span v-text="addTypeName(contact)" :id="'type_name_label_'+contact.contactsId"
+                          style="color: #B2B2B2;font-size: 13px;border:solid thin"></span>  <!-- 职位 -->
+                </div>
+            </div>
+            <div class="weui-cells" style="padding-left: 30px">
+                <bbb v-for="subCustomer in bbb.departmentList" :bbb="subCustomer"></bbb>
+            </div>
+        </div>
+    </div>
+</template>
+<template id="customer3">
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd" :id="customer2.deptName">
+                <span class="pull-left" @click="changeSubFold(customer2.enclosureStatus)" style="padding-right: 10px;">
+                    <img :src="imgPath">
+                </span>
+                <span class="pull-left" @click="changeSubFold(customer2.enclosureStatus)" v-text="customer2.deptName"
+                      style="padding-right: 5px;color: #333333;font-size: 16px"></span>   <!-- 机构名字 -->
+                <span class="pull-left" v-text="addNumBrackets(customer2.contactNumber,customer2.enclosureStatus)"
+                      style="color: #333333;font-size: 16px"></span>                     <!--  机构人员个数 -->
+                <span class="pull-left" v-text="addMineBrackets(customer2.enclosureStatus,customer2.applyName)"
+                      style="padding-left:5px;color:#38A4F2;font-size:14px;"></span>     <!-- 机构所属 是不是我的 -->
+                <span class="pull-left" v-text="addApplyingBrackets(customer2.enclosureStatus,customer2.applyName)"
+                      style="padding-left:5px;color:#38A4F2;font-size:14px;"></span>
+                <span class="pull-left" v-text="addEnclosureBrackets(customer2.enclosureStatus)"
+                      style="padding-left:5px;color:#999999;font-size:14px;"></span>
+                <span class="pull-left" v-text="addNormalBrackets(customer2.enclosureStatus)"
+                      style="padding-left:5px;color:#38A4F2;font-size:14px;"
+                      @click="apply(customer2.deptName, customer2.deptId)"></span>
+                <span class="pull-left" v-text="addOpenSeaWarning(customer2.openSeaWarning)"
+                      style="color: #FF0000;padding-left: 5px;font-size: 13px"
+                      @click="openSeaWarning(customer2.openSeaWarning)"></span>
+            </div>
+
+        </div>
+        <div class="weui-cells" v-show="showSub" v-if="customer2.enclosureStatus!='ENCLOSURE'">
+            <div class="weui-cell" v-for="contact in customer2.contactsList" :id="contact.realName"
+                 @click="toContactDetail(contact.contactsId)">
+                <div class="weui-cell__hd">
+                    <img :src="checkGender(contact.gender)" style="width: 18px;height: 19px" class="usr-img">
+                </div>        <!-- 男女头像标记 -->
+                <div >
+                    <span v-text="contact.realName" style="color: #333333;font-size: 16px"></span> <!-- 用户名 -->
+                    <span v-text="addTypeName(contact)" :id="'type_name_label_'+contact.contactsId"
+                          style="color: #B2B2B2;font-size: 13px;border:solid thin"></span>  <!-- 职位 -->
+                </div>
+            </div>
+            <div class="weui-cells" style="padding-left: 30px">
+                <customer v-for="subCustomer in customer2.departmentList" :customer2="subCustomer"></customer>
+            </div>
+        </div>
+    </div>
+</template>
+</html>
+<script>
+    function backToList() {
+        history.back();
+    }
+</script>

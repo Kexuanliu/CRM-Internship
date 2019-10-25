@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>创建公司</title>
+
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css"/>
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/newCompany.js"></script>
+
+    <style>
+        .top-bar {
+            background: #ffffff;
+            text-align: center;
+            font-size: large;
+            padding: 10px 15px;
+        }
+
+        .center-box {
+            text-align: center;
+        }
+
+        .weui-label {
+            text-align: left;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .member-box {
+            width: auto;
+            padding: 5px 15px;
+        }
+
+        .member-name {
+            font-size: 12px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="createVue">
+    <div id="main" v-show="showPage === 'main'">
+        <div class="top-bar">
+            <span @click="backToMe" class="pull-left"><img src="/images/back_icon.svg" style="margin-top:6px"/></span>
+            <span class="center">创建公司</span>
+        </div>
+
+        <div class="weui-toptips weui-toptips_warn " style="display:none">公司名不能为空且公司成员不能少于三人</div>
+
+        <div class="center-ele">
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">公司名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" placeholder="请填写真实名称" v-model="companyName">
+                    </div>
+                </div>
+                <div class="weui-tab__panel" id="searchResult"
+                     style="display: none; margin-left: 80px; position:fixed; z-index: 9999; background: #ffffff; with: 100%;">
+                    <p class="weui-cell" style="color: #CE3C39">以下公司已被创建，不能再创建</p>
+                    <label class="weui-cell weui-check__label"
+                           v-for="company in companyList.filter(filterList)">
+                        <div class="weui-cell__bd">
+                            <p style="color: #ff1fae" v-text="company.companyName"></p>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <!--<input type="text" v-bind:value="company.companyName" v-model="companyName">-->
+                        </div>
+                    </label>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <div class="position">
+                    <a class="weui-cell weui-cell_access" @click="selPost">
+                        <label class="weui-label">我的职务</label>
+                        <div class="weui-cell__bd">
+                            <p class="pull-right" v-text="post"></p>
+                        </div>
+                        <div class="weui-cell__ft"></div>
+                    </a>
+                </div>
+            </div>
+            <div class="weui-cells__title">3人即可创建公司，赶快邀请同事加入你的公司吧</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd" style="text-align: center">
+                        <div class="weui-grid member-box">
+                            <div class="weui-grid__icon">
+                                <img src="/images/defaultUserIcon.png" alt="">
+                            </div>
+                            <span class="member-name" v-text="">我</span>
+                        </div>
+                        <div v-for="(member, index) in members" :key="'members_' + index"
+                             class="weui-grid member-box">
+                            <div class="weui-grid__icon">
+                                <img src="/images/defaultUserIcon.png" alt="">
+                            </div>
+                            <span class="member-name" v-text="member.crmUserName"></span>
+                        </div>
+                        <div class="weui-grid member-box" @click="inviteMember">
+                            <div class="weui-grid__icon">
+                                <img src="/images/journal/plus.png" alt="">
+                            </div>
+                            <span class="member-name">邀请同事</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--BEGIN toast-->
+            <div id="toast" style="display: none;">
+                <div class="weui-mask_transparent"></div>
+                <div class="weui-toast">
+                    <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                    <p class="weui-toast__content">已完成</p>
+                </div>
+            </div>
+            <!--end toast-->
+
+            <button @click="create" class="weui-btn weui-btn_primary" style="position: fixed; bottom: 10px">
+                立即创建
+            </button>
+        </div>
+    </div>
+
+    <div id="selPos" v-show="showPage === 'selPos'">
+        <div class="top-bar">
+            <span @click="back" class="pull-left"><img src="/images/back_icon.svg" style="margin-top:6px"/></span>
+            <span class="center">职务</span>
+        </div>
+        <div class="weui-cells">
+            <div class="weui-cells__title">请选择正确的职务，以便获取更精准的体验和服务</div>
+
+            <div class="weui-cells weui-cells_radio">
+                <label class="weui-cell weui-check__label" v-for="pos in psList">
+                    <div class="weui-cell__bd">
+                        <p v-text="pos"></p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check" v-bind:value="pos" v-model="post">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="center-box" id="invite" v-show="showPage === 'invite'">
+        <div class="top-bar">
+            <span @click="backToMain" class="pull-left"><img src="/images/back_icon.svg" style="margin-top:6px"/></span>
+            <span class="center" style="font-size: large">添加公司成员</span>
+            <span class="pull-right" style="color: dodgerblue;"
+                  @click="save"> 保存 &nbsp; </span>
+        </div>
+
+        <div class="weui-toptips weui-toptips_warn invite_tip" style="display:none">姓名或手机号均不能为空!</div>
+
+        <div class="center-ele">
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" placeholder="必填" v-model="name">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">手机号</label></div>
+                    <div class="weui-cell__bd">
+                        <input class="weui-input" type="number" pattern="[0-9]*" placeholder="必填" v-model="tel">
+                    </div>
+                </div>
+            </div>
+
+            <div class="page__bd page__bd_spacing" style="margin-top: 15px">
+                <a @click="saveAndAdd" class="weui-btn weui-btn_primary">保存并继续添加</a>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

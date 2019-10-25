@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MemberSeting</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="/weui.css">
+    <link rel="stylesheet" href="/example.css"/>
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/organization/companyFrame.js" charset="utf-8"></script>
+    <style>
+        .pull-left{
+            float: left!important;
+        }
+        .pull-right{
+            float: right!important;
+        }
+        .top-bar{
+            font-size: 18px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: solid 1px #DDDDDD ;
+            padding-left:15px;padding-right:15px;padding-top: 8px;padding-bottom: 8px
+        }
+        .center-box{
+            text-align: center;
+        }
+        .select-bar{
+            position: relative;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .customer-item{
+            background-color: #FFFFFF;
+            line-height: 1.47058824;
+            font-size: 17px;
+            overflow: hidden;
+            position: relative;
+        }
+        .weui-cells{
+            margin-top: 0;
+            padding: 0px;
+        }
+        .usr-img{
+            position: relative;
+            margin-right: 10px;
+            /*padding-left: 30px;*/
+            width: 25px;
+            display: block;
+
+        }
+        .narvi-bar {
+            z-index: 9999;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="memberSettingVue">
+    <input id="companyId" type="hidden" th:value="${companyId}">
+    <input id="companyName" type="hidden" th:value="${companyName}">
+
+    <div class="page navbar js_show" v-show="showPage === 'showMember'">
+        <div class="page__bd" style="height: 100%;" >
+            <div class="narvi-bar">
+                <div class="top-bar center-box" style="border: hidden">
+                    <span class="pull-left" style="color: rgb(61, 168, 244); font-size: 16px;"
+                          onclick="history.back()">返回</span>
+                    <span class="center-ele" style="font-size: 18px; color: rgb(51, 51, 51);">{{companyName}}</span>
+                    <span class="pull-right" @click="editMember()"
+                          style="color: rgb(61, 168, 244); font-size: 16px;">编辑</span>
+                </div>
+                <div class="weui-navbar" style="position: relative;height: 40px;background-color: #ffffff">
+                    <div id="memberShipBtn" class="weui-navbar__item weui-bar__item_on" @click="getMemberList()"
+                         style="padding: 10px 0;border: hidden" >
+                        人员关系
+                    </div>
+                    <div id="memberInfoBtn" class="weui-navbar__item" @click="getMemberInfoList()"
+                         style="padding: 10px 0;border: hidden" >
+                        人员信息
+                    </div>
+                </div>
+                <div class="weui-search-bar" >
+                    <form class="weui-search-bar__form">
+                        <div class="weui-search-bar__box">
+                            <i class="weui-icon-search"></i>
+                            <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+                            <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+                        </div>
+                        <label class="weui-search-bar__label" id="searchText">
+                            <i class="weui-icon-search"></i>
+                            <span>搜索</span>
+                        </label>
+                    </form>
+                    <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+                </div>
+            </div>
+            <div style="padding-top: 128px">
+                <div class="weui-tab__panel" v-show="showMemberRelationship" >
+                    <member v-for="member in memberList" :member="member"></member>
+
+                </div>
+                <div class="weui-tab__panel" v-show="showMemberInfo">
+                    <div class="weui-cells" v-for="member in memberInfoList">
+                        <div class="weui-cell" :id="member.memberId" >
+                            <div class="weui-cell__hd">
+                                <img :src="chooseGenderImg(member.memberGender)" style="width: 18px;height: 19px" class="usr-img">
+                            </div>
+                            <div class="weui-cell__bd">
+                                <span v-text="member.memberName" style="color: #333333;font-size: 16px" ></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page navbar js_show" v-show="showPage === 'showMemberRelationEdit'">
+        <div class="page__bd" style="height: 100%;">
+            <div class="narvi-bar">
+                <div class="top-bar center-box" style="border: hidden">
+                    <span class="pull-left" @click="memberEdit2Member()"
+                          style="color: rgb(61, 168, 244); font-size: 16px;">返回</span>
+                    <span class="center-ele" style="font-size: 18px; color: rgb(51, 51, 51);">编辑人员关系</span>
+                </div>
+            </div>
+            <div style="padding-top: 44px">
+                <div class="weui-tab__panel"  id="editMemberShip" v-show="showMembership">
+                    <membership v-for="member in memberList" :member="member"></membership>
+                </div>
+
+                <div class="weui-mask" id="iosMask" style="opacity: 0;display: none;height: 100%"></div>
+
+                <div class="weui-actionsheet weui-actionsheet_toggle" style="display: none" id="actionSheet" >
+                    <div class="weui-actionsheet__menu">
+                        <div class="weui-actionsheet__cell" @click="addSubMember()">添加下属</div>
+                        <div class="weui-actionsheet__cell" @click="deleteLeader()">移除</div>
+                    </div>
+                    <div class="weui-actionsheet__action">
+                        <div class="weui-actionsheet__cell" id="iosActionsheetCancel"
+                             onclick="$('#actionSheet').hide();$('#iosMask').hide();
+                         document.getElementById('editMemberShip').style.opacity='1';">取消</div>
+                    </div>
+                </div>
+
+                <div class="weui-actionsheet weui-actionsheet_toggle" style="display: none" id="actionAddSheet" >
+                    <div class="weui-actionsheet__menu">
+                        <div class="weui-actionsheet__cell" @click="addSubMember()">添加下属</div>
+                    </div>
+                    <div class="weui-actionsheet__action">
+                        <div class="weui-actionsheet__cell"
+                             onclick="$('#actionAddSheet').hide();$('#iosMask').hide();
+                         document.getElementById('editMemberShip').style.opacity='1';">取消</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="page navbar js_show" v-show="showPage === 'showAddSubMember'">
+        <div class="page__bd" style="height: 100%;">
+            <div class="narvi-bar">
+                <div class="top-bar center-box" style="border: hidden">
+                    <span class="pull-left" @click="addSubMember2EditMember()"
+                          style="color: rgb(61, 168, 244); font-size: 16px;">取消</span>
+                    <span class="center-ele" style="font-size: 18px; color: rgb(51, 51, 51);">添加下属</span>
+                    <span class="pull-right" @click="membershipEditCheck()"
+                          style="color: rgb(61, 168, 244); font-size: 16px;">完成</span>
+                </div>
+            </div>
+            <div style="padding-top: 44px">
+                <div class="weui-tab__panel">
+                    <div class="weui-cells weui-cells_checkbox" v-for="member in siblingsList">
+                        <label class="weui-cell weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" class="weui-check" name="checkbox1"
+                                       :value="member.memberId" v-model="lowerMemberId">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p v-text="member.memberName"></p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page navbar js_show" v-show="showPage === 'showMemberInfoEdit'">
+        <div class="page__bd" style="height: 100%" >
+            <div class="narvi-bar">
+                <div class="top-bar center-box" style="border: hidden">
+                    <span class="pull-left" style="color: rgb(61, 168, 244); font-size: 16px;" @click="memberInfo2Member()">取消</span>
+                    <span class="center-ele" style="font-size: 18px; color: rgb(51, 51, 51);">编辑人员信息</span>
+                    <span class="pull-right" style="color: rgb(61, 168, 244); font-size: 16px;" @click="deleteMemberCheck()">删除</span>
+                </div>
+            </div>
+            <div style="padding-top: 44px" >
+                <div class="weui-tab__panel" >
+                    <div class="weui-cells weui-cells_checkbox" v-for="member in memberInfoList">
+                        <label class="weui-cell weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" class="weui-check" name="checkbox1"
+                                       :value="member.memberId" v-model="deleteMember">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p v-text="member.memberName"></p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+<script type="text/x-template" id="member">
+    <div class="weui-cells">
+        <div class="weui-cell" :id="member.memberId" >
+            <div class="weui-cell__hd">
+                <img :src="chooseGenderImg(member.memberGender)" style="width: 18px;height: 19px" class="usr-img">
+            </div>
+            <div class="weui-cell__bd">
+                <span v-text="member.memberName" style="color: #333333;font-size: 16px" ></span>
+                <span v-text="addSubMemberNum(member.subMemberNum)" style="color: #00A4FF;font-size: 13px" ></span>
+            </div>
+            <div class="weui-cell__ft" @click="changeSubFold()">
+                <img :src="foldImg">
+            </div>
+        </div>
+        <div class="weui-cells" v-show="showSub" style="padding-left: 20px">
+            <member v-for="subMember in member.subMemberList" :member="subMember"></member>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/x-template" id="membership">
+    <div class="weui-cells">
+        <div class="weui-cell" :id="member.memberId" >
+            <div class="weui-cell__hd">
+                <img :src="chooseGenderImg(member.memberGender)" style="width: 18px;height: 19px" class="usr-img">
+            </div>
+            <div class="weui-cell__bd">
+                <span v-text="member.memberName" style="color: #333333;font-size: 16px" ></span>
+                <span v-text="addSubMemberNum(member.subMemberNum)" style="color: #00A4FF;font-size: 13px" ></span>
+            </div>
+            <div class="weui-cell__bd" @click="changeSubFold()">
+                <img :src="foldImg"/>
+            </div>
+            <div class="weui-cell__ft" @click="showActionSheet(member)"
+                 onclick="document.getElementById('editMemberShip').style.opacity='0.5';">
+                <img :src="chooseImgForLeader(member)" class="usr-img"/>
+            </div>
+        </div>
+        <div class="weui-cells" v-show="showSub" style="padding-left: 20px">
+            <membership v-for="subMember in member.subMemberList" :member="subMember"></membership>
+        </div>
+    </div>
+
+</script>
+
+<script type="text/javascript" class="tabbar js_show">
+    $(function () {
+        $('.weui-navbar__item').on('click', function () {
+            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+        });
+    });
+</script>
+
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>添加客户信息</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/lib/distpicker.min.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/customer/addCustomer.js?v=20190702"></script>
+    <script src="/sample.js"></script>
+    <style>
+        .edgeButton {
+            color: dodgerblue;
+            height: 40px;
+            margin-top: 20%;
+        }
+
+        .center-box {
+            margin-top: 1%;
+            font-size: large;
+            height: 40px;
+        }
+
+        .bluebtn {
+            border-color: #199BFE;
+            color: #199BFE;
+            float: right;
+            font-size: 13px;
+
+        }
+    </style>
+</head>
+<body>
+<div id="addCustomerVue">
+    <div id="addCustomer" v-show="showPage === 'addCustomer'">
+        <input type="hidden" th:value="${customerId}" id="customerId">
+        <div class="weui-flex" style="background-color: white;height: 45px;">
+            <div>
+                <a href="javascript:customerList();">
+                    <div class="placeholder edgeButton">&nbsp; 取消</div>
+                </a></div>
+            <div class="weui-flex__item" align="center">
+                <div class="placeholder center-box" align="center">新建学校</div>
+            </div>
+            <div>
+                <div class="placeholder edgeButton" align="center" @click="subMit"> 提交 &nbsp; </div>
+            </div>
+        </div>
+
+        <div class="weui-cells">
+            <a class="weui-cell weui-cell_access" @click="selectNam">
+                <label class="weui-label" style="white-space:nowrap">学校名称</label>
+                <div class="weui-cell__bd" id="selNam">
+                    &nbsp; {{name}}
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access">
+                <label class="weui-label">学校类型</label>
+                <div class="weui-cell__bd">
+                    <select class="weui-select " v-model="schoolType">
+                        <option value="COLLEAGE">高校</option>
+                        <option value="VOCATIONSCHOOL">高职</option>
+                        <option value="SECONDARYSCHOOL">中职</option>
+                        <option value="K12">K12</option>
+                    </select>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access">
+                <label class="weui-label" style="white-space:nowrap">客户来源</label>
+                <div class="weui-cell__bd">
+                    <select class="weui-select " v-model="customerFrom">
+                        <option value="EXHIBITION">展会</option>
+                        <option value="INTRODUCTION">转介绍</option>
+                        <option value="INTERNET">网络</option>
+                        <option value="COMPANY">公司</option>
+                    </select>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <a class="weui-cell weui-cell_access">
+                <label class="weui-label" style="white-space:nowrap">销售区域</label>
+                <div class="weui-cell__bd">
+                    <select class="weui-select " v-model="region">
+                        <option value="华南">华南</option>
+                        <option value="华东">华东</option>
+                        <option value="华北">华北</option>
+                        <option value="华中">华中</option>
+                        <option value="西南">西南</option>
+                        <option value="西北">西北</option>
+                        <option value="东北">东北</option>
+                    </select>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+            <div data-toggle="distpicker" id="target" >
+                <a class="weui-cell weui-cell_access">
+                    <label class="weui-label" style="white-space:nowrap">省</label>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell__bd">
+                            <select class="weui-select" :data-province="province"  v-model="province">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </a>
+                <a class="weui-cell weui-cell_access">
+                    <label class="weui-label" style="white-space:nowrap">市</label>
+                    <div class="weui-cell__bd">
+                        <div class="weui-cell__bd">
+                            <select class="weui-select" :data-city="city" v-model="city">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="weui-cell__ft"></div>
+                </a>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">简介</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <textarea class="weui-textarea" placeholder="请输入学校的简介(选填)" rows="5" v-model="profile"></textarea>
+                    <div class="weui-textarea-counter"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">官方网站</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="        请输入学校官网(选填)" v-model="website">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="selSchType" v-show="showPage === 'selSchType'">
+        <div class="weui-flex" style="background-color: white;height: 45px;">
+            <div>
+                <div class="placeholder edgeButton" @click="cancelSelectSchoolType">&nbsp; 取消</div>
+            </div>
+            <div class="weui-flex__item">
+                <div class="placeholder center-box" align="center">选择学校类型</div>
+            </div>
+            <div>
+                <div class="placeholder" style="color: dodgerblue;height: 40px;margin-top: 20%;" align="center"
+                     @click="confirmSelectSchoolType"> 完成 &nbsp; </div>
+            </div>
+            <div>
+                <div class="placeholder" style="color: dodgerblue;height: 40px;margin-top: 20%;visibility: hidden"
+                     align="center"> 提交 &nbsp; </div>
+            </div>
+        </div>
+        <div class="weui-cells_radio visit-type-sel">
+            <label class="weui-cell weui-check__label" for="sch1">
+                <div class="weui-cell__bd">
+                    <p>高校</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="radio1" id="sch1" value="COLLEAGE" v-model="schoolTypeTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="sch2">
+                <div class="weui-cell__bd">
+                    <p>高职</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="radio1" class="weui-check" id="sch2" value="VOCATIONSCHOOL" v-model="schoolTypeTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="sch3">
+                <div class="weui-cell__bd">
+                    <p>中职</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="radio1" class="weui-check" id="sch3" value="SECONDARYSCHOOL" v-model="schoolTypeTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="sch4">
+                <div class="weui-cell__bd">
+                    <p>K12</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="radio1" class="weui-check" id="sch4" value="K12" v-model="schoolTypeTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <!--<label class="weui-cell weui-check__label" for="sch5">-->
+                <!--<div class="weui-cell__bd">-->
+                    <!--<p>代理商</p>-->
+                <!--</div>-->
+                <!--<div class="weui-cell__ft">-->
+                    <!--<input type="radio" name="radio1" class="weui-check" id="sch5" value="AGENT" v-model="schoolTypeTmp"/>-->
+                    <!--<span class="weui-icon-checked"></span>-->
+                <!--</div>-->
+            <!--</label>-->
+
+        </div>
+    </div>
+
+    <div id="selName" v-show="showPage === 'selName'">
+        <div class="weui-flex" style="background-color: white;height: 45px;">
+            <div>
+                <div class="placeholder edgeButton" @click="cancel">&nbsp; 取消</div>
+            </div>
+            <div class="weui-flex__item">
+                <div class="placeholder center-box" align="center">院校重名检查</div>
+            </div>
+            <div>
+                <div class="placeholder" style="color: dodgerblue;height: 40px;margin-top: 20%;" align="center"
+                     @click="submit"> 完成 &nbsp; </div>
+            </div>
+        </div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <div class="weui-search-bar__box">
+                        <i class="weui-icon-search"></i>
+                        <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="输入您想创建的院校名称"
+                               v-model="name" required="">
+                        <a href="javascript:" class="weui-icon-clear" id="searchClear" @click="clear"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="weui-panel__bd myCustomers">
+                <a class="weui-media-box weui-media-box_appmsg">
+                    <span style="font-size: 13px;color: #999999">
+                         以下为系统已存在院校，请直接进入院校创建二级学院
+                    </span>
+                </a>
+                <a class="weui-media-box weui-media-box_appmsg"
+                   v-for="customer in schList">
+                    <div class="weui-media-box__bd">
+                        <h1 class="weui-media-box__title"
+                            v-text="customer.customerName"></h1>
+                        <p class="weui-media-box__desc">{{customer.createName}}</p>
+                        <p class="weui-media-box__desc">创建: {{transferTime(customer.createTs)}}</p>
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <button @click="loadDetail(customer)" class="weui-btn weui-btn_plain-default bluebtn"
+                                style="width: 100px;">进入院校
+                        </button>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="js_dialog" id="iosDialog2" style="opacity: 1;" v-show="showErrMsg">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog">
+            <div class="weui-dialog__bd" v-text="errMsg"></div>
+            <div class="weui-dialog__ft">
+                <a @click="showErrMsg = false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="selectCustomerFromPage" v-show="showPage === 'selectCustomerFromPage'">
+        <div class="weui-flex" style="background-color: white;height: 45px;">
+            <div>
+                <div class="placeholder edgeButton" @click="cancelSelectSchoolType">&nbsp; 取消</div>
+            </div>
+            <div class="weui-flex__item">
+                <div class="placeholder center-box" align="center">选择客户来源</div>
+            </div>
+            <div>
+                <div class="placeholder" style="color: dodgerblue;height: 40px;margin-top: 20%;" align="center"
+                     @click="confirmSelectCustomerFrom"> 完成 &nbsp; </div>
+            </div>
+            <div>
+                <div class="placeholder" style="color: dodgerblue;height: 40px;margin-top: 20%;visibility: hidden"
+                     align="center"> 提交 &nbsp; </div>
+            </div>
+        </div>
+        <div class="weui-cells_radio visit-type-sel">
+            <label class="weui-cell weui-check__label" for="exhibition">
+                <div class="weui-cell__bd">
+                    <p>展会</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" class="weui-check" name="c_f_radio" id="exhibition" value="EXHIBITION" v-model="customerFromTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="introduction">
+                <div class="weui-cell__bd">
+                    <p>转介绍</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="c_f_radio" class="weui-check" id="introduction" value="INTRODUCTION" v-model="customerFromTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="internet">
+                <div class="weui-cell__bd">
+                    <p>网络</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="c_f_radio" class="weui-check" id="internet" value="INTERNET" v-model="customerFromTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+            <label class="weui-cell weui-check__label" for="company">
+                <div class="weui-cell__bd">
+                    <p>公司</p>
+                </div>
+                <div class="weui-cell__ft">
+                    <input type="radio" name="c_f_radio" class="weui-check" id="company" value="COMPANY" v-model="customerFromTmp"/>
+                    <span class="weui-icon-checked"></span>
+                </div>
+            </label>
+
+        </div>
+    </div>
+
+</div>
+<script>
+    function customerList() {
+        location.href = '/customer/customerList';
+    }
+    ;
+</script>
+</body>
+
+</html>

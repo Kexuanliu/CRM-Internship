@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>添加联系人</title>
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css"/>
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/contactsInfo.js"></script>
+
+    <style>
+        .weui-cells:before {
+            border: none;
+        }
+        .top-bar {
+            background: #ffffff;
+            text-align: center;
+            padding: 10px 15px;
+        }
+        .pull-left {
+            float: left!important;
+        }
+        .my-we-ui-cell {
+            padding: 11px 15px;
+        }
+        .topic {
+            font-size:16px;
+            padding: 11px 15px;
+        }
+        .detail {
+            padding-left: 15px;
+            padding-bottom: 27px;
+            padding-right: 15px;
+            min-height: 97px;
+            font-size: 15px;
+        }
+        .project {
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 13px;
+        }
+        .visitor {
+            height: 23px;
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 5px;
+            font-size: 15px;
+            color: #666666;
+            line-height: 22px;
+        }
+        .visit_result {
+            padding-left: 15px;
+            padding-right: 15px;
+            padding-top: 5px;
+            font-size: 15px;
+            color: #888888;
+            line-height: 22px;
+            /* height: 44px; */
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            display: -webkit-inline-box;
+            text-overflow: ellipsis;
+        }
+        .follow-up-time {
+            font-size: 12px;
+            color: #B2B2B2;
+            text-align: left;
+            width: 50%;
+        }
+        .follow-up-detail-btn {
+            color: #B2B2B2;
+            font-size: 13px;
+            text-align: right;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+
+<div id="contactsInfoVue">
+
+    <div class="top-bar">
+        <span class="pull-left" onclick="history.back()"><img src="/images/back_icon.svg"></span>
+        <span th:text="${contacts.getRealName()}"></span>
+    </div>
+
+    <div class="weui-navbar" style="position: relative;">
+        <div class="weui-navbar__item weui-bar__item_on" style="padding: 10px 0px;"
+             id="infoPageBtn" @click="switch2InfoPage">
+            基本信息
+        </div>
+        <div class="weui-navbar__item" style="padding: 10px 0px;" id="followUpPageBtn" @click="switch2FollowUpPage">
+            跟进记录
+        </div>
+        <div class="weui-navbar__item" style="padding: 10px 0px;" id="followUpPageBtn2" @click="switch2FollowUpPage2">
+            关联商机/项目
+        </div>
+    </div>
+
+    <div v-show="showPage == 'infoPage'" id="infoPageDiv">
+        <div class="weui-cells weui-cells_form" style="font-size: 15px;">
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'职位：'+${contacts.showContactsType()}">性别：</span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'性别：'+${contacts.showGender()}"></span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'电话：'+${contacts.showTel()}"></span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'座机：'+${contacts.showPhone()}"></span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'邮箱：'+${contacts.showEmail()}"></span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'微信：'+${contacts.showWeChat()}"></span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'QQ：'+${contacts.showQQ()}"></span>
+                </div>
+            </div>
+            <div class="weui-cell my-we-ui-cell">
+                <div class="weui-cell__hd">
+                    <span th:text="'办公地点：'+${contacts.showOfficeAddr()}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells">
+            <p class="topic">个人简介</p>
+            <p th:text="${contacts.showProfile()}" class="detail"></p>
+        </div>
+
+        <div class="weui-cells">
+            <p class="topic">特殊关系</p>
+            <p class="detail" th:text="${contacts.showSpecialRelationship()}"></p>
+        </div>
+    </div>
+    <div v-show="showPage == 'followUpPage2'" id="followUpPageDiv2">
+        <div style="height: 35px"></div>
+        <div class="weui-panel weui-panel_access" th:each="opportunity : ${opportunities}">
+            <div class="weui-panel__bd">
+                <div class="weui-media-box weui-media-box_text">
+                    <h4 class="weui-media-box__title" th:text="${opportunity.getOpportunityName()}"></h4>
+                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">状态&nbsp;
+                        <span style="font-weight: 100" th:text="${opportunity.getSalesStatus()}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-show="showPage == 'followUpPage'" id="followUpPageDiv" style="padding: 10px">
+        <div th:each="userJournal : ${followUpRecords}" id="journalContent">
+            <div class="weui-panel__bd" style=" height: 40px;margin-top: 10px">
+                <a href="javascript:;" class="weui-media-box weui-media-box_appmsg"
+                   style=" height: 40px; padding: 0px ;">
+                    <div class="weui-media-box__hd" style=" height: 40px;width: 40px; margin-right: 0px; ">
+                        <img src="/images/journal/defaultUserIcon.png"
+                             style="width: 34px;height: 34px; margin-right: 1em; line-height: 5px"
+                             alt=""
+                             class="weui-tabbar__icon">
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <label class="weui-media-box__title" style="color: #333333;font-size: 16px" th:text="${userJournal.getUser().getRealName()}"></label>
+                        <p class="weui-media-box__desc" style="color: #999999;font-size: 12px" th:text="${#dates.format(userJournal.getCreateTs(),'yyyy-MM-dd HH:mm:ss')}"></p>
+
+                    </div>
+                </a>
+            </div>
+
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__bd"
+                     style="padding-top: 20px;padding-left:5px;line-height: 20px;">
+                    <div class="weui-form-preview" th:each="visitRecord,visitStat : ${userJournal.getVisitRecords()}">
+                        <div class="weui-form-preview__bd" style="padding: 5px 0px">
+                            <div class="weui-form-preview__item" style="font-size: .8em;">
+                                <label class="weui-form-preview__label"
+                                       style="float:left;color: #555555;font-size: 14px" th:text="'今日联系'+(${visitStat.index}+1)+':'"></label>
+
+                                <div class="weui-form-preview__value">
+                                    <div th:each="contacts : ${visitRecord.getChosenContacts()}">
+                                                    <span style="float: left;text-align:left;color: #555555;font-size: 14px" th:text="${contacts.getTotalName()}+'、'"></span>
+                                    </div>
+                                </div>
+                                <p style="text-align: left;color: #555555;font-size: 14px">
+                                    联系类型:
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('VISIT')}">市外拜访</span>
+                                    <span th:if="${visitRecord.getVisitType()=='VISIT_INSIDE'}">市内拜访</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('OFFLINE')}">线下拜访</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('PHONE')}">电话</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('NORMAL_VISIT')}">普通拜访</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('TRAN_VISIT')}">培训拜访</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('ACCOMPANY_VISIT')}">陪同拜访</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('COMPANY_RECEPTION')}">公司接待</span>
+                                    <span th:if="${visitRecord.getVisitType().toString().equals('OTHER')}">其他</span>
+                                </p>
+                                <p style="text-align: left;color: #555555;font-size: 14px">
+                                    拜访事由:
+                                    <span th:text="${visitRecord.getOutReason()}">市外拜访</span>
+                                </p>
+                                <p style="text-align: left;color: #555555;font-size: 14px" th:text="'联系结果:'+${visitRecord.getVisitResult()}"></p>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-form-preview" th:each="patch : ${userJournal.getJournalPatches()}" >
+                        <div class="weui-form-preview__bd" style="padding: 5px 0px">
+                            <div class="weui-form-preview__item" style="font-size: 12px;line-height: 17px">
+                                        <span class="weui-form-preview__value" style="text-align: left;">
+                                             <label th:text="${patch.getCreateTs()}+' 补充'"
+                                                    style="font-size: 12px;color: #BBBBBB">2018-07-26 13:01:59 补充</label>
+                                            <label th:text="${patch.getContent()}" style="font-size: 12px;color: #101010">这是我的补充信息</label>
+                                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Organization</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <link rel="stylesheet" href="/weui.css">
+    <link rel="stylesheet" href="/example.css"/>
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/organization/showOrganization.js?v=20190314" charset="utf-8"></script>
+    <script src="http://static.walkclass.com/js/plugins/jquery.hovertreescroll.js" type="text/javascript"></script>
+    <style>
+        .center-ele {
+            display: inline-block;
+        }
+
+        .weui-grid {
+            text-align: center;
+        }
+
+        .top-bar {
+            background: #FFFFFF;
+            font-size: 18px;
+            text-align: center;
+            padding: 8px 15px;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .data_table{
+            border:0;
+            width:100%;
+            border-collapse: collapse;
+            color: #888888 ;
+        }
+        .data_table tr{
+            border-top:1px solid  #D9D9D9;
+        }
+        .span_show{
+            float:right;
+        }
+        .weui-label{
+            color: #888888 ;
+        }
+        .weui-tabbar{
+            position: fixed;
+        }
+    </style>
+</head>
+<body>
+
+<div class="center-box">
+    <div id="organizationVue" class="page navbar js_show">
+        <div class="top-bar">
+            <span onclick="backToList()" class="pull-left">
+                <img src="/images/back_icon.svg" /></span>
+            <span class="center" style="padding-left: 4px" th:text="${customerName}
+"></span>
+            <input type="hidden" id="customerId" th:value="${customerId}">
+        </div>
+        <div class="weui-tab" style="margin-top: 0px;">
+
+            <div class="weui-tab__panel"  style="background: #FFFFFF">
+
+                <div id="tab1" class="weui-tab__content" style="display: block;">
+
+                    <div>
+                        <div class="weui-media-box weui-media-box_text">
+                            <h1 class="weui-media-box__title">数据信息</h1>
+                            <table class="data_table">
+                                <tr >
+                                    <td >项目级别</td>
+                                    <td>项目数量</td>
+                                    <td>转化率</td>
+                                    <td>流失率</td>
+                                </tr>
+                                <tr>
+                                    <td>A级项目</td>
+                                    <td>{{companyData.successRateA}}</td>
+                                    <td>{{companyData.coverageRateA}}</td>
+                                    <td>{{companyData.permeabilityA}}</td>
+                                </tr>
+                                <tr>
+                                    <td>B级项目</td>
+                                    <td>{{companyData.successRateB}}</td>
+                                    <td>{{companyData.coverageRateB}}</td>
+                                    <td>{{companyData.permeabilityB}}</td>
+                                </tr>
+                                <tr>
+                                    <td>C级项目</td>
+                                    <td>{{companyData.successRateC}}</td>
+                                    <td>{{companyData.coverageRateC}}</td>
+                                    <td>{{companyData.permeabilityC}}</td>
+                                </tr>
+                                <tr>
+                                    <td>D级项目</td>
+                                    <td>{{companyData.successRateD}}</td>
+                                    <td>{{companyData.coverageRateD}}</td>
+                                    <td>{{companyData.permeabilityD}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="weui-media-box weui-media-box_text">
+                        <h1 class="weui-media-box__title">拜访信息</h1>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">拜访次数</label>
+                            <div class="weui-cell__bd">
+                                <span class="span_show">   {{visitCount}}</span>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">拜访人数</label>
+                            <div class="weui-cell__bd">
+                                <span class="span_show"> {{personCount}}</span>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">A级人员数量</label>
+                            <div class="weui-cell__bd">
+                                 <span class="span_show">  {{a}}</span>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">A级覆盖率</label>
+                            <div class="weui-cell__bd">
+                               <span class="span_show">    {{aRate}}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="weui-media-box weui-media-box_text">
+                        <h1 class="weui-media-box__title">D级项目信息</h1>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">项目数量</label>
+                            <div class="weui-cell__bd">
+                                <span class="span_show">   {{companyData.dCount}}</span>
+                            </div>
+                        </div>
+
+                        <div class="weui-cell weui-cell_access">
+                            <label class="weui-label">应收金额</label>
+                            <div class="weui-cell__bd">
+                                <span class="span_show">   {{companyData.amount}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab2" class="weui-tab__content">
+            </div>
+        </div>
+
+        <div class="weui-tabbar" style="height: 50px;font-size: 15px; background: #FFFFFF">
+            <a href="javascript:;" class="weui-tabbar__item " @click="toCustomerInfo()">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/信息1.png" alt="" class="weui-tabbar__icon"  style="width: 23px;height: 27px;">
+                    </span>
+                <p class="weui-tabbar__label">院校信息</p>
+            </a>
+            <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/统计.png" alt="" class="weui-tabbar__icon">
+                    </span>
+                <p class="weui-tabbar__label">统计信息</p>
+            </a>
+
+        </div>
+    </div>
+
+
+</div>
+</div>
+
+</body>
+</html>
+<script>
+    function backToList() {
+        location.href = '/customer/customerList';
+    }
+</script>

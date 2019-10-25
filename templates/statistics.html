@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>数据统计</title>
+    <link rel="stylesheet" href="/weui.css">
+    <link rel="stylesheet" href="/example.css"/>
+    <link rel="stylesheet" type="text/css" href="/statistics.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/weui.min.js"></script>
+    <script src="/common.js"></script>
+    <style>
+        .pull-right {
+            float: right !important;
+        }
+        .sub-span {
+            color: rgb(178, 178, 178);
+            font-size: 13px;
+            border: thin solid;
+            margin-left: 5px;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        .chooseTimeTitle{
+            color:#888888;
+            font-size: 15px;
+        }
+
+        .chooseTimeItem{
+            text-align: center;
+        }
+
+        .itemTitle{
+            background: #F8F8F8;
+            color:#888888;
+            font-size:13px;
+            padding-left: 15px;
+        }
+
+        .itemChoosen {
+            background: #38A4F2;
+            border: 1px solid rgba(255, 255, 255, 0);
+            text-align: center;
+            padding: 2px 6px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        .exportExcel {
+            color: #38A4F2;
+        }
+
+        .table_body {
+            width: 1600px;
+            margin-top: 45px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .table_body table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table_body th {
+            background-color: #E7ECF4;
+        }
+
+        .table_body tr{
+            border-bottom: 1px solid #B8C5DE;
+            height: 34px;
+        }
+
+        .table_body tr span{
+           padding: 5px 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div id="dataVue">
+    <div v-if="showPage=='mainPage'">
+        <div class="weui-tab">
+            <div class="navi-bar">
+                <div class="top-bar center-box">
+                <span class="pull-left" @click="back()">
+                    <img src="/images/back_icon.svg" style="margin-top: 0.4em; height: 1em">
+                </span>
+                    <span style="margin-top: 3px;">数据统计</span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div style="height: 1.67em"></div>
+            <div class="weui-panel weui-panel_access" style="margin-top: 1.4em;">
+                <div class="weui-panel__bd" style="height: 2.22em;margin-top: 0px">
+                    <div
+                       style=" height: 2.22em; padding: 0px; background-color: white">
+                        <div class="weui-media-box__hd"
+                             style=" height: 2.22em;width: 2.22em; margin-right: 0px; float: left">
+                            <img src="/images/journal/defaultUserIcon.png"
+                                 style="width: 1.11em;height: 1.11em; line-height: 0.56em; padding: 0.56em;margin-left: 0.33em"
+                                 alt=""
+                                 class="weui-tabbar__icon">
+
+                        </div>
+                        <span @click="showSelectAllList">
+                            <div
+                                  style="font-size: 0.67em; float: left; opacity: 0.5; margin-top: 0.8em">
+                            {{calChoosePeople}}
+                        </div>
+                        <div class="weui-media-box__hd"
+                             style="height: 2.22em;width: 2.22em; margin-right: 0px; float: left">
+                            <img src="/images/pullDown.svg"
+                                 style="width: 0.84em; height: 0.84em; padding: 0.67em;"
+                                 class="weui-tabbar__icon">
+                        </div>
+                        </span>
+                        <div
+                             style="font-size: 0.67em; float: right; margin-top: 0.8em; margin-right: 0.56em; opacity: 0.5" @click="showTimeSel">
+                            {{translateTimeEnum}}
+                        </div>
+                        <div class="weui-media-box__hd"
+                             style="height: 2.22em;width: 2.22em; margin-right: 0px; float: right">
+                            <img src="/images/chooseTime.svg"
+                                 style="width: 0.83em; height: 0.83em; padding: 0.67em;"
+                                 class="weui-tabbar__icon">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="height: 6.7em; background-color: white; margin-top: 0.56em">
+            <div class="tite">客户</div>
+            <div class="first2">
+            <span class="newA">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/APeople.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newACustomer')">
+                    <p class="opa smallSize ml">新增A级人员</p>
+                    <p class="bigSize flo ml">{{totalStatistic.aLevelCustomerCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+                <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/ACover.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('ACover')">
+                    <p class="opa smallSize ml">A级人员覆盖率</p>
+                    <p class="bigSize flo ml">{{totalStatistic.aLevelCustomerRate}}</p>
+                    <p class="spec flo opa smallSize">%</p>
+                </div>
+            </span>
+            </div>
+        </div>
+
+        <div style="margin-top: 0px; height: 6.67em; background-color: white">
+            <div class="tite">代理商</div>
+            <div class="first2">
+            <span class="newA">
+                <div class="weui-media-box__hd" style="float: left">
+                    <img src="/images/newAgent.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newAgent')">
+                    <p class="opa smallSize ml">新增代理商</p>
+                    <p class="bigSize flo ml">{{totalStatistic.newAgentCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+                <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/centralAgent.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('coreAgent')">
+                    <p class="opa smallSize ml">核心代理商</p>
+                    <p class="bigSize flo ml">{{totalStatistic.coreAgentCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+            </div>
+        </div>
+
+        <div style="height: 19.44em; background-color: white">
+            <div class="tite">拜访</div>
+            <div class="second setH">
+            <span class="newA">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/visitClient.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('visitCustomer')">
+                    <p class="opa smallSize ml">拜访客户</p>
+                    <p class="bigSize flo ml">{{totalStatistic.visitCustomerNumCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                    <p class="bigSize flo opa">/</p>
+                    <p class="bigSize flo">{{totalStatistic.visitCustomerTimesCount}}</p>
+                    <p class="spec flo opa smallSize">次</p>
+                </div>
+            </span>
+                <span class="newA">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/Accompany.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('companyVisit')">
+                    <p class="opa smallSize ml">陪同拜访</p>
+                    <p class="bigSize flo ml">{{totalStatistic.accompanyVisitNumCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                    <p class="bigSize flo opa">/</p>
+                    <p class="bigSize flo">{{totalStatistic.accompanyVisitTimesCount}}</p>
+                    <p class="spec flo opa smallSize">次</p>
+                </div>
+            </span>
+            </div>
+            <div class="second setH">
+            <span class="visi">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/deepVisit.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('deepVisit')">
+                    <p class="opa smallSize ml">深度拜访</p>
+                    <p class="bigSize flo ml">{{totalStatistic.deepVisitTimesCount}}</p>
+                    <p class="spec flo opa smallSize">次</p>
+                </div>
+            </span>
+                <span class="visi">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/shallowVisit.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('normalVisit')">
+                    <p class="opa smallSize ml">浅度拜访</p>
+                    <p class="bigSize flo ml">{{totalStatistic.normalVisitTimesCount}}</p>
+                    <p class="spec flo opa smallSize">次</p>
+                </div>
+            </span>
+            </div>
+            <div class="second setH">
+            <span class="visi">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/FirstSchool.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('visistCustomer')">
+                    <p class="opa smallSize ml">拜访一级学院</p>
+                    <p class="bigSize flo ml">{{totalStatistic.customerVisitNumCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+                <span class="visi">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/secondSchool.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('visistDept')">
+                    <p class="opa smallSize ml">拜访二级学院</p>
+                    <p class="bigSize flo ml">{{totalStatistic.deptVisitNumCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+            </div>
+            <div class="second setH">
+            <span class="visi">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/visitPresident.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('visitPresident')">
+                    <p class="opa smallSize ml">拜访院长</p>
+                    <p class="bigSize flo ml">{{totalStatistic.visitPresidentTimesCount}}</p>
+                    <p class="spec flo opa smallSize">次</p>
+                </div>
+            </span>
+                <span class="visi">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/visitDirector.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('visitDean')">
+                    <p class="opa smallSize ml">拜访主任</p>
+                    <p class="bigSize flo ml">{{totalStatistic.visitDeanTimesCount}}</p>
+                    <p class="spec flo opa smallSize">次</p>
+                </div>
+            </span>
+            </div>
+        </div>
+
+        <div style="height: 15.56em; background-color: white;">
+            <div class="tite">商机</div>
+            <div class="second setH">
+            <span class="newA">
+                <div style="float: left">
+                    <img src="/images/newOppo.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newOpp')">
+                    <p class="opa smallSize ml">新增商机</p>
+                    <p class="bigSize flo ml">{{totalStatistic.newOppCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+                <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/AOppo.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newAOpp')">
+                    <p class="opa smallSize ml">新增A级</p>
+                    <p class="bigSize flo ml">{{totalStatistic.alevelOppCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+            </div>
+            <div class="second setH">
+            <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/BOppo.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newBOpp')">
+                    <p class="opa smallSize ml">新增B级</p>
+                    <p class="bigSize flo ml">{{totalStatistic.blevelOppCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+                <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/cOppo.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newCOpp')">
+                    <p class="opa smallSize ml">新增C级</p>
+                    <p class="bigSize flo ml">{{totalStatistic.clevelOppCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+            </div>
+            <div class="second setH">
+            <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/DOppo.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('newDOpp')">
+                    <p class="opa smallSize ml">新增D级</p>
+                    <p class="bigSize flo ml">{{totalStatistic.dlevelOppCount}}</p>
+                    <p class="spec flo opa smallSize">个</p>
+                </div>
+            </span>
+                <span class="ACover">
+                <div class="weui-media-box__hd flo">
+                    <img src="/images/DMoney.svg"
+                         class="weui-tabbar__icon weuiC">
+                </div>
+                <div class="lines"></div>
+                <div class="weui-media-box__bd smallTitle" @click="getDetails('DMoney')">
+                    <p class="opa smallSize ml">D级计划成交金额</p>
+                    <p class="bigSize flo ml">{{totalStatistic.dlevelOppMoneySum}}</p>
+                    <p class="spec flo opa smallSize">元</p>
+                </div>
+            </span>
+            </div>
+        </div>
+
+        <!--<div style="margin-top: 0px; height: 100px; background-color: white">-->
+            <!--<div class="tite">项目支持</div>-->
+            <!--<div class="first2">-->
+            <!--<span class="newA">-->
+                <!--<div class="weui-media-box__hd flo">-->
+                    <!--<img src="/images/apply.svg"-->
+                         <!--class="weui-tabbar__icon weuiC">-->
+                <!--</div>-->
+                <!--<div class="lines"></div>-->
+                <!--<div class="weui-media-box__bd smallTitle">-->
+                    <!--<p class="opa smallSize ml">新增申请支持</p>-->
+                    <!--<p class="bigSize flo ml">13</p>-->
+                    <!--<p class="smallSize spec opa">次</p>-->
+                <!--</div>-->
+            <!--</span>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+
+    <!--全部同事-->
+    <div v-if="showPage=='allList'">
+        <div class="navi-bar">
+            <div class="top-bar">
+				<span @click="backToMain"
+                      style="color: rgb(61, 168, 244); font-size: 16px;"
+                      class="pull-left">取消</span> <span>选择对象</span> <span
+                    @click="confirmSelList"
+                    style="color: rgb(61, 168, 244); font-size: 16px;"
+                    class="pull-right">完成</span>
+            </div>
+            <div class="weui-navbar " style="position: relative;height: 40px;background-color: #F9F9F9;
+                            font-size: 15px; color: #999999;">
+                <div class="weui-navbar__item weui-bar__item_on "
+                     style="border-bottom: inset rgba(56, 164, 242, 1); color: rgba(56, 164, 242, 1)">
+                    全部同事
+                </div>
+                <div class="weui-navbar__item" @click="showSelectSubList">
+                    我的下属
+                </div>
+            </div>
+            <div class="weui-search-bar">
+                <div class="weui-search-bar__form">
+                    <div class="weui-search-bar__box">
+                        <i class="weui-icon-search"></i>
+                        <input type="text" class="weui-search-bar__input"
+                               placeholder="搜索" v-model="employee.serachAllEmployeeWord">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--下属列表展示-->
+        <div class="weui-cells weui-cells_checkbox" style="margin-top: 126px">
+            <label class="weui-cell weui-check__label" :for="index" v-for="(item, index) in filterAllEmployeeList"
+                   >
+                <div class="weui-cell__hd">
+                    <input type="checkbox" name="checkbox1" class="weui-check" :value="item"
+                           v-model="employee.choosenList"
+                           :id="index"/>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>{{item.realName}}  <span class="sub-span" v-if="item.isSub">下属</span></p>
+                </div>
+            </label>
+        </div>
+        <div class="weui-tabbar" style="position: fixed;background: white">
+            <div class="weui-cells_checkbox">
+                <label class="weui-cell weui-check__label" for="selAll">
+                    <div class="weui-cell__hd">
+                        <input type="checkbox" name="checkbox1" class="weui-check"
+                               v-model="employee.selAll"
+                               id="selAll"/>
+                        <i class="weui-icon-checked"></i>
+                    </div>
+                    <div class="weui-cell__bd" v-if="employee.selAll">
+                        全不选
+                    </div>
+                    <div class="weui-cell__bd" v-if="!employee.selAll">
+                        全选
+                    </div>
+                </label>
+            </div>
+            <div class="weui-cell weui-cell_access" style="position: absolute;right: 0" @click="showSelectedList">
+                <div class="weui-cell__ft">
+                    已选对象: {{calChoosePeople}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--下属-->
+    <div v-if="showPage=='subList'">
+        <div class="navi-bar">
+            <div class="top-bar">
+				<span @click="backToMain"
+                      style="color: rgb(61, 168, 244); font-size: 16px;"
+                      class="pull-left">取消</span> <span>选择对象</span> <span
+                    @click="confirmSelList"
+                    style="color: rgb(61, 168, 244); font-size: 16px;"
+                    class="pull-right">完成</span>
+            </div>
+            <div class="weui-navbar " style="position: relative;height: 40px;background-color: #F9F9F9;
+                            font-size: 15px; color: #999999;">
+                <div class="weui-navbar__item weui-bar__item_on " @click="showSelectAllList">
+                    全部同事
+                </div>
+                <div class="weui-navbar__item weui-bar__item_on"
+                     style="border-bottom: inset rgba(56, 164, 242, 1); color: rgba(56, 164, 242, 1)">
+                    我的下属
+                </div>
+            </div>
+            <div class="weui-search-bar">
+                <div class="weui-search-bar__form">
+                    <div class="weui-search-bar__box">
+                        <i class="weui-icon-search"></i>
+                        <input type="text" class="weui-search-bar__input"
+                               placeholder="搜索" v-model="employee.serachSubEmployeeWord">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--下属列表展示-->
+        <div class="weui-cells weui-cells_checkbox"  style="margin-top: 126px">
+            <label class="weui-cell weui-check__label" :for="'s' + index"
+                   v-for="(item, index) in filterSubEmployeeList">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" name="checkbox1" class="weui-check" :value="item"
+                           v-model="employee.choosenList"
+                           :id="'s' + index"/>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>{{item.realName}}  <span class="sub-span" v-if="item.isSub">下属</span></p>
+                </div>
+            </label>
+        </div>
+
+        <div class="weui-tabbar" style="position: fixed;background: white">
+            <div class="weui-cells_checkbox">
+                <label class="weui-cell weui-check__label" for="selSubAll">
+                    <div class="weui-cell__hd">
+                        <input type="checkbox" name="checkbox1" class="weui-check"
+                               v-model="employee.selSubAll"
+                               id="selSubAll"/>
+                        <i class="weui-icon-checked"></i>
+                    </div>
+                    <div class="weui-cell__bd" v-if="employee.selSubAll">
+                        全不选
+                    </div>
+                    <div class="weui-cell__bd" v-if="!employee.selSubAll">
+                        全选
+                    </div>
+                </label>
+            </div>
+            <div class="weui-cell weui-cell_access" style="position: absolute;right: 0" @click="showSelectedList">
+                <div class="weui-cell__ft">
+                    已选对象: {{calChoosePeople}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--已选对象接着进行筛选-->
+    <div v-if="showPage=='finalList'">
+        <div class="top-bar">
+			    <span class="pull-left" @click="backToAllList()">
+                    <img src="/images/back_icon.svg" style="margin-top: 7px;">
+                </span>
+            <span>修改已选对象</span> <span
+                @click="confirmFinalList"
+                style="color: rgb(61, 168, 244); font-size: 16px;"
+                class="pull-right">保存修改</span>
+        </div>
+        <!--下属列表展示-->
+        <div class="weui-cells weui-cells_checkbox">
+            <label class="weui-cell weui-check__label" :for="'b' + index"
+                   v-for="(item, index) in employee.choosenList">
+                <div class="weui-cell__hd">
+                    <input type="checkbox" name="checkbox1" class="weui-check" :value="item"
+                           v-model="employee.finnalList"
+                           :id="'b' + index"/>
+                    <i class="weui-icon-checked"></i>
+                </div>
+                <div class="weui-cell__bd">
+                    <p>{{item.realName}} <span class="sub-span" v-if="item.isSub">下属</span></p>
+                </div>
+            </label>
+        </div>
+    </div>
+
+
+    <div v-if="showPage=='chooseTime'">
+        <div class="top-bar">
+				<span @click="backToMain"
+                      style="color: rgb(61, 168, 244); font-size: 16px;"
+                      class="pull-left">取消</span> <span>选择时间段</span> <span
+                @click="confirmTimeSel"
+                style="color: rgb(61, 168, 244); font-size: 16px;"
+                class="pull-right">完成</span>
+        </div>
+
+
+        <div class="weui-cells">
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle ">
+                    按天
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('today')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='today'}">
+                         今天
+                    </span>
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('yesterday')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='yesterday'}">
+                         昨天
+                    </span>
+                </div>
+            </label>
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle">
+                    按月
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('thisMonth')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='thisMonth'}">
+                         本月
+                    </span>
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('lastMonth')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='lastMonth'}">
+                         上月
+                    </span>
+                </div>
+            </label>
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle">
+                    按季
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('thisQuarter')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='thisQuarter'}">
+                         本季度
+                    </span>
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('lastQuarter')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='lastQuarter'}">
+                         上季度
+                    </span>
+                </div>
+            </label>
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle">
+                    按年
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('thisYear')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='thisYear'}">
+                         本年度
+                    </span>
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('lastYear')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='lastYear'}">
+                         上年度
+                    </span>
+                </div>
+            </label>
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle">
+                    其他
+                </div>
+                <div class="weui-cell__bd chooseTimeItem" @click="setTimeEnum('toNow')">
+                    <span :class="{itemChoosen:timeChoose.timeEnum=='toNow'}">
+                         注册至今
+                    </span>
+                </div>
+                <div class="weui-cell__bd chooseTimeItem">
+
+                </div>
+            </label>
+        </div>
+
+
+        <div class="weui-cells">
+            <div class="itemTitle">自定义时间段</div>
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle">
+                    开始时间
+                </div>
+                <div class="weui-cell__bd">
+                    <input type="date" class="weui-input" placeholder="请选择">
+                </div>
+            </label>
+            <label class="weui-cell">
+                <div class="weui-cell__hd chooseTimeTitle">
+                    结束时间
+                </div>
+                <div class="weui-cell__bd">
+                    <input type="date" class="weui-input" placeholder="请选择">
+                </div>
+            </label>
+        </div>
+    </div>
+    <div id="loadingToast" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">数据加载中</p>
+        </div>
+    </div>
+    <div v-if="showPage=='showList'">
+        <div class="weui-tab">
+            <div class="navi-bar">
+                <div class="top-bar center-box">
+                <span class="pull-left" @click="backToMain()">
+                    <img src="/images/back_icon.svg" style="margin-top: 7px;">
+                </span>
+                    <span style="margin-top: 3px;">{{detailName}}</span>
+
+                    <span class="pull-right exportExcel" @click="exportExcel()">
+                    导出
+                </span>
+                </div>
+            </div>
+        </div>
+        <div class="table_body">
+            <show-list :data=dataList></show-list>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+<script id="showList" type="text/x-template">
+    <table rules='all' border='1' cellpadding='10' style="border-collapse: collapse; white-space: nowrap">
+        <tr style='background-color: #E7ECF4; border-inline-color: #B8C5DE; text-align: center'>
+            <th style="padding-left: 5px; padding-right: 5px" v-for="item in data.tableHead">
+                <span v-if="item.sortFiled" @click="sortByField(item.sortFiled)">
+                     <span>
+                         {{orderType}}
+                     </span>
+                     {{item.name}}
+                </span>
+                <span v-if="!item.sortFiled">
+                     {{item.name}}
+               </span>
+            </th>
+        </tr>
+        <tr style='border: 1px solid lightgray; text-align: center;' v-for="item in data.tableBody">
+            <td style='white-space: nowrap; padding-left: 15px; padding-right: 15px' v-for="(value) in item">
+                <span href="#" v-if="!value.link">
+                    {{value.value}}
+                </span>
+                <a :href="value.link" v-if="value.link">
+                    {{value.value}}
+                </a>
+            </td>
+        </tr>
+    </table>
+</script>
+<script type="module" src="/statistics.js"></script>
+

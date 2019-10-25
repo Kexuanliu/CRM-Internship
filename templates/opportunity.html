@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>商机</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css?v=20190619"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/weui.min.js"></script>
+    <script src="/common.js?v=20190619"></script>
+    <script src="/opportunity/opportunity.js?v=20190709"></script>
+    <style>
+        .top-bar {
+            font-size: 18px;
+            text-align: center;
+            background: #ffffff;
+            border-bottom: solid 1px #DDDDDD;
+        }
+
+        .center-ele {
+            display: inline-block;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .sortSelect {
+            position: absolute;
+            top: 90px;
+            width: 100%;
+            z-index: 99999;
+        }
+
+        .filterSelect {
+            position: absolute;
+            top: 90px;;
+            width: 100%;
+            z-index: 99999;
+        }
+
+        .filterDetail {
+            position: absolute;
+            top: 90px;
+            left: 25%;
+            width: 75%;
+            z-index: 99999;
+        }
+
+        .weui-cells {
+            margin-top: 0;
+            padding: 0px;
+        }
+
+        .navi-bar {
+            height: 44px;
+            padding: 8px 15px;
+
+        }
+
+        .center-box {
+            text-align:left ;
+            font-size: large;
+            height: 40px;
+            text-align: left;
+        }
+
+        .other-option {
+            position: absolute;
+            bottom: 50px;
+            right: 60px;
+            z-index: 99999;
+        }
+
+    </style>
+</head>
+<body>
+<div id="opportunityVue">
+
+    <div style="display: none" v-show="showAddJournalDialog">
+        <div class="weui-mask" @click="cancelAddCustomerEvent"></div>
+        <div class="add-journal">
+            <div class="weui-actionsheet__menu" style="border-radius: 0.33em">
+                <a href="/opportunity/newSale">
+                    <div class="weui-actionsheet__cell add-journal-item">新建商机</div>
+                </a>
+                <a href="/customer/agentInput?type=3">
+                    <div class="weui-actionsheet__cell add-journal-item"
+                         style="border-top: 1px solid #e5e5e5;">excel导入商机
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="opportunity" v-show="showPage === 'opportunity'">
+        <div class="page tabbar js_show">
+            <div class="weui-tab">
+
+                <div id="titleBar">
+                    <div class="navbar">
+                        <div class="top-bar" style="height: 28px; padding: 10px 10px;">
+                            <span class="pull-left">
+                                <img src="/images/back_icon.svg" style="margin-top:7px; display: none"/></span>
+                            <span class="center" style="font-size: 22px; margin-top: 1px">商机</span>
+                            <a @click="addCustomer">
+                                        <span class="pull-right" style="margin-top: 7px;margin-left: 10px"><img
+                                                src="/images/add.png"
+                                                style="width: 16px; height: 16px; display: block"/></span>
+                            </a>
+                            <a @click="search">
+                                        <span class="pull-right" style="margin-top: 7px;">
+                                            <img
+                                                    src="/images/search.svg"
+                                                    style="width: 16px; height: 16px; display: block"/></span>
+                            </a>
+                        </div>
+                        <div v-if="searchBar">
+                            <div class="weui-search-bar" id="searchBar">
+                                <div class="weui-search-bar__form">
+                                    <div class="weui-search-bar__box">
+                                        <i class="weui-icon-search"></i>
+                                        <input type="text" class="weui-search-bar__input" id="searchInput"
+                                               placeholder="搜索" v-model="keyWord">
+                                        <a href="javascript:" class="weui-icon-clear" id="searchClear"
+                                           @click="clear"></a>
+                                    </div>
+                                    <label class="weui-search-bar__label" id="searchText" @click="text"
+                                           style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                                        <i class="weui-icon-search"></i>
+                                        <span>搜索</span>
+                                    </label>
+                                </div>
+                                <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel"
+                                   @click="cancel">取消</a>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="weui-flex">
+                                <div class="weui-flex__item" style="text-align: center;height: 35px;padding-top: 5px">
+                        <span @click="sort">
+                            <label>排序</label>
+                            <img :src='imgSort'>
+
+                        </span>
+                                </div>
+                                <div class="weui-flex__item" style="text-align: center;height: 35px;padding-top: 5px">
+                        <span @click="filter">
+                            <label>筛选</label>
+                            <img :src='imgFilter'>
+                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weui-tab__panel">
+                    <div id="opportuityNull" class="blank" style="margin:20% auto auto auto; text-align:center; "
+                         v-show="showNull ==='null'">
+                        <p>
+                            <img src="/images/opportunity/opportunityNull.svg"/>
+                        </p>
+                        <p style="color: #CCCCCC; font-size: small">还没有创建相关的商机哦，快去创建吧</p>
+                    </div>
+                    <div v-for="opportunity in opportunityList">
+                        <div class="weui-panel weui-panel_access" @click="detail(opportunity.opportunityId)">
+                            <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg"
+                               style="padding: 8px 5px ;">
+                                <div class="weui-media-box__hd">
+                                    <img class="weui-media-box__thumb" :src="imgSrc(opportunity.salesStatus)"
+                                         style="width: 40px;height: 40px;margin-top: 10px" alt="">
+                                </div>
+
+                                <div class="weui-media-box__bd">
+                                    <label class="weui-media-box__title"
+                                           style="font-size: 15px;color: #333333;">{{opportunity.opportunityName}}</label>
+                                    <p class="weui-media-box__desc" style="font-size: 12px;color: #888888;">
+                                        {{opportunity.customerName}}
+                                        <label class="pull-right" style="font-size: 12px;color: #101010;">
+                                            <span v-if="opportunity.create_ts === undefined"></span>
+                                            <span v-else>
+                                                <span v-text="opportunity.create_ts.substring(0,11)"></span>
+                                            </span>
+
+                                        </label>
+                                    </p>
+                                    <p class="weui-media-box__desc" style="font-size: 12px;color: #A0B4BB;">
+                                        <span v-if="opportunity.salesStatus !='F'">
+                                        <!--{{opportunity.salesStatus}} &nbsp;阶段-->
+                                            {{translateStatus(opportunity.salesStatus)}}
+                                            </span>
+                                        <span v-else>输单</span>
+                                        <label class="pull-right" style="font-size: 15px;color: #A0B4BB;">
+                                            {{opportunity.amount}}元</label>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div id="sortPage" style="display:none;" v-show="showSortPage">
+                        <div class="weui-mask" @click="cancelMask" style="position: absolute;top: 20%;"></div>
+                        <div class="sortSelect" @click="cancelMask">
+                            <div class="weui-cells weui-cells_radio">
+                                <label class="weui-cell weui-check__label" for="x11" @click="sortType">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">按创建时间正序</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="timeSort" id="x11"
+                                               value="TASC" v-model="sortMode"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="x12" @click="sortType">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">按创建时间倒序</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="timeSort" id="x12"
+                                               value="TDESC" v-model="sortMode"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="x13" @click="sortType">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">由A-D级排序</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="timeSort" id="x13"
+                                               value="SASC" v-model="sortMode"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="x14" @click="sortType">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">由D-A级排序</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input type="radio" class="weui-check" name="timeSort" id="x14"
+                                               value="SDESC" v-model="sortMode"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="filterPage" style="display:none;" v-show="showFilterPage">
+                        <div class="weui-mask" @click="cancelMask" style="position: absolute;top: 30%;"></div>
+                        <div class="filterSelect">
+                            <div class="weui-cells weui-cells_radio">
+                                <!--<label id="scene" class="weui-cell weui-check__label" @click="filterScene">-->
+                                <!--<div class="weui-cell__bd">-->
+                                <!--<p style="font-size: 14px;color: #101010;">筛选场景</p>-->
+                                <!--</div>-->
+                                <!--<div class="weui-cell__ft" style="display: none">-->
+                                <!--<input class="weui-check" name="filter"-->
+                                <!--/>-->
+                                <!--<span class="weui-icon-checked"></span>-->
+                                <!--</div>-->
+                                <!--</label>-->
+                                <label id="creator" class="weui-cell weui-check__label" @click="filterCreator">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">创建人</p>
+                                    </div>
+                                    <div class="weui-cell__ft" style="display: none">
+                                        <input class="weui-check" name="filter"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label id="customer" class="weui-cell weui-check__label" @click="filterCustomer">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">客户名称</p>
+                                    </div>
+                                    <div class="weui-cell__ft" style="display: none">
+                                        <input class="weui-check" name="filter"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label id="date" class="weui-cell weui-check__label" @click="filterDate">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">创建日期</p>
+                                    </div>
+                                    <div class="weui-cell__ft" style="display: none">
+                                        <input class="weui-check" name="filter"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+
+                                <label id="stage" class="weui-cell weui-check__label" @click="filterStage">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">销售阶段</p>
+                                    </div>
+                                    <div class="weui-cell__ft" style="display: none">
+                                        <input class="weui-check" name="filter"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+
+                                <div style="height: 120px"></div>
+                                <div style="height: 40px">
+                                    <a style="float:right; margin-right: 15px" href="javascript:;" @click="finish"
+                                       class="weui-btn weui-btn_mini weui-btn_primary">完成</a>
+                                    <a style="float:right; position: relative;bottom: 15px;right: 15px"
+                                       href="javascript:;"
+                                       @click="reset"
+                                       class="weui-btn weui-btn_mini weui-btn_default">重置</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="filterDate" style="display:none;" v-show="filterCondition === 'date'">
+                        <div class="filterDetail">
+                            <div class="weui-cells weui-cells_radio">
+                                <label class="weui-cell weui-check__label" @click="dateChecked" for="dateCheck">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">不限</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="dateCheck" class="weui-check" type="radio" value="all"
+                                               name="createDate"
+                                               v-model="dateValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+
+
+                                <div class="weui-cell" @click="removeChecked">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label"
+                                               style="font-size: 14px;color: #101010;width: 80px">开始时间</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <input class="weui-input" type="date" style="font-size: 14px;color: #101010;"
+                                               v-model="dateValueStart"/>
+                                    </div>
+                                </div>
+
+
+                                <div class="weui-cell" @click="removeChecked">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label"
+                                               style="font-size: 14px;color: #101010;width: 80px">结束时间</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <input class="weui-input" type="date" style="font-size: 14px;color: #101010;"
+                                               v-model="dateValueEnd"/>
+                                    </div>
+                                </div>
+                                <div style="height: 135px"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="filterCreator" style="display:none;" v-show="filterCondition === 'creator'">
+                        <div class="filterDetail">
+                            <div class="weui-cells weui-cells_radio">
+                                <label class="weui-cell weui-check__label" for="creatorCheck" @click="creatorChecked">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">全部</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="creatorCheck" type="radio" class="weui-check" name="selectCreator"
+                                               value="all"
+                                               v-model="creatorValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" @click="creatorChecked1">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">我</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="mine" type="radio" class="weui-check" name="selectCreator"
+                                               value="mine"
+                                               v-model="creatorValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" @click="creatorChecked2">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">我的下属</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="subs" type="radio" class="weui-check" name="selectCreator"
+                                               value="sub"
+                                               v-model="creatorValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <a class="weui-cell weui-cell_access" href="javascript:;" @click="removeChecked1">
+                                    <div class="weui-cell__bd">
+                                        <input id="creatorChoose" class="weui-input" type="text" placeholder="选择创建人"
+                                               style="font-size: 14px;color: #101010;" readonly="readonly"
+                                               v-model="creatorV"/>
+                                        <!--<div class="placeholder" style="font-size: 14px;color:grey;"> {{creatorValueC}}</div>-->
+                                    </div>
+                                    <div class="weui-cell__ft"></div>
+                                </a>
+                                <div style="height: 90px"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="filterStage" style="display:none;" v-show="filterCondition === 'stage'">
+                        <div class="filterDetail" style="height: 260px">
+                            <div class="weui-cells weui-cells_radio" style="overflow: auto;height: 260px;" >
+                                <label class="weui-cell weui-check__label" for="stage1">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">不限</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stage1" type="radio" class="weui-check" name="selectStage"
+                                               value="all"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stage2">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">A&nbsp;获取客户信息</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stage2" type="radio" class="weui-check" name="selectStage"
+                                               value="A"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stageB1">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">B1&nbsp;方案撰写</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stageB1" type="radio" class="weui-check" name="selectStage"
+                                               value="B1"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stageB2">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">B2&nbsp;方案申报及落实资金</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stageB2" type="radio" class="weui-check" name="selectStage"
+                                               value="B2"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stageB3">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">B3&nbsp;项目论证</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stageB3" type="radio" class="weui-check" name="selectStage"
+                                               value="B3"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stageB4">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">B4&nbsp;写招标参数</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stageB4" type="radio" class="weui-check" name="selectStage"
+                                               value="B4"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stage4">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">C&nbsp;挂网招标</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stage4" type="radio" class="weui-check" name="selectStage"
+                                               value="C"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stage5">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">D&nbsp;中标签合同</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stage5" type="radio" class="weui-check" name="selectStage"
+                                               value="D"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <label class="weui-cell weui-check__label" for="stage6">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">输单</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="stage6" type="radio" class="weui-check" name="selectStage" value="F"
+                                               v-model="stageValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <!--<div style="height: 140px"></div>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="filterCustomer" style="display:none;" v-show="filterCondition === 'customer'">
+                        <div class="filterDetail">
+                            <div class="weui-cells weui-cells_radio">
+                                <label class="weui-cell weui-check__label" @click="customerChecked" for="customerCheck">
+                                    <div class="weui-cell__bd">
+                                        <p style="font-size: 14px;color: #101010;">不限</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <input id="customerCheck" type="radio" class="weui-check" name="customer"
+                                               value="all"
+                                               v-model="customerValue"/>
+                                        <span class="weui-icon-checked"></span>
+                                    </div>
+                                </label>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">
+                                        <input id="customerInput" class="weui-input" type="text" placeholder="请输入"
+                                               style="font-size: 14px;color: #101010;" v-model="customerValueIn"/>
+                                    </div>
+                                </div>
+                                <div style="height: 185px"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- loading toast -->
+                    <div id="loadingToast" style="display:none;">
+                        <div class="weui-mask_transparent"></div>
+                        <div class="weui-toast">
+                            <i class="weui-loading weui-icon_toast"></i>
+                            <p class="weui-toast__content">数据加载中</p>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <br/>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div id="footer">
+            <navfooter></navfooter>
+        </div>
+    </div>
+
+    <div id="selectCreator" style="display:none;" v-show="showPage === 'selectCreator'">
+        <div class="weui-tab">
+
+            <div class="top-bar " style="border: hidden; padding: 8px 8px;text-align: center">
+                        <span class="pull-left" @click="backToFilter"
+                              style="color: rgb(61, 168, 244); font-size: 16px;">取消</span>
+                <span class="center-ele" style="font-size: 18px; color: rgb(51, 51, 51);">选择创建人</span>
+                <span class="pull-right" @click="submit"
+                      style="color: rgb(61, 168, 244); font-size: 16px;">完成</span>
+            </div>
+            <div class="subMember" style="margin-top: 3px;">
+                <div class="weui-cells weui-cells_checkbox" v-for="member in subMemberList"
+                     style="margin-top: 0;padding: 0px;">
+                    <label class="weui-cell weui-check__label">
+                        <div class="weui-cell__hd">
+                            <input type="checkbox" class="weui-check" name="checkbox1"
+                                   :value="member.memberId + ',' + member.memberName" v-model="tempSub">
+                            <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p v-text="member.memberName"></p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div id="toDetail" style="display:none;" v-show="showPage === 'toDetail' ">
+
+        <div id="opportunityDetail" v-show="show ==='home'">
+            <div class="page tabbar js_show">
+                <div class="weui-tab">
+
+                    <div class="weui-tab__panel">
+
+                        <div class="weui-navbar" style="height: 50px;">
+                            <div id="titleBar1" class="weui-navbar__item top-bar" style=" padding: 10px 10px;">
+                            <span class="pull-left" style="margin-top: 7px" @click="back()">&nbsp;
+                                <img src="/images/back_icon.svg"/>
+                            </span>
+                                <span style="width: 76%;text-align: center;font-size: 20px;margin-top: 5px ">商机</span>
+                             <span style="float:right;margin-top: 7px" @click="modif">&nbsp;
+                                <img src="/images/opportunity/editOpportunity.svg"/>
+                            </span>
+                            </div>
+                        </div>
+
+                        <div style="height: 35px"></div>
+                        <div class="weui-panel weui-panel_access">
+                            <div class="weui-panel__bd">
+                                <div class="weui-media-box weui-media-box_text">
+                                    <h4 class="weui-media-box__title">{{opportunity.opportunityName}}</h4>
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">客户名称&nbsp;
+                                        <span style="font-weight: 100">{{opportunity.customerName}}</span>
+                                    </p>
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">二级学院&nbsp;
+                                        <span style="font-weight: 100">
+                                           <span v-if="contact.topDeptName ===undefined"></span>
+                                            <span v-else>{{contact.topDeptName}}-</span>
+                                            <span v-if="contact.subDeptName ===undefined"></span>
+                                            <span v-else>{{contact.subDeptName}}</span>
+                                        </span>
+                                    </p>
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">决策人&nbsp;
+                                        <span style="font-weight: 100">
+                                            <span v-if="contact.type === undefined"></span>
+                                            <span v-else>{{contact.type}}-</span>
+                                            <span v-if="contact.contactsName ===undefined"></span>
+                                            <span v-else>{{contact.contactsName}}</span>
+                                        </span>
+                                    </p>
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">负责人&nbsp;
+                                        <span style="font-weight: 100">
+                                            <span v-if="contact.type === undefined"></span>
+                                            <span v-else>{{charge.type}}-</span>
+                                            <span v-if="charge.contactsName ===undefined"></span>
+                                            <span v-else>{{charge.contactsName}}</span>
+                                        </span>
+                                    </p>
+
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">代理商&nbsp;
+                                        <span style="font-weight: 100">
+                                            <span >{{agent.companyName}}</span>
+                                        </span>
+                                    </p>
+
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">联系人&nbsp;
+                                        <span style="font-weight: 100">
+                                            <span >{{agent.position}}-{{agent.linkName}}</span>
+                                        </span>
+                                    </p>
+
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">金额（元）&nbsp;
+                                        <span style="font-weight: 100">{{opportunity.amount}}</span>
+                                    </p>
+                                    <p class="weui-media-box__desc" style="padding: 3px;font-weight: bold">状态&nbsp;
+                                        <span style="font-weight: 100" v-if="opportunity.salesStatus !='F'">
+                                        {{opportunity.salesStatus}} &nbsp;阶段
+                                            </span>
+                                        <span style="font-weight: 100" v-else>输单</span>
+
+                                        <!--<span style="font-weight: 100">{{opportunity.salesStatus}} &nbsp;阶段</span>-->
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="weui-grids">
+                            <a id="detailBox" href="javascript:;" class="weui-grid navi-bar"
+                               style="border-bottom: solid 2px #38A4F2" @click="detailShow()">
+                                <p id="detail" class="weui-grid__label" style=" font-size: medium;color:#38A4F2">
+                                    详细信息</p>
+                            </a>
+                            <a id="relevantBox" href="javascript:;" class="weui-grid navi-bar" @click="relevant()">
+
+                                <p id="relevant" class="weui-grid__label" style=" font-size: medium;">跟进记录</p>
+                            </a>
+                            <a id="modifBox" href="javascript:;" class="weui-grid navi-bar" @click="modification()">
+
+                                <p id="modif" class="weui-grid__label" style=" font-size: medium;">修改记录</p>
+                            </a>
+                        </div>
+
+                        <div id="detailPage" style="display:none;" v-show="showDetailPage ==='detailPage'">
+                            <div class="weui-cells" style="font-size: small">
+                                <div class="weui-cell" style="font-weight: bold">基本信息</div>
+                                <label style="margin-left: 15px;color: grey">项目内容</label>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.content}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            是否包含学呗</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{translateContainXuebei( opportunity.containXuebei)}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            预估挂标日期</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.checkDateString}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            交付日期</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.clinchDateString}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            金额(元)</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.amount}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            资金来源</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{translateMoneyFrom(opportunity.moneyFrom)}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            客户名称</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.customerName}}</span>
+                                    </div>
+                                </div>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            二级学院</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>
+                                            <span v-if="contact.topDeptName ===undefined"></span>
+                                            <span v-else>{{contact.topDeptName}}-</span>
+                                            <span v-if="contact.subDeptName ===undefined"></span>
+                                            <span v-else>{{contact.subDeptName}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            决策人</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>
+                                            <span v-if="contact.type === undefined"></span>
+                                            <span v-else>{{contact.type}}-</span>
+                                            <span v-if="contact.contactsName ===undefined"></span>
+                                            <span v-else>{{contact.contactsName}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            负责人</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>
+                                            <span v-if="charge.type === undefined"></span>
+                                            <span v-else>{{contact.type}}-</span>
+                                            <span v-if="charge.contactsName ===undefined"></span>
+                                            <span v-else>{{charge.contactsName}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            代理商</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>
+                                             <span >{{agent.companyName}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            联系人</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>
+                                              <span >{{agent.position}}-{{agent.linkName}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            销售阶段</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span v-if="opportunity.salesStatus !='F'">
+                                        {{opportunity.salesStatus}} &nbsp;阶段
+                                            </span>
+                                        <span v-else>输单</span>
+
+
+                                    </div>
+                                </div>
+
+
+                                <div v-if="opportunity.salesStatus !='F'">
+                                    <div class="weui-cells" style="font-size: small">
+                                        <div class="weui-cell">
+                                            <label style="margin-left: 0px;">输单原因</label>
+                                        </div>
+                                        <div class="weui-cell">
+                                            <div class="weui-cell__bd" style="color: darkgray;">
+                                                <span>暂无</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div v-else>
+                                    <div v-if="opportunity.failReason ===undefined ">
+                                        <div class="weui-cells" style="font-size: small">
+                                            <a class="weui-cell weui-cell_access"
+                                               @click="fail()">
+                                                <div class="weui-cell__bd">
+                                                    <p>输单原因</p>
+                                                </div>
+                                                <div class="weui-cell__ft">请输入输单原因</div>
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+                                    <div v-else>
+                                        <div class="weui-cells" style="font-size: small">
+                                            <div class="weui-cell">
+                                                <label style="margin-left: 0px;">输单原因:</label>
+                                            </div>
+                                            <div class="weui-cell">
+                                                <div class="weui-cell__bd" style="color: darkgray;">
+                                                    <span>{{opportunity.failReason}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                            <div class="weui-cells" style="font-size: small">
+                                <div class="weui-cell" style="font-weight:bold">系统信息</div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            最后跟进时间</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.update_ts}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            状态</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>进行中</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            创建人</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{creatorName}}</span>
+                                    </div>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd">
+                                        <label class="weui-label">
+                                            创建时间</label>
+                                    </div>
+                                    <div class="weui-cell__bd">
+                                        <span>{{opportunity.create_ts}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div id="relevantPage" style="display:none;" v-show="showDetailPage ==='relevantPage'">
+                            <div class="weui-footer" style="margin-top: 5px;margin-bottom: 5px">
+                                <p class="weui-footer__text">——————&nbsp; 项目支持 &nbsp;——————</p>
+                            </div>
+                            <div class="weui-cells" style="font-size: small;">
+
+                                <div v-for="support in applySupports">
+                                    <div></div>
+                                    <div class="weui-cell" style="font-weight: bold">
+                                        {{supportType(support.supportType)}}
+                                    </div>
+                                    <div class="weui-media-box weui-media-box_text">
+                                        <ul class="weui-media-box__info" style="margin-top: 0px">
+                                            <span v-if="support.leader === undefined">
+                                            <li class="weui-media-box__info__meta">负责人：管理员未指配</li>
+                                            </span>
+                                            <span v-else>
+                                                <li class="weui-media-box__info__meta">负责人：{{support.leaderName}}</li>
+                                            </span>
+                                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                                {{supportOrder(support.order)}}
+                                            </li>
+                                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                                {{support.expireDate.substring(0,11)}}
+                                            </li>
+                                        </ul>
+                                        <p class="weui-media-box__desc" style="line-height: 25px;display: inline-block">
+                                            {{support.content}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="weui-panel__ft">
+                                    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                                        <div class="weui-cell__bd">以上为全部支持记录</div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="weui-cells" style="font-size: small">
+
+                                <div class="weui-cell" style="font-weight: bold;">拜访记录</div>
+
+                                <div v-for="record in visitRecords">
+                                    <div></div>
+                                    <div class="weui-media-box weui-media-box_text">
+                                        <ul class="weui-media-box__info" style="margin-top: 0px">
+                                            <li class="weui-media-box__info__meta">{{record.realName}}</li>
+                                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                                {{visitType(record.visitType)}}
+                                            </li>
+                                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                                {{record.updateTime}}
+                                            </li>
+                                        </ul>
+                                        <p class="weui-media-box__desc" style="line-height: 25px;display: inline-block">
+                                            {{record.visitResult}}</p>
+                                    </div>
+
+                                </div>
+
+                                <div class="weui-panel__ft">
+                                    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                                        <div class="weui-cell__bd">以上为全部拜访记录</div>
+                                        <!--<span class="weui-cell__ft"></span>-->
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div id="modifPage" style="display:none;" v-show="showDetailPage ==='modifPage'">
+                            <div class="weui-cells" style="font-size: small">
+                                <div class="weui-cell" style="font-weight: bold">修改记录</div>
+
+                                <div v-for="record in modifyRecord">
+                                    <div></div>
+                                    <div class="weui-media-box weui-media-box_text">
+                                        <ul class="weui-media-box__info" style="margin-top: 0px">
+                                            <li class="weui-media-box__info__meta">{{record.realName}}</li>
+                                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                                {{record.createTime}}
+                                            </li>
+                                        </ul>
+                                        <p class="weui-media-box__desc" style="line-height: 25px;display: inline-block">
+                                            编辑 商机 &nbsp;{{record.opportunityName}}，客户&nbsp;{{record.customerName}}</p>
+                                    </div>
+
+                                </div>
+                                <div class="weui-media-box weui-media-box_text">
+                                    <ul class="weui-media-box__info" style="margin-top: 0px">
+                                        <li class="weui-media-box__info__meta">{{creatorName}}</li>
+                                        <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">
+                                            {{opportunity.create_ts}}
+                                        </li>
+                                    </ul>
+                                    <p class="weui-media-box__desc" style="line-height: 25px">创建 商机 &nbsp;{{opportunity.opportunityName}}，客户&nbsp;{{opportunity.customerName}}</p>
+                                </div>
+
+                                <div class="weui-panel__ft">
+                                    <a href="javascript:void(0);" class="weui-cell weui-cell_access weui-cell_link">
+                                        <div class="weui-cell__bd">以上为全部修改记录</div>
+                                        <!--<span class="weui-cell__ft"></span>-->
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="toast1" style="display: none;">
+                <div class="weui-mask_transparent"></div>
+                <div class="weui-toast">
+                    <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                    <p class="weui-toast__content">成功转为项目</p>
+                </div>
+            </div>
+
+
+            <div class="weui-tabbar">
+
+
+                <span v-if="opportunity.salesStatus !='F'" style="width:33% ">
+                    <a class="weui-tabbar__item" @click="clickApplySupport">
+                        <img src="/images/opportunity/applySupport.svg" class="weui-tabbar__icon">
+                        <p class="weui-tabbar__label">申请支持</p>
+                    </a>
+                </span>
+                <span v-else style="width:33% ">
+                    <a class="weui-tabbar__item" style="opacity: 0.5">
+                        <img src="/images/opportunity/applySupport.svg" class="weui-tabbar__icon">
+                        <p class="weui-tabbar__label">申请支持</p>
+                    </a>
+                </span>
+
+                <span v-if="opportunity.salesStatus ==='D' " style="width:33% ">
+                    <a class="weui-tabbar__item " @click="convert">
+                        <img src="/images/opportunity/convertToProject.svg" class="weui-tabbar__icon">
+                        <p class="weui-tabbar__label">转为项目</p>
+                    </a>
+                </span>
+                <span v-else style="width:33% ">
+                    <a class="weui-tabbar__item " style="opacity: 0.5">
+                        <img src="/images/opportunity/convertToProject.svg" class="weui-tabbar__icon">
+                        <p class="weui-tabbar__label">转为项目</p>
+                    </a>
+                </span>
+                <span style="width:33% ">
+                    <a class="weui-tabbar__item" @click="other">
+                        <img src="/images/opportunity/others.svg" class="weui-tabbar__icon">
+                        <p class="weui-tabbar__label">其他</p>
+                    </a>
+                </span>
+            </div>
+
+            <div id="othersOption" v-show="showOption === true">
+                <div class="weui-mask" @click="cancelOtherEvent"></div>
+                <div class="other-option">
+                    <div class="weui-actionsheet__menu" style="border-radius: 0.33em">
+                        <a @click="deleteOppo">
+                            <div class="weui-actionsheet__cell "
+                                 style="font-size: medium;color: #0D0D0D;padding: 10px 15px">删除商机
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!--BEGIN dialog1-->
+            <div class="js_dialog" id="iosDialog1" style="display: none;" v-show="showDialog">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">商机</strong></div>
+                    <div class="weui-dialog__bd">删除该条商机</div>
+                    <div class="weui-dialog__ft">
+                        <a @click="deleteConfirm" class="weui-dialog__btn weui-dialog__btn_default">确认</a>
+                        <a @click="cancelDialog" class="weui-dialog__btn weui-dialog__btn_primary">取消</a>
+                    </div>
+                </div>
+            </div>
+            <!--END dialog1-->
+
+        </div>
+
+        <div id="fail" style="display:none;" v-show="show ==='failReason'">
+
+            <div class="center-box">
+
+                <div id="inputInfo">
+                    <div class="top-bar" style="height: 40px">
+                        <span @click="failBack" class="pull-left">
+                                <img src="/images/back_icon.svg"
+                                     style="margin-top:10px;margin-left: 10px"/>
+                        </span>
+
+                        <span style="height: 40px;display: inline-block ;padding-top: 5px;">输单原因</span>
+
+                        <span class="pull-right" style="margin-top: 7px; color: #28b3ff"
+                              @click="failSubmit(opportunity.opportunityId)"> 完成 &nbsp; </span>
+                    </div>
+
+                    <div class="list">
+                        <div class="page__bd">
+
+
+                            <div class="weui-cells weui-cells_form">
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">
+                                        <textarea class="weui-textarea" placeholder="请输入输单原因" rows="24"
+                                                  v-model="failReason"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+        <div id="modificationOppo" style="display:none;" v-show="show ==='modif'">
+
+            <div class="center-box">
+
+                <div id="basicInfo">
+                    <div class="top-bar" style="height: 40px">
+                        <span @click="modifBack" class="pull-left">
+                                <img src="/images/back_icon.svg"
+                                     style="margin-top:10px;margin-left: 10px"/>
+                        </span>
+
+                        <span style="height: 40px;display: inline-block ;padding-top: 5px;">编辑商机</span>
+
+                        <span class="pull-right" style="margin-top: 7px; color: #28b3ff"
+                              @click="detailSubmit"> 完成 &nbsp; </span>
+                    </div>
+
+                    <div class="list">
+                        <div class="page__bd">
+                            <div class="weui-cells">
+                                <div class="weui-cell">基本信息</div>
+                                <label style="margin-left: 15px"><span style="color: red">*</span>项目内容</label>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">
+                                        <input class="weui-input" type="text" placeholder="请填写基本内容" v-model="content">
+                                    </div>
+                                </div>
+                                <a class="weui-cell weui-cell_access" @click="showDatePicker">
+                                    <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>预估挂标日期</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <span v-text="preDate"></span>
+                                    </div>
+                                </a>
+                                <a class="weui-cell weui-cell_access" @click="deliverDatePicker">
+                                    <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>交付日期</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <span v-text="deliverDate"></span>
+                                    </div>
+                                </a>
+                                <a class="weui-cell weui-cell_access" @click="selSaleStage">
+                                    <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>销售阶段</p>
+                                    </div>
+                                    <div class="weui-cell__ft">
+                                        <span v-text="saleStage"></span>
+                                    </div>
+                                </a>
+
+                                <div class="weui-cell">
+                                    <div class="weui-cell__hd"><label class="weui-label"><span
+                                            style="color: red">*</span>金额(元)</label></div>
+                                    <div class="weui-cell__bd">
+                                        <input class="weui-input" type="number" placeholder="请输入项目金额" v-model="amount">
+                                    </div>
+                                </div>
+                                <a class="weui-cell weui-cell_access">
+                                    <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>决策人</p>
+                                        <p style="color: grey">
+                                            <!--<span v-text="contact.customerName+'-'+contact.departmentName+'-'+contact.typeName+'-'+contact.realName"></span>-->
+                                            <span v-if="contact.customerName === undefined"></span>
+                                            <span v-else>{{contact.customerName}}-</span>
+                                            <span v-if="contact.topDeptName ===undefined"></span>
+                                            <span v-else>{{contact.topDeptName}}-</span>
+                                            <span v-if="contact.subDeptName ===undefined"></span>
+                                            <span v-else>{{contact.subDeptName}}-</span>
+                                            <span v-if="contact.type === undefined"></span>
+                                            <span v-else>{{contact.type}}-</span>
+                                            <span v-if="contact.contactsName ===undefined"></span>
+                                            <span v-else>{{contact.contactsName}}</span>
+                                        </p>
+                                    </div>
+
+                                </a>
+
+                                <a class="weui-cell weui-cell_access">
+                                    <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>负责人</p>
+                                        <p style="color: grey">
+                                            <!--<span v-text="contact.customerName+'-'+contact.departmentName+'-'+contact.typeName+'-'+contact.realName"></span>-->
+                                            <span v-if="charge.customerName === undefined"></span>
+                                            <span v-else>{{charge.customerName}}-</span>
+                                            <span v-if="charge.topDeptName ===undefined"></span>
+                                            <span v-else>{{charge.topDeptName}}-</span>
+                                            <span v-if="charge.subDeptName ===undefined"></span>
+                                            <span v-else>{{charge.subDeptName}}-</span>
+                                            <span v-if="charge.type === undefined"></span>
+                                            <span v-else>{{charge.type}}-</span>
+                                            <span v-if="charge.contactsName ===undefined"></span>
+                                            <span v-else>{{charge.contactsName}}</span>
+                                        </p>
+                                    </div>
+                                </a>
+
+                                <a class="weui-cell weui-cell_access">
+                                    <div class="weui-cell__bd">
+                                        <p><span style="color: red">*</span>代理商</p>
+                                        <p style="color: grey">
+                                            <span >{{agent.companyName}}-{{agent.position}}-{{agent.linkName}}</span>
+                                        </p>
+                                    </div>
+                                </a>
+
+                                <div class="weui-cell">
+                                    <label><span style="color: red">*</span>商机名称</label>
+                                </div>
+                                <div class="weui-cell">
+                                    <div class="weui-cell__bd">
+                                        <input class="weui-input" type="text" v-model="opportunityName"
+                                               placeholder="请输入商机名称">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--BEGIN toast-->
+                    <div id="toast" style="display: none;">
+                        <div class="weui-mask_transparent"></div>
+                        <div class="weui-toast">
+                            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                            <p class="weui-toast__content">修改成功</p>
+                        </div>
+                    </div>
+                    <!--end toast-->
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        <div id="saleStage" v-show="show === 'saleStage'" style="display: none">
+            <div class="top-bar" style="height: 40px">
+            <span @click="chooseBack" class="pull-left">
+                <img src="/images/back_icon.svg"
+                     style="margin-top:10px;margin-left: 10px"/></span>
+                <span class="center" style="height: 40px;display: inline-block ;padding-top: 5px;">选择销售阶段</span>
+                <span class="pull-right" style="margin-top: 7px; color: #28b3ff"
+                      @click="done1"> 完成 &nbsp; </span>
+            </div>
+            <div class="weui-cells weui-cells_radio">
+                <label class="weui-cell weui-check__label" v-for="(stage, index) in stages" v-if="convertNumber<=index">
+                    <div class="weui-cell__hd">
+                        <img :src="'/images/opportunity/'+ ind[index] +'Stage.svg' " style="margin-right: 10px"/>
+                    </div>
+                    <div class="weui-cell__bd">
+                        <p v-text="stage"></p>
+                    </div>
+                    <div class="weui-cell__ft">
+                        <input type="radio" class="weui-check"
+                               :value="ind[index] "
+                               v-model="selStage">
+                        <span class="weui-icon-checked"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>
+<script src="/navFooter.js"></script>

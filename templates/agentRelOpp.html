@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <meta HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <meta HTTP-EQUIV="Cache-Control" CONTENT="no-store, must-revalidate">
+    <title>客户</title>
+    <!-- 引入 WeUI -->
+    <link rel="stylesheet" href="/weui.css"/>
+    <link rel="stylesheet" href="/example.css">
+    <link rel="stylesheet" type="text/css" href="/journalList.css">
+    <script src="/lib/jquery-2.1.1.js"></script>
+    <script src="/vue.v2.5.13.js"></script>
+    <script src="/common.js?v=20190619"></script>
+    <script src="/customer/agentRelOpp.js?v=20190619"></script>
+    <style>
+
+        .top-bar {
+            text-align: center;
+            background: #FFFFFF;
+        }
+
+        .pull-left {
+            float: left !important;
+        }
+
+        .pull-right {
+            float: right !important;
+        }
+
+        .weui-media-box__hd img{
+            width: 36px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="customerVue"  class="page tabbar js_show">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            <div class="weui-tab">
+                <input type="hidden" id="agentId" th:value="${agentId}">
+                <input type="hidden" id="companyName" th:value="${companyName}">
+
+                <div class="page navbar js_show">
+                    <div id="titleBar" v-show="titleBar">
+                        <div class="navbar">
+                            <div class="top-bar" style="height: 28px; padding: 10px 10px;">
+                            <span @click="backToInfo" class="pull-left">
+                                <img src="/images/back_icon.svg" style="margin-top:7px;"/></span>
+                                <span class="center" style="font-size: 22px; margin-top: 1px" th:text="${companyName}"></span>
+                                <a @click="addCustomer" style="display: none">
+                                        <span class="pull-right" style="margin-top: 7px;"><img
+                                                src="/images/add.png"
+                                                style="width: 16px; height: 16px; display: block"/></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="js_dialog" id="iosDialog2" style="opacity: 1;display: none" v-show="showErrMsg">
+                        <div class="weui-mask"></div>
+                        <div class="weui-dialog">
+                            <div class="weui-dialog__bd" v-text="errMsg"></div>
+                            <div class="weui-dialog__ft">
+                                <a @click="showErrMsg=false" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="weui-tab__panel">
+                        <div class="panel">
+
+                            <div class="weui-navbar" style="position: relative;height: 40px;background-color: #F9F9F9;
+                            font-size: 15px; color: #999999;">
+                                <div class="weui-navbar__item " @click="goJour" >
+                                    跟进记录
+                                </div>
+                                <div class="weui-navbar__item weui-bar__item_on"  style="border-bottom: inset rgba(56, 164, 242, 1); color: rgba(56, 164, 242, 1)" >
+                                    相关商机
+                                </div>
+                            </div>
+
+                            <div id="opportuityNull" class="blank" style="margin:20% auto auto auto; text-align:center; "
+                                 v-show="showNull ==='null'">
+                                <p>
+                                    <img src="/images/opportunity/opportunityNull.svg"/>
+                                </p>
+                                <p style="color: #CCCCCC; font-size: small">还没有创建相关的商机哦，快去创建吧</p>
+                            </div>
+
+
+                            <div v-for="opportunity in opportunityList">
+                                <div class="weui-panel weui-panel_access" @click="detail(opportunity.opportunityId)">
+                                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg"
+                                       style="padding: 8px 10px ;">
+                                        <div class="weui-media-box__hd">
+                                            <img class="weui-media-box__thumb" :src="imgSrc(opportunity.salesStatus)"
+                                                 style="width: 40px;height: 40px;margin-top: 10px" alt="">
+                                        </div>
+
+                                        <div class="weui-media-box__bd">
+                                            <label class="weui-media-box__title"
+                                                   style="font-size: 15px;color: #333333;">{{opportunity.opportunityName}}</label>
+                                            <p class="weui-media-box__desc" style="font-size: 12px;color: #888888;">
+                                                {{opportunity.customerName}}
+                                                <label class="pull-right" style="font-size: 12px;color: #101010;">
+                                                    <span v-if="opportunity.checkDate === undefined"></span>
+                                                    <span v-else>
+                                                <span v-text="opportunity.checkDate.substring(0,11)"></span>
+                                            </span>
+
+                                                </label>
+                                            </p>
+                                            <p class="weui-media-box__desc" style="font-size: 12px;color: #A0B4BB;">
+                                        <span v-if="opportunity.salesStatus !='F'">
+                                        <!--{{opportunity.salesStatus}} &nbsp;阶段-->
+                                            {{translateStatus(opportunity.salesStatus)}}
+                                            </span>
+                                                <span v-else>输单</span>
+                                                <label class="pull-right" style="font-size: 15px;color: #A0B4BB;">
+                                                    {{opportunity.amount}}元</label>
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div id="loadingToast" style="display:none;">
+                                <div class="weui-mask_transparent"></div>
+                                <div class="weui-toast">
+                                    <i class="weui-loading weui-icon_toast"></i>
+                                    <p class="weui-toast__content">数据加载中</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+    <div class="weui-tabbar" style="height: 50px;font-size: 15px; background: #FFFFFF">
+        <a href="javascript:;" class="weui-tabbar__item " @click="backToInfo">
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/信息1.png" alt="" class="weui-tabbar__icon"  style="width: 23px;height: 27px;">
+                    </span>
+            <p class="weui-tabbar__label">代理商信息</p>
+        </a>
+        <a class="weui-tabbar__item weui-bar__item_on" @click="orgDisplay()" >
+            <span style="display: inline-block;position: relative;">
+                        <img src="/images/customer/相关2.svg" alt="" class="weui-tabbar__icon">
+                    </span>
+            <p class="weui-tabbar__label">相关</p>
+        </a>
+    </div>
+</div>
+</body>
+
+</html>
