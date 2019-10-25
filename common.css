@@ -1,0 +1,40 @@
+.fix-item {
+   position: fixed;
+    z-index: 999;
+    width: 100%;
+    border-bottom:1px solid #e5e5e5;
+}
+
+.defaultSpan {
+    color: #CCCCCC;
+}
+
+.chosenSpan {
+    color: #888888;
+}
+
+.noBorder{
+    height: 15px;
+    background: #F8F8F8;
+}
+.topBottomBorder {
+    height: 15px;
+    border-top:1px solid #e5e5e5;
+    border-bottom:1px solid #e5e5e5;
+    background: #F8F8F8;
+}
+.topBorder{
+    height: 15px;
+    border-top:1px solid #e5e5e5;
+    background: #F8F8F8;
+}
+
+.bottomBorder{
+    height: 15px;
+    border-bottom:1px solid #e5e5e5;
+    background: #F8F8F8;
+}
+
+.selectDirRlt{
+    direction: rtl;
+}

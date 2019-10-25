@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuebei.crm.project.ProjectMapper">
+
+    <resultMap id="projectMap" type="com.xuebei.crm.project.Project">
+        <id property="projectId" column="sales_opportunity_id"/>
+        <result property="projectName" column="opportunity_nm"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="status" column="sales_status"/>
+        <result property="amount" column="amount"/>
+        <result property="deadLine" column="clinch_date"/>
+        <result property="content" column="content"/>
+        <result property="leaderId" column="leader"/>
+        <result property="leaderName" column="leader_nm"/>
+        <result property="progress" column="progress"/>
+        <result property="userId" column="user_id"/>
+        <result property="agent" column="agent"/>
+        <result property="createTime" column="create_ts"/>
+        <result property="updaterId" column="updater_id"/>
+        <result property="updateTime" column="update_ts"/>
+    </resultMap>
+    <resultMap id="testMap" type="com.xuebei.crm.opportunity.Opportunity">
+        <result property="opportunityName" column="opportunity_nm"/>
+        <result property="opportunityId" column="sales_opportunity_id"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="customerId" column="prt_nm"/>
+        <result property="failReason" column="department_nm"/>
+        <result property="agent" column="type_name"/>
+        <result property="userId" column="real_nm"/>
+        <result property="amount" column="amount"/>
+        <result property="salesStatus" column="sales_status"/>
+    </resultMap>
+
+    <resultMap id="projectDetailMap" type="com.xuebei.crm.project.ProjectDetail">
+        <id property="projectId" column="project_id"/>
+        <result property="projectName" column="project_nm"/>
+        <result property="amount" column="amount"/>
+        <result property="content" column="content"/>
+        <result property="status" column="sales_status"/>
+        <result column="status" property="applyStatus"/>
+        <result property="agent" column="agent"/>
+        <result property="clinchDate" column="clinch_date"/>
+        <result property="creatorId" column="user_id"/>
+        <result property="creatorName" column="creator"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="progress" column="progress"/>
+        <result property="leaderId" column="leader"/>
+        <result property="leaderName" column="leader_nm"/>
+        <result property="leaderPhone" column="leader_t"/>
+        <association property="projectContacts" javaType="com.xuebei.crm.project.ProjectContacts">
+            <id property="contactsName" column="contacts_nm"/>
+            <result property="customerName" column="customer_nm"/>
+            <result property="topDeptName" column="prt_dept_nm"/>
+            <result property="subDeptName" column="dept_nm"/>
+            <result property="type" column="contacts_type"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="supportMap" type="com.xuebei.crm.opportunity.Support">
+        <id property="supportId" column="support_id"/>
+        <result property="salesOpportunityId" column="sales_opportunity_id"/>
+        <result property="supportType" column="support_type"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="order" column="support_order"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <resultMap id="opportunityMap" type="com.xuebei.crm.opportunity.Opportunity">
+        <id property="opportunityId" column="sales_opportunity_id"/>
+        <result property="opportunityName" column="opportunity_nm"/>
+        <result property="salesStatus" column="sales_status"/>
+    </resultMap>
+
+    <resultMap id="projectStartMap" type="com.xuebei.crm.project.ProjectStart">
+        <id property="id" column="start_project_id"/>
+        <result column="sales_opportunity_id" property="projectId"/>
+        <result column="status" property="status"/>
+        <result column="apply_content" property="applyContent"/>
+        <result column="user_id" property="userId"/>
+        <association property="projectName" javaType="java.lang.String">
+            <id property="projectId" column="sales_opportunity_id"/>
+            <result column="opportunity_nm" property="projectName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="contractMap" type="com.xuebei.crm.project.Contract">
+        <id column="contract_id" property="contractId"/>
+        <result column="contract_no" property="contractNo"/>
+        <result column="project_id" property="projectId"/>
+        <result column="amount" property="amount"/>
+        <result column="advance_pay" property="advancePay"/>
+        <result column="advance_time" property="advanceTime"/>
+    </resultMap>
+
+    <resultMap id="refundLogMap" type="com.xuebei.crm.project.Refund">
+        <id column="refund_id" property="refundId"/>
+        <result column="project_id" property="projectId"/>
+        <result column="refund_amount" property="refundNum"/>
+        <result column="refund_condition" property="condition"/>
+        <result column="is_refunded" property="isRefunded"/>
+        <result column="refund_time" property="time"/>
+    </resultMap>
+
+    <resultMap id="missionMap" type="com.xuebei.crm.project.ProjectDetail">
+        <id property="projectId" column="support_id"/>
+        <result property="projectName" column="project_nm"/>
+        <result property="creatorName" column="creator"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="leaderName" column="leader_nm"/>
+        <result property="leaderPhone" column="leader_t"/>
+        <association property="projectContacts" javaType="com.xuebei.crm.project.ProjectContacts">
+            <id property="contactsName" column="contacts_nm"/>
+            <result property="customerName" column="customer_nm"/>
+            <result property="topDeptName" column="prt_dept_nm"/>
+            <result property="subDeptName" column="dept_nm"/>
+            <result property="type" column="contacts_type"/>
+        </association>
+        <association property="support" javaType="com.xuebei.crm.opportunity.Support">
+            <id property="supportId" column="support_id"/>
+            <result property="supportType" column="support_type"/>
+            <result property="order" column="support_order"/>
+            <result property="expireDate" column="expire_date"/>
+            <result property="content" column="content"/>
+            <result property="percent" column="percent"/>
+            <result property="leader" column="leader"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="supportInforMap" type="com.xuebei.crm.opportunity.Support">
+        <id property="salesOpportunityId" column="information_id"/>
+        <id property="supportId" column="support_id"/>
+        <result property="content" column="information"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="createTs" column="create_ts"/>
+    </resultMap>
+
+    <resultMap id="companyUserMap" type="com.xuebei.crm.company.CompanyUser">
+        <id property="userId" column="user_id"/>
+        <result property="crmUserName" column="real_nm"/>
+    </resultMap>
+
+
+    <insert id="insertProject" parameterType="com.xuebei.crm.project.Project"
+            useGeneratedKeys="true" keyColumn="sales_opportunity_id" keyProperty="projectId">
+        INSERT INTO sales_opportunity
+        (`customer_id`, `opportunity_nm`,
+         `sales_status`, `amount`, `clinch_date`, `agent`, `leader`,
+         `content`, `user_id`, `create_ts`, `updater_id`, `update_ts`)
+        VALUES
+            (#{customerId}, #{projectName}, #{status}, #{amount}, #{deadLine},
+                            #{agent}, #{leaderId}, #{content}, #{userId}, NOW(),
+                            #{userId}, NOW()
+            )
+    </insert>
+
+    <insert id="insertProjectStart" parameterType="com.xuebei.crm.project.ProjectStart"
+            useGeneratedKeys="true" keyColumn="start_project_id" keyProperty="id">
+        INSERT INTO project_start (
+            `status`, `apply_content`, `sales_opportunity_id`, `user_id`, `create_ts`
+        ) VALUES (
+            'applying', #{applyContent}, #{projectId}, #{userId}, NOW()
+        )
+    </insert>
+
+    <insert id="insertContract" parameterType="com.xuebei.crm.project.Contract">
+        INSERT INTO contract (
+            `contract_id`, `contract_no`, `project_id`,
+            `amount`, `advance_pay`, `advance_time`
+        ) VALUES (
+            #{contractId}, #{contractNo}, #{projectId},
+            #{amount}, #{advancePay}, #{advanceTime}
+        )
+    </insert>
+
+    <insert id="insertRefund" parameterType="com.xuebei.crm.project.Refund"
+            useGeneratedKeys="true" keyColumn="refund_id" keyProperty="refundId">
+        INSERT INTO refund_log (
+            `project_id`, `refund_amount`, `refund_condition`, `is_refunded`
+        ) VALUES (
+            #{projectId}, #{refundNum}, #{condition}, 0
+        )
+    </insert>
+
+    <update id="isRefunded">
+        UPDATE refund_log
+        SET
+            is_refunded = #{isRefunded}, refund_time = #{time}
+        WHERE project_id = #{projectId} AND refund_id = #{refundId} AND refund_log.is_refunded = 0;
+    </update>
+
+    <update id="updateProjectStart" parameterType="com.xuebei.crm.project.ProjectStart">
+        UPDATE project_start
+        SET
+            status = 'applying', apply_content = #{applyContent}
+        WHERE start_project_id = #{id}
+    </update>
+
+    <update id="refuseProject" parameterType="java.lang.Integer">
+        UPDATE project_start
+        SET
+            status = 'refused'
+        WHERE sales_opportunity_id = #{projectId}
+    </update>
+
+    <update id="passProject" parameterType="java.lang.Integer">
+        UPDATE project_start
+        SET
+            status = 'permitted'
+        WHERE sales_opportunity_id = #{projectId}
+    </update>
+
+    <update id="updateProjectStatus" parameterType="java.lang.Integer">
+        UPDATE sales_opportunity
+        SET
+            sales_status = '1', progress = 0
+        WHERE sales_opportunity_id = #{projectId}
+    </update>
+
+    <update id="refundProject" parameterType="java.lang.Integer">
+        UPDATE sales_opportunity
+        SET
+            sales_status = '2'
+        WHERE sales_opportunity_id = #{projectId} AND sales_status != '2'
+    </update>
+
+    <update id="endProject" parameterType="java.lang.Integer">
+        UPDATE sales_opportunity
+        SET
+            sales_status = '3'
+        WHERE sales_opportunity_id = #{projectId}
+    </update>
+
+    <update id="updateProgress">
+        UPDATE sales_opportunity
+        SET
+            progress = #{progress}
+        WHERE sales_opportunity_id = #{projectId}
+    </update>
+
+    <update id="assignLeader">
+        UPDATE sales_opportunity
+        SET
+            leader = #{leader}
+        WHERE sales_opportunity_id = #{projectId}
+    </update>
+
+    <update id="updateContract" parameterType="com.xuebei.crm.project.Contract">
+        UPDATE contract
+        SET
+            amount = #{amount}, advance_pay = #{advancePay}, advance_time = #{advanceTime}
+        WHERE contract_id = #{contractId}
+    </update>
+
+    <update id="updateRefund" parameterType="com.xuebei.crm.project.Refund">
+        UPDATE refund_log
+        SET
+            refund_amount = #{refundNum}, refund_condition = #{condition}
+        WHERE refund_id = #{refundId}
+    </update>
+
+    <select id="searchProject" resultMap="projectMap">
+        SELECT s.sales_opportunity_id, s.opportunity_nm, s.customer_id, s.sales_status, s.amount, s.clinch_date,
+        uv.real_nm AS leader_nm,
+        s.agent, s.leader,s.progress, s.content, s.user_id, s.create_ts, s.updater_id, s.update_ts FROM
+        sales_opportunity s
+        INNER JOIN crm_customer v ON s.customer_id = v.customer_id
+        LEFT JOIN opportunity_contacts oc ON s.sales_opportunity_id=oc.sales_opportunity_id
+        LEFT JOIN contacts conts ON oc.contacts_id=conts.contacts_id
+        LEFT JOIN project_start ps ON ps.sales_opportunity_id = s.sales_opportunity_id
+        Left JOIN user_view uv ON s.leader = uv.user_id
+        WHERE s.sales_status in ( '0' , '1', '2', '3')
+
+        <if test="isAdmin != 'ADMIN'">
+            AND ( ( s.leader = #{userId} AND ps.status = 'permitted' )
+            OR s.user_id IN
+            <foreach item="subId" collection="subMember" open="(" separator="," close=")">
+                #{subId}
+            </foreach>
+            )
+        </if>
+        <if test="isAdmin == 'ADMIN'">
+            AND s.user_id in ( select m.user_id from company_user m where m.company_id =
+            ( select n.company_id from company_user n where n.user_id = #{userId}))
+            AND ( ps.status != 'refused' OR ps.status IS NULL )
+        </if>
+        <if test="keyWord != null and keyWord != ''">
+            AND (s.opportunity_nm LIKE CONCAT('%', #{keyWord}, '%') OR v.customer_nm LIKE CONCAT('%', #{keyWord}, '%')
+            <if test = "createIds!=null">
+                OR s.updater_id IN
+                <foreach item="createId" collection="createIds" open="(" separator="," close=")">
+                    #{createId}
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="creator == 'sub' or subUsers != null">
+            AND s.user_id IN
+            <foreach item="subId" collection="subMember" open="(" separator="," close=")">
+                #{subId}
+            </foreach>
+        </if>
+
+        <if test="startTime != null">
+            AND s.create_ts &gt; #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND s.create_ts &lt;#{endTime}
+        </if>
+        <if test="status != null and status != 'all'">
+            AND s.sales_status = #{status}
+        </if>
+        <if test="creator == 'mine'">
+            AND s.user_id = #{userId}
+        </if>
+
+        <if test="customerName != null and customerName != ''">
+            AND (v.customer_nm LIKE CONCAT('%', #{customerName}, '%')
+            OR conts.real_nm LIKE CONCAT('%', #{customerName}, '%'))
+        </if>
+        <if test="before != null and before != ''">
+            AND s.sales_status in ('0', '1')
+        </if>
+        <if test="after != null and after != ''">
+            AND s.sales_status in ('2', '3')
+        </if>
+    </select>
+
+    <select id="getProjectStart" resultMap="projectStartMap">
+        SELECT *
+        FROM project_start ps
+        WHERE ps.sales_opportunity_id = #{projectId} AND ps.user_id = #{userId}
+    </select>
+
+    <select id="getRefundStage" resultType="java.lang.Integer">
+        SELECT count(*) FROM refund_log
+        WHERE project_id = #{projectId}
+        <if test="isRefunded != 2 ">
+            AND is_refunded = #{isRefunded}
+        </if>
+    </select>
+
+    <select id="getRefunds" resultMap="refundLogMap">
+        SELECT *
+        FROM refund_log
+        WHERE project_id = #{projectId}
+    </select>
+
+    <select id="getContract" resultMap="contractMap">
+        SELECT *
+        FROM contract
+        WHERE project_id = #{projectId} limit 1;
+    </select>
+
+    <select id="queryOpportunitiesByUserId" resultMap="opportunityMap">
+        SELECT
+            sales_opportunity_id,
+            opportunity_nm
+        FROM sales_opportunity
+        WHERE user_id = #{userId} AND has_delete = 0;
+    </select>
+
+    <select id="queryOpportunitiesByUserIds" resultMap="opportunityMap">
+        SELECT
+        sales_opportunity_id,
+        opportunity_nm
+        FROM sales_opportunity
+        WHERE user_id in
+        <foreach collection="userIds" item="item" index="i" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        AND has_delete = 0;
+    </select>
+
+    <select id="queryOpportunityNameByOpportunityId" resultType="java.lang.String">
+        SELECT opportunity_nm
+        FROM sales_opportunity
+        WHERE sales_opportunity_id = #{opportunityId};
+    </select>
+
+    <select id="queryOpportunity" resultMap="testMap">
+        SELECT
+            a.opportunity_nm,
+            a.sales_status,
+            a.amount,
+            qq.type_name,
+            c.sales_opportunity_id,
+            d.contacts_type_id,
+            d.real_nm,
+            e.department_nm,
+            f.department_nm AS prt_nm,
+            g.customer_nm,
+            g.customer_id
+        FROM sales_opportunity AS a
+            INNER JOIN opportunity_contacts c ON a.sales_opportunity_id = c.sales_opportunity_id
+            INNER JOIN contacts AS d ON c.contacts_id = d.contacts_id
+            INNER JOIN contacts_type qq ON qq.contacts_type_id = d.contacts_type_id
+            INNER JOIN customer_dept AS e ON d.customer_dept_id = e.customer_dept_id
+            INNER JOIN crm_customer AS g ON g.customer_id = e.customer_id
+            LEFT JOIN customer_dept AS f ON e.prt_id = f.customer_dept_id
+        WHERE a.sales_opportunity_id = #{opportunityid}
+    </select>
+    <select id="queryOpportunity2" resultMap="testMap">
+        SELECT
+            a.opportunity_nm,
+            a.sales_status,
+            a.amount,
+            b.*,
+            qq.type_name
+        FROM sales_opportunity AS a LEFT JOIN
+            (
+                SELECT
+                    c.sales_opportunity_id,
+                    c.contacts_id,
+                    d.contacts_type_id,
+                    d.real_nm,
+                    e.department_nm,
+                    f.department_nm AS prt_nm,
+                    g.customer_nm
+                FROM
+                    opportunity_contacts AS c LEFT JOIN contacts AS d
+                        ON
+                            c.contacts_id = d.contacts_id
+                    LEFT JOIN customer_dept AS e ON d.customer_dept_id = e.customer_dept_id
+                    LEFT JOIN customer_dept AS f ON e.prt_id = f.customer_dept_id
+                    LEFT JOIN crm_customer AS g ON g.customer_id = e.customer_id
+            ) AS b
+                ON a.sales_opportunity_id = b.sales_opportunity_id
+            LEFT JOIN contacts_type qq
+                ON qq.contacts_type_id = b.contacts_type_id
+        WHERE b.contacts_id = #{contactsId}
+    </select>
+
+    <select id="queryProjectDetailById" resultMap="projectDetailMap">
+        SELECT
+            A.sales_opportunity_id AS project_id,
+            A.opportunity_nm       AS project_nm,
+            A.amount,
+            A.content,
+            A.agent,
+            A.clinch_date,
+            A.sales_status,
+            U.real_nm              AS creator,
+            A.create_ts,
+            A.leader,
+            A.progress,
+            A.user_id,
+            p.status,
+            C.real_nm              AS contacts_nm,
+            C.department_nm        AS dept_nm,
+            D.customer_nm,
+            F.department_nm        AS prt_dept_nm,
+            H.type_name            AS contacts_type,
+            U2.real_nm             AS leader_nm,
+            U2.TEL                 AS leader_t
+        FROM sales_opportunity A LEFT JOIN opportunity_contacts B ON a.sales_opportunity_id = B.sales_opportunity_id
+            LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+            LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+            LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+            LEFT JOIN contacts G ON B.contacts_id = G.contacts_id
+            LEFT JOIN contacts_type H ON G.contacts_type_id = H.contacts_type_id
+            LEFT JOIN user_view U ON A.user_id = U.user_id
+            LEFT JOIN user_view U2 ON A.leader = U2.user_id
+            LEFT JOIN project_start p ON A.sales_opportunity_id = p.sales_opportunity_id
+        WHERE A.has_delete = 0 AND A.sales_opportunity_id = #{projectId} limit 1;
+    </select>
+
+
+    <select id="queryProjectDetailByChargId" resultMap="projectDetailMap">
+        SELECT
+               A.sales_opportunity_id AS project_id,
+               A.opportunity_nm       AS project_nm,
+               A.amount,
+               A.content,
+               A.agent,
+               A.clinch_date,
+               A.sales_status,
+               U.real_nm              AS creator,
+               A.create_ts,
+               A.leader,
+               A.progress,
+               A.user_id,
+               p.status,
+               C.real_nm              AS contacts_nm,
+               C.department_nm        AS dept_nm,
+               D.customer_nm,
+               F.department_nm        AS prt_dept_nm,
+               H.type_name            AS contacts_type,
+               U2.real_nm             AS leader_nm,
+               U2.TEL                 AS leader_t
+        FROM sales_opportunity A LEFT JOIN opportunity_contacts B ON a.sales_opportunity_id = B.sales_opportunity_id
+                                 LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+                                 LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+                                 LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+                                 LEFT JOIN contacts G ON B.contacts_id = G.contacts_id
+                                 LEFT JOIN contacts_type H ON G.contacts_type_id = H.contacts_type_id
+                                 LEFT JOIN user_view U ON A.user_id = U.user_id
+                                 LEFT JOIN user_view U2 ON A.leader = U2.user_id
+                                 LEFT JOIN project_start p ON A.sales_opportunity_id = p.sales_opportunity_id
+        WHERE A.has_delete = 0 AND A.charge_id = #{chargeId} limit 1;
+    </select>
+
+    <select id="queryProjectDetailByMakeId" resultMap="projectDetailMap">
+        SELECT
+               A.sales_opportunity_id AS project_id,
+               A.opportunity_nm       AS project_nm,
+               A.amount,
+               A.content,
+               A.agent,
+               A.clinch_date,
+               A.sales_status,
+               U.real_nm              AS creator,
+               A.create_ts,
+               A.leader,
+               A.progress,
+               A.user_id,
+               p.status,
+               C.real_nm              AS contacts_nm,
+               C.department_nm        AS dept_nm,
+               D.customer_nm,
+               F.department_nm        AS prt_dept_nm,
+               H.type_name            AS contacts_type,
+               U2.real_nm             AS leader_nm,
+               U2.TEL                 AS leader_t
+        FROM sales_opportunity A LEFT JOIN opportunity_contacts B ON a.sales_opportunity_id = B.sales_opportunity_id
+                                 LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+                                 LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+                                 LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+                                 LEFT JOIN contacts G ON B.contacts_id = G.contacts_id
+                                 LEFT JOIN contacts_type H ON G.contacts_type_id = H.contacts_type_id
+                                 LEFT JOIN user_view U ON A.user_id = U.user_id
+                                 LEFT JOIN user_view U2 ON A.leader = U2.user_id
+                                 LEFT JOIN project_start p ON A.sales_opportunity_id = p.sales_opportunity_id
+        WHERE A.has_delete = 0 AND A.decision_maker_id = #{makeId};
+    </select>
+
+
+    <select id="querySupportsByProjectId" resultMap="supportMap">
+        SELECT *
+        FROM support
+        WHERE sales_opportunity_id = #{projectId};
+    </select>
+
+    <select id="queryMissionUn" resultMap="missionMap">
+        SELECT S.support_id, A.sales_opportunity_id AS project_id, A.opportunity_nm AS project_nm,
+        S.support_type, S.expire_date,S.support_order,S.content,
+        U.real_nm AS creator, S.create_ts,S.percent,
+        C.real_nm AS contacts_nm, C.department_nm AS dept_nm, D.customer_nm,
+        F.department_nm AS prt_dept_nm, H.type_name AS contacts_type,
+        U2.real_nm AS leader_nm, U2.TEL AS leader_t
+        from support S
+        inner join sales_opportunity A on A.sales_opportunity_id = S.sales_opportunity_id
+        LEFT JOIN opportunity_contacts B ON A.sales_opportunity_id = B.sales_opportunity_id
+        LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+        LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+        LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+        LEFT JOIN contacts G ON B.contacts_id = G.contacts_id
+        LEFT JOIN contacts_type H ON G.contacts_type_id = H.contacts_type_id
+        LEFT JOIN user_view U ON S.creator_id = U.user_id
+        LEFT JOIN user_view U2 ON S.leader = U2.user_id
+        where A.has_delete = 0 and
+        S.percent != 100
+        <if test="admin">
+            And S.creator_id in (select cu.user_id from company_user cu where cu.company_id =
+            (select cu.company_id from company_user cu
+            where cu.user_id = #{userId})
+            )
+        </if>
+        <if test="!admin">
+            And ( S.creator_id = #{userId} OR S.leader = #{userId} OR S.creator_id IN
+            <foreach collection="subUserId" index="index" item="subId" open="(" separator="," close=")">
+                #{subId}
+            </foreach>
+            )
+        </if>
+        order by S.create_ts DESC
+
+    </select>
+
+    <select id="queryMission" resultMap="missionMap">
+        SELECT S.support_id, A.sales_opportunity_id AS project_id, A.opportunity_nm AS project_nm,
+        S.support_type, S.expire_date,S.support_order,S.content,
+        U.real_nm AS creator, S.create_ts,S.percent,
+        C.real_nm AS contacts_nm, C.department_nm AS dept_nm, D.customer_nm,
+        F.department_nm AS prt_dept_nm, H.type_name AS contacts_type,
+        U2.real_nm AS leader_nm, U2.TEL AS leader_t
+        from support S
+        inner join sales_opportunity A on A.sales_opportunity_id = S.sales_opportunity_id
+        LEFT JOIN opportunity_contacts B ON A.sales_opportunity_id = B.sales_opportunity_id
+        LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+        LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+        LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+        LEFT JOIN contacts G ON B.contacts_id = G.contacts_id
+        LEFT JOIN contacts_type H ON G.contacts_type_id = H.contacts_type_id
+        LEFT JOIN user_view U ON S.creator_id = U.user_id
+        LEFT JOIN user_view U2 ON S.leader = U2.user_id
+        where A.has_delete = 0 and
+        S.percent = 100
+        <if test="admin">
+            And S.creator_id in (select cu.user_id from company_user cu where cu.company_id =
+            (select cu.company_id from company_user cu
+            where cu.user_id = #{userId})
+            )
+        </if>
+        <if test="!admin">
+            And ( S.creator_id = #{userId} OR S.leader = #{userId} OR S.creator_id IN
+            <foreach collection="subUserId" index="index" item="subId" open="(" separator="," close=")">
+                #{subId}
+            </foreach>
+            )
+        </if>
+        order by S.create_ts DESC
+    </select>
+
+    <select id="queryMissionDetail" resultMap="missionMap">
+        SELECT
+            S.support_id,
+            A.sales_opportunity_id AS project_id,
+            A.opportunity_nm       AS project_nm,
+            S.support_type,
+            S.expire_date,
+            S.support_order,
+            S.content,
+            S.leader,
+            U.real_nm              AS creator,
+            S.create_ts,
+            S.percent,
+            C.real_nm              AS contacts_nm,
+            C.department_nm        AS dept_nm,
+            D.customer_nm,
+            F.department_nm        AS prt_dept_nm,
+            H.type_name            AS contacts_type,
+            U2.real_nm             AS leader_nm,
+            U2.TEL                 AS leader_t
+        FROM support S
+            INNER JOIN sales_opportunity A ON A.sales_opportunity_id = S.sales_opportunity_id
+            LEFT JOIN opportunity_contacts B ON A.sales_opportunity_id = B.sales_opportunity_id
+            LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+            LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+            LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+            LEFT JOIN contacts G ON B.contacts_id = G.contacts_id
+            LEFT JOIN contacts_type H ON G.contacts_type_id = H.contacts_type_id
+            LEFT JOIN user_view U ON S.creator_id = U.user_id
+            LEFT JOIN user_view U2 ON S.leader = U2.user_id
+        WHERE S.support_id = #{supportId}
+    </select>
+
+    <select id="querySupportInformation" resultMap="supportInforMap">
+        SELECT *
+        FROM mission_information m
+        WHERE m.support_id = #{supportId}
+    </select>
+
+    <insert id="insertProgressInform">
+        INSERT INTO mission_information (support_id, information, create_ts, creator_id)
+        VALUES (#{supportId}, #{progress}, NOW(), #{userId})
+    </insert>
+
+    <update id="updateSupportProgress">
+        UPDATE support s
+        SET s.percent = #{progress}, s.updater_id = #{userId}, s.update_ts = NOW()
+        WHERE s.support_id = #{supportId}
+    </update>
+
+    <select id="queryCompanyUser" resultMap="companyUserMap">
+        SELECT
+            c.user_id,
+            cu.real_nm
+        FROM company_user c
+            INNER JOIN crm_user cu ON cu.crm_user_id = c.crm_user_id
+        WHERE c.user_id IN (SELECT c.user_id
+                            FROM company_user c
+                            WHERE c.company_id =
+                                  (SELECT c.company_id
+                                   FROM company_user c
+                                   WHERE c.user_id = #{userId}))
+              AND cu.real_nm LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+    <update id="setSupportLeader">
+        UPDATE support s
+        SET s.leader = #{leaderId}, s.updater_id = #{userId}, s.update_ts = NOW()
+        WHERE s.support_id = #{supportId}
+    </update>
+
+    <update id="modifyProject" parameterType="com.xuebei.crm.opportunity.Opportunity">
+        UPDATE sales_opportunity
+        SET
+            opportunity_nm = #{opportunityName},
+            sales_status   = #{salesStatus},
+            amount         = #{amount},
+            clinch_date    = #{clinchDate},
+            content        = #{content},
+            agent          = #{agent},
+            updater_id     = #{userId},
+            update_ts      = NOW()
+        WHERE sales_opportunity_id = #{opportunityId}
+    </update>
+
+
+    <select id="getSubordinatesOpportunityByAgentAndCustomerList" resultMap="testMap">
+        SELECT
+        a.opportunity_nm,
+        a.sales_opportunity_id,
+        a.sales_status,
+        a.amount,
+        qq.type_name,
+        c.sales_opportunity_id,
+        d.contacts_type_id,
+        d.real_nm,
+        e.department_nm,
+        f.department_nm AS prt_nm,
+        g.customer_nm,
+        g.customer_id
+        FROM sales_opportunity AS a
+        left JOIN opportunity_contacts c ON a.sales_opportunity_id = c.sales_opportunity_id
+        left JOIN contacts AS d
+        ON (c.contacts_id = d.contacts_id or a.decision_maker_id=d.contacts_id)
+        left JOIN contacts_type qq ON qq.contacts_type_id = d.contacts_type_id
+        left JOIN customer_dept AS e ON d.customer_dept_id = e.customer_dept_id
+        left JOIN crm_customer AS g ON g.customer_id = e.customer_id
+        LEFT JOIN customer_dept AS f ON e.prt_id = f.customer_dept_id
+        WHERE a.user_id in
+        <foreach collection="userGroup" item="item" index="i" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        and (
+        <if test="agents!=null and agents.size>0">
+            a.agent_id in
+            <foreach collection="agents" item="item" index="i" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="customerList!=null and customerList.size>0">
+            <if test="agents!=null and agents.size>0">
+                or
+            </if>
+            (
+            a.customer_id in
+            <foreach collection="customerList" item="item" index="i" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            <if test="userIds!=null and userIds.size>0">
+                and a.decision_maker_id in
+                <foreach collection="userIds" item="item" index="i" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            )
+        </if>
+        )
+        AND a.has_delete = 0;
+    </select>
+
+    <select id="getOpportunityByIds" resultMap="testMap">
+        SELECT
+        a.opportunity_nm,
+        a.sales_opportunity_id,
+        a.sales_status,
+        a.amount,
+        qq.type_name,
+        c.sales_opportunity_id,
+        d.contacts_type_id,
+        d.real_nm,
+        e.department_nm,
+        f.department_nm AS prt_nm,
+        g.customer_nm,
+        g.customer_id
+        FROM sales_opportunity AS a
+        INNER JOIN opportunity_contacts c ON a.sales_opportunity_id = c.sales_opportunity_id
+        INNER JOIN contacts AS d ON c.contacts_id = d.contacts_id
+        INNER JOIN contacts_type qq ON qq.contacts_type_id = d.contacts_type_id
+        INNER JOIN customer_dept AS e ON d.customer_dept_id = e.customer_dept_id
+        INNER JOIN crm_customer AS g ON g.customer_id = e.customer_id
+        LEFT JOIN customer_dept AS f ON e.prt_id = f.customer_dept_id
+        WHERE a.sales_opportunity_id in
+        <foreach collection="oppIds" item="item" index="i" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryOpportunitySimple" resultMap="opportunityMap">
+        SELECT *
+        from sales_opportunity a
+                 inner join visit_log b on a.sales_opportunity_id = b.sales_opportunity_id
+                 inner join visit_contacts c on b.visit_log_id = c.visit_log_id
+        WHERE c.contacts_id = #{contactsId};
+    </select>
+</mapper>

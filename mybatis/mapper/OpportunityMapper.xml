@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xuebei.crm.opportunity.OpportunityMapper">
+
+    <resultMap id="companyMap" type="com.xuebei.crm.company.Company">
+        <id property="companyId" column="company_id"/>
+        <result property="companyName" column="com_nm"/>
+    </resultMap>
+
+    <resultMap id="modifyRecord" type="com.xuebei.crm.opportunity.OpportunityModify">
+        <id property="opportunityId" column="sales_opportunity_id"/>
+        <result property="opportunityName" column="opportunity_nm"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="realName" column="real_nm"/>
+        <result property="createTime" column="time_stamp"/>
+    </resultMap>
+
+    <resultMap id="visitMap" type="com.xuebei.crm.journal.VisitRecord">
+        <id property="visitId" column="visit_log_id"/>
+        <result property="journalId" column="journal_id"/>
+        <result property="visitType" column="visit_type"/>
+        <result property="updateTime" column="update_ts"/>
+        <result property="realName" column="real_nm"/>
+        <result property="visitResult" column="visit_result"/>
+    </resultMap>
+
+    <resultMap id="opportunityMap" type="com.xuebei.crm.opportunity.Opportunity">
+        <id property="opportunityId" column="sales_opportunity_id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="opportunityName" column="opportunity_nm"/>
+        <result property="salesStatus" column="sales_status"/>
+        <result property="failReason" column="fail_reason"/>
+        <result property="amount" column="amount"/>
+        <result property="userId" column="user_id"/>
+        <result property="create_ts" column="create_ts"/>
+        <result property="checkDate" column="check_date"/>
+        <result property="clinchDate" column="clinch_date"/>
+        <result property="updater_id" column="updater_id"/>
+        <result property="update_ts" column="update_ts"/>
+        <result property="agent" column="agent"/>
+        <result property="agentId" column="agent_id"/>
+        <result property="decisionMakerId" column="decision_maker_id"/>
+        <result property="agentLinkId" column="agent_link_id"/>
+        <result property="chargeId" column="charge_id"/>
+        <result property="containXuebei" column="contain_xuebei"/>
+        <result property="moneyFrom" column="money_from"/>
+    </resultMap>
+
+    <resultMap id="supportMap" type="com.xuebei.crm.opportunity.Support">
+        <id property="supportId" column="support_id"/>
+        <result property="salesOpportunityId" column="sales_opportunity_id"/>
+        <result property="supportType" column="support_type"/>
+        <result property="expireDate" column="expire_date"/>
+        <result property="order" column="support_order"/>
+        <result property="content" column="content"/>
+        <result property="leader" column="leader"/>
+        <result property="leaderName" column="real_nm"/>
+    </resultMap>
+
+    <sql id="salesStatusCommon">
+        ('A', 'B1','B2','B3','B4', 'C', 'D', 'F')
+    </sql>
+
+    <insert id="addSale" parameterType="com.xuebei.crm.opportunity.Opportunity"
+            useGeneratedKeys="true" keyColumn="sales_opportunity_id" keyProperty="opportunityId">
+        INSERT INTO `sales_opportunity` (`agent_id`, `decision_maker_id`, `agent_link_id`, `charge_id`,
+                                         `customer_id`, `opportunity_nm`,
+                                         `sales_status`, `amount`, `check_date`, `clinch_date`,
+                                         `content`,
+                                         `user_id`,
+                                         `create_ts`,
+                                         `updater_id`,
+                                         `update_ts`,
+                                         `contain_xuebei`,
+                                         `money_from`,
+                                         `is_excel_import`,
+                                         `agent`
+        ) VALUES (#{agentId},
+                  #{decisionMakerId},
+                  #{agentLinkId},
+                  #{chargeId},
+                  #{customerId},
+                  #{opportunityName},
+                  #{salesStatus},
+                  #{amount},
+                  #{checkDate},
+                  #{clinchDate},
+                  #{content},
+                  #{userId}, #{create_ts},
+                  #{userId} , NOW(), #{containXuebei}, #{moneyFrom},
+                  #{isExcelImport},
+                  #{agent}
+        )
+    </insert>
+
+    <insert id="addOpportunityContact">
+        INSERT INTO `opportunity_contacts` (
+            `sales_opportunity_id`, `contacts_id`
+        ) VALUES (
+            #{opportunityId},
+            #{contactId}
+        )
+    </insert>
+
+    <select id="queryOpportunityByAgentId" resultMap="opportunityMap">
+
+        SELECT s.sales_opportunity_id,
+               s.customer_id,
+               c.customer_nm,
+               s.opportunity_nm,
+               s.sales_status,
+               s.amount,
+               s.user_id,
+               s.create_ts,
+               s.check_date
+        FROM sales_opportunity s
+                 inner join company_user cu on cu.user_id in(select cu.user_id
+                                                             from company_user cu
+                                                             where cu.company_id =
+                                                                   (select cu.company_id
+                                                                    from company_user cu
+                                                                    where cu.user_id = #{scene})) and
+                                               cu.user_id = s.user_id
+                 LEFT JOIN crm_customer c ON c.customer_id = s.customer_id
+                 LEFT JOIN opportunity_contacts oc ON s.sales_opportunity_id = oc.sales_opportunity_id
+                 LEFT JOIN contacts conts ON oc.contacts_id = conts.contacts_id
+        WHERE s.sales_status IN <include refid="salesStatusCommon"/>
+          AND s.has_delete = 0 AND s.agent_id = #{agentId}
+
+    </select>
+
+    <select id="queryOpportunity" resultMap="opportunityMap">
+        SELECT
+        s.sales_opportunity_id,s.customer_id,c.customer_nm,s.opportunity_nm,s.sales_status,s.amount,s.user_id,s.create_ts,s.check_date
+        FROM sales_opportunity s
+        inner join company_user cu on cu.user_id in(select cu.user_id from company_user cu where cu.company_id =
+        (select cu.company_id from company_user cu where cu.user_id =#{scene})
+        ) and cu.user_id = s.user_id
+        LEFT JOIN crm_customer c ON c.customer_id = s.customer_id
+        LEFT JOIN opportunity_contacts oc ON s.sales_opportunity_id=oc.sales_opportunity_id
+        LEFT JOIN contacts conts ON  oc.contacts_id=conts.contacts_id
+        WHERE s.sales_status IN <include refid="salesStatusCommon"/> AND  s.has_delete = 0
+        <if test="!admin">
+            And ( s.user_id = #{curUserId} OR s.user_id IN
+            <foreach collection="subUserIdWhole" index="index" item="subId" open="(" separator="," close=")">
+                #{subId}
+            </foreach>
+            )
+        </if>
+        <if test="createStart != null">
+            AND s.create_ts &gt; #{createStart}
+        </if>
+        <if test="createEnd != null">
+            AND s.create_ts &lt; #{createEnd}
+        </if>
+        <if test="salesStatus != null and salesStatus != 'all' ">
+            AND s.sales_status = #{salesStatus}
+        </if>
+        <if test="customerName != null and customerName != ''">
+            AND (c.customer_nm LIKE CONCAT('%', #{customerName}, '%')
+            OR  conts.real_nm LIKE CONCAT('%', #{customerName}, '%'))
+        </if>
+        <if test="userId != null and userId != 'all' and userId !=''">
+            AND s.user_id = #{userId}
+        </if>
+        <if test="subUserId!= null  ">
+            AND s.user_id IN
+            <foreach item="subUserId" collection="subUserId" open="(" separator="," close=")">
+                #{subUserId}
+            </foreach>
+        </if>
+
+        <if test="subUser != null and subUser != '' ">
+            AND s.user_id IN
+            <foreach item="subUser" collection="chooseSubUser" open="(" separator="," close=")">
+                #{subUser}
+            </foreach>
+        </if>
+
+        <if test="keyWord != null and keyWord != ''">
+            AND (s.opportunity_nm LIKE CONCAT('%', #{keyWord}, '%') OR c.customer_nm LIKE CONCAT('%', #{keyWord}, '%')
+            <if test = "createIds!=null">
+                OR s.updater_id IN
+                <foreach item="createId" collection="createIds" open="(" separator="," close=")">
+                    #{createId}
+                </foreach>
+            </if>
+            )
+        </if>
+        <if test="sortMode == 'TASC'">
+            ORDER BY s.create_ts ASC
+        </if>
+        <if test="sortMode == 'TDESC'">
+            ORDER BY s.create_ts DESC
+        </if>
+        <if test="sortMode == 'SASC'">
+            ORDER BY s.sales_status ASC
+        </if>
+        <if test="sortMode == 'SDESC'">
+            ORDER BY s.sales_status DESC
+        </if>
+    </select>
+
+    <select id="opportunityDetail" resultMap="opportunityMap">
+         SELECT  s.*,c.customer_nm,cu.real_nm FROM sales_opportunity s
+        LEFT JOIN crm_customer c ON c.customer_id = s.customer_id
+        LEFT JOIN crm_user cu on cu.crm_user_id = (select cus.crm_user_id from company_user cus where cus.user_id = s.user_id)
+        WHERE s.sales_opportunity_id = #{opportunityId}
+    </select>
+
+    <select id="queryOpportunityCreator" resultType="java.lang.String">
+        select cu.real_nm  from crm_user cu where cu.crm_user_id =
+        (select cp.crm_user_id from company_user cp  where cp.user_id =
+        (select so.user_id from sales_opportunity so where
+        so.sales_opportunity_id = #{opportunityId}
+        ))
+    </select>
+
+    <update id="modifyOpportunity" parameterType="com.xuebei.crm.opportunity.Opportunity">
+        UPDATE sales_opportunity SET
+                                     opportunity_nm =#{opportunityName},
+                                     sales_status   =#{salesStatus},
+                                     amount         = #{amount},
+                                     check_date     =#{checkDate},
+                                     clinch_date    =#{clinchDate},
+                                     content        =#{content},
+                                     updater_id     = #{userId} ,
+                                     update_ts      = NOW()
+        WHERE sales_opportunity_id =#{opportunityId}
+    </update>
+
+    <insert id="addModificationRecord">
+        INSERT INTO opportunity_modification_record (
+            sales_opportunity_id, user_id, time_stamp, comment
+        ) VALUES (
+            #{opportunityId},
+            #{userId},
+            NOW(),
+            NULL
+        )
+    </insert>
+    <insert id="addStatusRecord">
+        INSERT INTO opportunity_change (
+            sales_opportunity_id, sales_status, new_status
+        ) VALUES (
+            #{opportunityId},
+            #{oldStatus},
+            #{newStatus}
+        )
+    </insert>
+
+    <select id="queryModifyRecord" resultMap="modifyRecord">
+        select om.sales_opportunity_id,so.opportunity_nm,cu.real_nm,cc.customer_nm,om.time_stamp
+        from opportunity_modification_record om
+        inner join sales_opportunity so on so.sales_opportunity_id = om.sales_opportunity_id
+        inner join crm_customer cc on cc.customer_id = so.customer_id
+        inner join crm_user cu on cu.crm_user_id =
+		  (select c.crm_user_id from company_user c where c.user_id = om.user_id)
+        where om.sales_opportunity_id = #{opportunityId}
+        ORDER  BY om.time_stamp DESC
+    </select>
+
+    <select id="queryVisitRecord" resultMap="visitMap">
+        select j.journal_id,vl.visit_log_id,j.user_id,cu.real_nm,j.update_ts,vl.visit_result,vl.visit_type
+        from journal j
+        left join visit_log  vl on j.journal_id = vl.journal_id
+        left join crm_user cu on cu.crm_user_id = (select c.crm_user_id from company_user c where c.user_id =j.user_id)
+        where j.has_submitted = 1
+        and vl.sales_opportunity_id = #{opportunityId}
+        ORDER  BY j.update_ts DESC
+    </select>
+
+
+    <update id="insertFailReason">
+        update sales_opportunity
+        set fail_reason=#{failReason}
+        where sales_opportunity_id= #{opportunityId}
+    </update>
+    <insert id="insertSupport">
+		INSERT INTO support (
+			sales_opportunity_id,
+			support_type,
+			expire_date,
+			support_order,
+			content,
+			create_ts,
+			creator_id,
+			updater_id,
+			update_ts
+		)
+		VALUES
+			(
+				#{salesOpportunityId},
+				#{supportType},
+				#{expireDate},
+				#{order},
+				#{content},
+				NOW(),
+				#{creatorId},
+				#{creatorId},
+				NOW()
+			);
+    </insert>
+
+    <update id="deleteOpportunity">
+        update sales_opportunity
+        set has_delete = 1
+        where sales_opportunity_id= #{opportunityId}
+    </update>
+
+    <update id="convertOpportunity">
+        update sales_opportunity
+        set sales_status = 0
+        where sales_opportunity_id= #{opportunityId}
+    </update>
+    
+    <select id="queryApplySupport" resultMap="supportMap">
+        select s.*,c.real_nm from support  s
+        left join crm_user c on c.crm_user_id =
+        (select cu.crm_user_id from company_user cu where cu.user_id = s.leader)
+          where s.sales_opportunity_id = #{opportunityId}
+    </select>
+
+    <select id="getOppByName" resultMap="opportunityMap">
+        select * from sales_opportunity where opportunity_nm=#{oppName} limit 1;
+    </select>
+
+    <select id="getOppoByParam" resultMap="opportunityMap">
+        SELECT
+        sales_opportunity_id, customer_id, opportunity_nm, sales_status, amount, check_date, agent, user_id, create_ts, agent_id, decision_maker_id
+        FROM sales_opportunity
+        WHERE create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and user_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and sales_status in
+        <foreach collection="types" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>;
+    </select>
+
+    <select id="getUpdateOppAgent" resultMap="opportunityMap">
+        select * from sales_opportunity where agent_id is not null and agent_id != '';
+    </select>
+
+    <update id="updateOppAgent">
+        update sales_opportunity set agent=#{agentName}
+        where sales_opportunity_id=#{opportunityId}
+    </update>
+</mapper>

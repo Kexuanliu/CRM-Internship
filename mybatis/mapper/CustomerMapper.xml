@@ -1,0 +1,1002 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.customer.CustomerMapper">
+
+    <resultMap id="deptMap" type="com.xuebei.crm.customer.Department">
+        <id property="deptId" column="customer_dept_id"/>
+        <result property="deptName" column="department_nm"/>
+        <result property="profile" column="profile"/>
+        <result property="website" column="website"/>
+        <result property="enclosureStatus" column="enclosure_status"/>
+        <association property="customer" javaType="com.xuebei.crm.customer.Customer">
+            <id property="customerId" column="customer_id"/>
+        </association>
+        <association property="parent" javaType="com.xuebei.crm.customer.Department">
+            <id property="deptId" column="prt_id"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="enclosureApplyMap" type="com.xuebei.crm.customer.EnclosureApply">
+        <id property="enclosureApplyId" column="enclosure_apply_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="statusCd" column="status_cd"/>
+        <result property="startTime" column="apply_start_ts"/>
+        <result property="endTime" column="apply_end_ts"/>
+        <result property="deptId" column="customer_dept_id"/>
+    </resultMap>
+
+    <resultMap id="contactsTypeMap" type="com.xuebei.crm.customer.ContactsType">
+        <id property="contactsTypeId" column="contacts_type_id"/>
+        <result property="typeName" column="type_name"/>
+    </resultMap>
+
+    <resultMap id="customerMap" type="com.xuebei.crm.customer.Customer">
+        <id property="customerId" column="customer_id"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="customerType" column="type_cd"/>
+        <result property="profile" column="profile"/>
+        <result property="website" column="website"/>
+        <result property="customerFrom" column="customer_from"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="createTime" column="create_ts"/>
+        <result property="createId" column="creator_id"/>
+        <result property="region" column="region"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+    </resultMap>
+
+    <resultMap id="contactsMap" type="com.xuebei.crm.customer.Contacts">
+        <id property="contactsId" column="contacts_id"/>
+        <result property="departmentId" column="customer_dept_id"/>
+        <result property="realName" column="real_nm"/>
+        <result property="gender" column="gender"/>
+        <result property="typeName" column="type_name"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="contactsTypeId" column="contacts_type_id"/>
+    </resultMap>
+
+    <resultMap id="contactsDetailMap" type="com.xuebei.crm.customer.Contacts">
+        <id property="contactsId" column="contacts_id"/>
+        <result property="departmentId" column="customer_dept_id"/>
+        <result property="realName" column="real_nm"/>
+        <result property="gender" column="gender"/>
+        <result property="phone" column="phone"/>
+        <result property="wechat" column="wechat"/>
+        <result property="tel" column="tel"/>
+        <result property="QQ" column="QQ"/>
+        <result property="email" column="email"/>
+        <result property="officeAddr" column="office_address"/>
+        <result property="profile" column="profile"/>
+        <result property="specialRelationship" column="special_relationship"/>
+        <association property="contactsType" javaType="com.xuebei.crm.customer.ContactsType">
+            <id property="contactsTypeId" column="contacts_type_id"/>
+            <result property="typeName" column="type_name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="visitMap" type="com.xuebei.crm.customer.Visit">
+        <id property="visitId" column="visit_log_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="visitTime" column="create_ts"/>
+        <result property="visitDept" column="des_id"/>
+    </resultMap>
+
+    <resultMap id="followUpRecordMap" type="com.xuebei.crm.customer.FollowUpRecord">
+        <result property="followUpTime" column="create_ts"/>
+        <result property="followUpPersonRealName" column="real_nm"/>
+        <result property="visitLogId" column="visit_log_id"/>
+        <result property="followUpType" column="visit_type"/>
+        <result property="followUpResult" column="visit_result"/>
+    </resultMap>
+
+    <resultMap id="contactsDeptMap" type="com.xuebei.crm.customer.ContactsDept">
+        <id property="contactsId" column="contacts_id"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="deptName" column="department_nm"/>
+        <result property="prtDeptName" column="prt_dept_name"/>
+        <result property="realName" column="real_nm"/>
+        <result property="contactsType" column="type_name"/>
+    </resultMap>
+
+    <resultMap id="opportunityDetailMap" type="com.xuebei.crm.customer.Contacts">
+        <id property="contactsId" column="contacts_id"/>
+        <result property="departmentId" column="customer_dept_id"/>
+        <result property="realName" column="real_nm"/>
+        <result property="gender" column="gender"/>
+        <result property="typeName" column="type_name"/>
+        <result property="departmentName" column="department_nm"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="customerId" column="customer_id"/>
+    </resultMap>
+
+    <resultMap id="crmAgentMap" type="com.xuebei.crm.customer.agent.CrmAgent">
+        <id property="agentId" column="agent_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="profile" column="profile"/>
+        <result property="website" column="website"/>
+        <result property="customerFrom" column="customer_from"/>
+        <result property="customerLevel" column="customer_level"/>
+        <result property="cooperation" column="cooperation"/>
+        <result property="cooperationType" column="cooperation_type"/>
+        <result property="updaterId" column="updater_id"/>
+        <result property="createId" column="create_id"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="createName" column="create_name"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="region" column="region"/>
+    </resultMap>
+
+    <resultMap id="crmAgentLinkMap" type="com.xuebei.crm.customer.agent.CrmAgentLink">
+        <id property="linkUserId" column="link_user_id"/>
+        <result property="agentId" column="agent_id"/>
+        <result property="linkName" column="link_name"/>
+        <result property="linkPosition" column="link_position"/>
+        <result property="linkGeneral" column="link_general"/>
+        <result property="linkMobile" column="link_mobile"/>
+        <result property="linkPhone" column="link_phone"/>
+        <result property="linkWeixin" column="link_weixin"/>
+        <result property="linkQQ" column="link_qq"/>
+        <result property="linkMail" column="link_mail"/>
+        <result property="linkBg" column="link_bg"/>
+        <result property="updaterId" column="updater_id"/>
+        <result property="createId" column="create_id"/>
+        <result property="createTs" column="create_ts"/>
+    </resultMap>
+
+
+    <select id="isUserHasCustomer" resultType="java.lang.Boolean">
+        SELECT COUNT(company_customer.customer_id)
+        FROM company_user
+            INNER JOIN company_customer ON company_user.company_id = company_customer.company_id
+        WHERE company_user.user_id = #{userId} AND company_customer.customer_id = #{customerId};
+    </select>
+
+    <select id="isSubDepartNameExist" resultType="java.lang.Boolean">
+        SELECT COUNT(customer_dept_id)
+        FROM customer_dept
+        WHERE prt_id = #{prtId}
+        AND department_nm = #{departmentName};
+    </select>
+
+    <select id="isTopDepartNameExist" resultType="java.lang.Boolean">
+        SELECT COUNT(customer_dept_id)
+        FROM customer_dept
+        WHERE customer_id = #{customerId}
+        AND department_nm = #{departmentName};
+    </select>
+    
+    <select id="searchDeptByName" resultMap="deptMap">
+        select *
+        from customer_dept
+        WHERE  customer_id=#{customerId}
+        AND department_nm=#{departmentName};
+    </select>
+    
+    <update id="updateDept">
+        UPDATE customer_dept
+        set website=#{website},
+            profile=#{profile}
+        WHERE customer_dept_id=#{deptId};
+
+    </update>
+
+    <insert id="insertDepartment" parameterType="com.xuebei.crm.customer.Department">
+        INSERT INTO customer_dept (
+                customer_dept_id,
+                prt_id,
+                department_nm,
+                customer_id,
+                enclosure_status,
+                website,
+                `profile`,
+                `create_id`,
+                `create_name`,
+                `create_ts`,
+                `is_excel_import`
+        )
+        VALUES
+            (
+                    #{deptId},
+                    #{parent.deptId},
+                    #{deptName},
+                    #{customer.customerId},
+                    #{enclosureStatus},
+                    #{website},
+                    #{profile},
+                    #{createId},
+                    #{createName},
+                    #{createTs},
+                    #{isExcelImport}
+            );
+    </insert>
+
+    <insert id="newSchool" parameterType="com.xuebei.crm.customer.CustomerViewModel">
+        INSERT INTO crm_customer (
+                customer_id,
+                customer_nm,
+                type_cd,
+                profile,
+                website,
+                customer_from,
+                creator_id,
+                create_ts,
+                updater_id, update_ts, is_excel_import, province, city, region
+
+        )
+        VALUES
+            (#{customerId},
+             #{name},
+             #{schoolType},
+             #{profile},
+             #{website},
+             #{customerFrom},
+             #{creatorId},
+             #{createTs},
+             #{updaterId},
+             NOW(),
+             #{isExcelImport},
+             #{province},
+             #{city},
+             #{region}
+            );
+    </insert>
+
+
+    <insert id="newAgent" parameterType="com.xuebei.crm.customer.agent.CrmAgent">
+        INSERT INTO `crm_agent` (
+                `agent_id`,
+                `company_name`,
+                `profile`,
+                `website`,
+                `customer_from`,
+                `customer_level`,
+                `cooperation`,
+                `cooperation_type`,
+                `create_ts`,
+                `create_name`,
+                `create_id`,
+                `updater_id`,
+                `update_ts`,
+                `is_del`,
+                `is_excel_import`,
+                `province`,
+                `city`,
+                `region`)
+        VALUES (#{agentId},
+                #{companyName},
+                #{profile},
+                #{website},
+                #{customerFrom},
+                #{customerLevel},
+                #{cooperation},
+                #{cooperationType},
+                #{createTs},
+                #{createName},
+                #{createId},
+                #{updaterId},
+                NOW(), 0, #{isExcelImport}, #{province}, #{city}, #{region});
+    </insert>
+
+
+    <insert id="newAgentLink" parameterType="com.xuebei.crm.customer.agent.CrmAgentLink">
+        INSERT INTO `crm_agent_link` (`link_user_id`,
+                                      `agent_id`,
+                                      `link_name`,
+                                      `link_position`,
+                                      `link_general`,
+                                      `link_mobile`,
+                                      `link_phone`,
+                                      `link_weixin`,
+                                      `link_qq`,
+                                      `link_mail`,
+                                      `link_bg`,
+                                      `create_ts`,
+                                      `create_id`,
+                                      `updater_id`,
+                                      `update_ts`,
+                                      `is_del`)
+        VALUES (#{linkUserId},
+                #{agentId},
+                #{linkName},
+                #{linkPosition},
+                #{linkGeneral},
+                #{linkMobile},
+                #{linkPhone},
+                #{linkWeixin},
+                #{linkQQ},
+                #{linkMail},
+                #{linkBg},
+                #{createTs},
+                #{createId},
+                #{updaterId},
+                NOW(),
+                0);
+    </insert>
+
+    <update id="updateCrmAgent" parameterType="com.xuebei.crm.customer.agent.CrmAgent">
+        UPDATE `crm_agent`
+        SET
+            `company_name`     =  #{companyName},
+            `profile`          =  #{profile},
+            `website`          =  #{website},
+            `customer_from`    =  #{customerFrom},
+            `customer_level`   = #{customerLevel},
+            `cooperation`      = #{cooperation},
+            `cooperation_type` = #{cooperationType},
+            `updater_id`       = #{updaterId},
+            `update_ts`        = NOW(),
+            `province`         = #{province},
+            `city`             = #{city},
+            `region`           = #{region}
+        WHERE `agent_id` = #{agentId};
+    </update>
+
+    <update id="updateCrmAgentLink" parameterType="com.xuebei.crm.customer.agent.CrmAgentLink">
+        UPDATE `crm_agent_link`
+        SET `link_name`     = #{linkName},
+            `link_position` = #{linkPosition},
+            `link_general`  = #{linkGeneral},
+            `link_mobile`   = #{linkMobile},
+            `link_phone`    = #{linkPhone},
+            `link_weixin`   = #{linkWeixin},
+            `link_qq`       = #{linkQQ},
+            `link_mail`     = #{linkMail},
+            `link_bg`       = #{linkBg},
+            `updater_id`    = #{updaterId},
+            `update_ts`     = NOW()
+        WHERE `link_user_id` = #{linkUserId};
+    </update>
+
+
+    <update id="delCrmAgent">
+        UPDATE `crm_agent`
+        SET `is_del` = 1
+        WHERE  `agent_id` =  #{agentId};
+    </update>
+
+    <update id="delCrmAgentLink">
+        UPDATE `crm_agent_link`
+        SET `is_del` = 1
+        WHERE `link_user_id` = #{linkUserId};
+    </update>
+
+    <select id="queryCrmAgent" resultMap="crmAgentMap">
+        SELECT *
+        FROM `crm_agent`
+        WHERE `agent_id` = #{agentId}
+        limit 1;
+    </select>
+
+    <select id="queryCrmAgentLink" resultMap="crmAgentLinkMap">
+        SELECT *
+        FROM `crm_agent_link`
+        WHERE `link_user_id` = #{linkUserId}
+        limit 1;
+    </select>
+
+    <select id="querySelfCrmAgent" resultMap="crmAgentMap">
+        SELECT *
+        FROM `crm_agent`
+        WHERE create_id in
+        <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        and  is_del = 0
+        order by create_ts desc
+        limit 1000;
+    </select>
+
+    <select id="queryCrmAgentLinkList" resultMap="crmAgentLinkMap">
+        SELECT *
+        FROM `crm_agent_link`
+        WHERE `agent_id` = #{agentId}
+          AND is_del = 0
+        ORDER BY create_ts desc
+        limit 1000;
+    </select>
+
+    <select id="getCrmAgentLink" resultMap="crmAgentLinkMap">
+        SELECT *
+        FROM `crm_agent_link`
+        WHERE
+        `link_user_id` IN
+        <foreach collection="linkUserIds" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+        AND is_del = 0
+        limit 1000;
+    </select>
+
+    <select id="queryCrmAgentByKeyWord" resultMap="crmAgentMap">
+        SELECT *
+        FROM `crm_agent`
+        WHERE (company_name LIKE CONCAT('%', #{searchWord}, '%') OR
+               create_name   LIKE CONCAT('%', #{searchWord}, '%') )
+          AND is_del = 0;
+    </select>
+
+
+    <select id="queryCustomerInfo" resultMap="customerMap">
+        select * from crm_customer
+        where is_del = 0
+        AND (customer_nm LIKE CONCAT('%', #{searchWord}, '%')
+        <if test="createIds!=null">
+            OR creator_id IN
+            <foreach item="createId" collection="createIds" open="(" separator="," close=")">
+                #{createId}
+            </foreach>
+        </if>
+        )
+        ;
+    </select>
+
+    <select id="queryCustomer" resultMap="customerMap">
+        SELECT *
+        FROM crm_customer
+        WHERE customer_id = #{customerId} AND is_del = 0 ;
+    </select>
+
+    <select id="getMyCustomers" resultMap="customerMap">
+        select distinct cc.* from crm_customer cc
+            INNER join customer_dept cd on cd.customer_id = cc.customer_id
+            INNER join enclosure_apply e on e.customer_dept_id = cd.customer_dept_id
+        where e.user_id = #{userId} and e.status_cd = 'PERMITTED' AND cc.is_del = 0;
+    </select>
+
+    <select id="getCustomerBySet" resultMap="customerMap">
+        select distinct cc.* from crm_customer cc
+                                      INNER join customer_dept cd on cd.customer_id = cc.customer_id
+                                      INNER join enclosure_apply e on e.customer_dept_id = cd.customer_dept_id
+        where e.user_id IN
+        <foreach collection="userIdSet" item="cId" open="(" close=")" separator=",">#{cId}</foreach>
+          and e.status_cd = 'PERMITTED' AND cc.is_del = 0;
+    </select>
+
+    <select id="getCommonCustomers" resultMap="customerMap">
+        select distinct cc.* from crm_customer cc
+        where cc.creator_id = #{userId} AND cc.is_del = 0
+              and cc.customer_id not in ( select cd.customer_id from customer_dept cd
+            INNER join enclosure_apply e on e.customer_dept_id = cd.customer_dept_id
+        where e.user_id = #{userId}  and e.status_cd = 'PERMITTED');
+    </select>
+
+    <select id="queryDepartmentById" resultMap="deptMap">
+        SELECT *
+        FROM customer_dept
+        WHERE customer_dept_id = #{deptId};
+    </select>
+
+    <select id="lastFollowTs" resultType="java.lang.String">
+        SELECT DATE_FORMAT(max(j.create_ts), '%Y%m%d')
+        FROM crm_customer cc
+            INNER JOIN contacts_type ct ON cc.customer_id = ct.customer_id
+            INNER JOIN contacts cs ON cs.contacts_type_id = ct.contacts_type_id
+            INNER JOIN visit_contacts vc ON vc.contacts_id = cs.contacts_id
+            INNER JOIN visit_log vl ON vl.visit_log_id = vc.visit_log_id
+            INNER JOIN journal j ON vl.journal_id = j.journal_id
+        WHERE cc.customer_id = #{customerId} AND cc.is_del = 0
+    </select>
+
+    <insert id="insertContacts" parameterType="com.xuebei.crm.customer.Contacts">
+        INSERT INTO `contacts` (
+            `contacts_id`,
+            `customer_dept_id`,
+            `real_nm`,
+            `gender`,
+            `phone`,
+            `wechat`,
+            `tel`,
+            `QQ`,
+            `email`,
+            `office_address`,
+            `profile`,
+            `special_relationship`,
+            `contacts_type_id`,
+            `create_id`,
+            `create_ts`
+        )
+        VALUES
+            (
+                #{contactsId},
+                #{department.deptId},
+                #{realName},
+                #{gender},
+                #{phone},
+                #{wechat},
+                #{tel},
+                #{QQ},
+                #{email},
+                #{officeAddr},
+                #{profile},
+                #{specialRelationship},
+                #{contactsType.contactsTypeId},
+                #{createId},
+                #{createTs}
+            );
+    </insert>
+    <update id="updateContacts" parameterType="com.xuebei.crm.customer.Contacts">
+      UPDATE `contacts`
+       SET  `customer_dept_id`=#{department.deptId},
+            `real_nm`=#{realName},
+            `gender`=#{gender},
+            `phone`=#{phone},
+            `wechat`=#{wechat},
+            `tel`=#{tel},
+            `QQ`=#{QQ},
+            `email`=#{email},
+            `office_address`=#{officeAddr},
+            `profile`=#{profile},
+            `special_relationship`=#{specialRelationship},
+            `contacts_type_id`=#{contactsType.contactsTypeId}
+        WHERE `contacts_id`= #{contactsId}
+    </update>
+    <select id="queryContactsTypeById" resultMap="contactsTypeMap">
+        SELECT *
+        FROM contacts_type
+        WHERE contacts_type_id = #{contactsTypeId};
+    </select>
+
+    <select id="queryContactsTypeByName" resultMap="contactsTypeMap">
+        SELECT *
+        FROM contacts_type
+        WHERE type_name = #{typeName} limit 1;
+    </select>
+
+    <select id="queryDepartment" resultMap="deptMap">
+        SELECT cd.*
+        FROM customer_dept cd
+            LEFT JOIN contacts c ON c.customer_dept_id = cd.customer_dept_id
+        WHERE cd.customer_id = #{customerId}
+    </select>
+    <select id="queryContact" resultMap="contactsMap">
+        SELECT
+            c.*,
+            ct.type_name,
+            cu.customer_nm,
+            cu.customer_id
+        FROM contacts c
+            LEFT JOIN customer_dept cd ON c.customer_dept_id = cd.customer_dept_id
+            LEFT JOIN contacts_type ct ON ct.contacts_type_id = c.contacts_type_id
+            LEFT JOIN crm_customer cu ON cd.customer_id = cu.customer_id
+        WHERE c.contacts_id = #{contactsId}
+    </select>
+    <select id="queryContacts" resultMap="contactsMap">
+        SELECT
+            c.*,
+            ct.type_name,
+            cu.customer_nm,
+            cu.customer_id
+        FROM contacts c
+            LEFT JOIN customer_dept cd ON c.customer_dept_id = cd.customer_dept_id
+            LEFT JOIN contacts_type ct ON ct.contacts_type_id = c.contacts_type_id
+            LEFT JOIN crm_customer cu ON cd.customer_id = cu.customer_id
+        WHERE cd.customer_id = #{customerId}
+    </select>
+
+    <update id="updateEnclosureApply" >
+        UPDATE enclosure_apply
+        SET apply_ts=NOW(),
+            customer_dept_id=#{deptId},
+            user_id= #{userId},
+            apply_reason= '机构编辑申请',
+            apply_start_ts=NOW(),
+            apply_end_ts=date_add(NOW(), INTERVAL 3 MONTH),
+            status_cd= 'APPLYING',
+            updater_id=#{userId},
+            update_ts= NOW()
+        WHERE customer_dept_id=#{deptId}
+    </update>
+
+    <insert id="insertEnclosureApply" parameterType="com.xuebei.crm.customer.EnclosureApply">
+        INSERT INTO enclosure_apply (
+            apply_ts,
+            customer_dept_id,
+            user_id,
+            apply_reason,
+            apply_start_ts,
+            apply_end_ts,
+            status_cd,
+            updater_id,
+            update_ts
+        )
+        VALUES (
+            NOW(),
+            #{deptId},
+            #{userId},
+            #{reasons},
+            NOW(),
+            date_add(NOW(), INTERVAL 3 MONTH),
+            'PERMITTED',
+            #{userId},
+            NOW()
+        );
+
+    </insert>
+
+    <insert id="insertEnclosureApplyOver" parameterType="com.xuebei.crm.customer.EnclosureApply">
+        INSERT INTO enclosure_apply (
+                apply_ts,
+                customer_dept_id,
+                user_id,
+                apply_reason,
+                apply_start_ts,
+                apply_end_ts,
+                status_cd,
+                updater_id,
+                update_ts
+                )
+        VALUES (
+                       NOW(),
+                       #{deptId},
+                       #{userId},
+                       #{reasons},
+                       NOW(),
+                       date_add(NOW(), INTERVAL 3 MONTH),
+                       'EXPIRED',
+                       #{userId},
+                       NOW()
+                       );
+
+    </insert>
+
+    <select id="queryEnclosureApply" resultMap="enclosureApplyMap">
+        SELECT
+            ea.user_id,
+            ea.status_cd
+        FROM enclosure_apply ea
+        WHERE ea.customer_dept_id = #{deptId}
+    </select>
+
+    <select id="queryNewEnclosureApply" resultMap="enclosureApplyMap">
+        SELECT *
+        FROM enclosure_apply AS t
+        WHERE t.customer_dept_id = #{deptId} AND t.status_cd = 'PERMITTED'
+        ORDER BY t.apply_start_ts DESC
+        LIMIT 1;
+    </select>
+
+    <select id="queryMyVisit" resultMap="visitMap">
+        SELECT
+            r1.create_ts,
+            r1.user_id,
+            r2.des_id,
+            r1.visit_log_id
+        FROM
+            (
+                SELECT
+                    A.contacts_id,
+                    B.create_ts,
+                    B.user_id,
+                    A.visit_log_id
+                FROM
+                    (SELECT
+                         visit_contacts.contacts_id,
+                         visit_log.journal_id,
+                         visit_log.visit_log_id
+                     FROM visit_contacts
+                         LEFT JOIN visit_log ON
+                                                 visit_contacts.visit_log_id = visit_log.visit_log_id)
+                        AS A LEFT JOIN journal AS B ON A.journal_id = B.journal_id
+            ) AS r1
+            LEFT JOIN
+            (
+                SELECT
+                    contacts.contacts_id,
+                    dept_dest_table.des_id
+                FROM contacts
+                    LEFT JOIN
+                    ((SELECT
+                          customer_dept_id,
+                          prt_id AS des_id
+                      FROM customer_dept
+                      WHERE prt_id IS NOT NULL)
+                     UNION
+                     (SELECT
+                          customer_dept_id,
+                          customer_dept_id AS des_id
+                      FROM customer_dept
+                      WHERE prt_id IS NULL))
+
+                        AS dept_dest_table
+                        ON contacts.customer_dept_id = dept_dest_table.customer_dept_id
+            ) AS r2 ON r1.contacts_id = r2.contacts_id
+        WHERE r2.des_id = #{deptId}
+              AND r1.create_ts &gt;= #{startTime}
+              AND r1.user_id = #{userId}
+        ORDER BY r1.create_ts DESC;
+    </select>
+
+    <select id="queryElseVisit" resultMap="visitMap">
+        SELECT
+            r1.create_ts,
+            r1.user_id,
+            r2.des_id,
+            r1.visit_log_id
+        FROM
+            (
+                SELECT
+                    A.contacts_id,
+                    B.create_ts,
+                    B.user_id,
+                    A.visit_log_id
+                FROM
+                    (SELECT
+                         visit_contacts.contacts_id,
+                         visit_log.journal_id,
+                         visit_log.visit_log_id
+                     FROM visit_contacts
+                         LEFT JOIN visit_log ON
+                                                 visit_contacts.visit_log_id = visit_log.visit_log_id)
+                        AS A LEFT JOIN journal AS B ON A.journal_id = B.journal_id
+            ) AS r1
+            LEFT JOIN
+            (
+                SELECT
+                    contacts.contacts_id,
+                    dept_dest_table.des_id
+                FROM contacts
+                    LEFT JOIN
+                    ((SELECT
+                          customer_dept_id,
+                          prt_id AS des_id
+                      FROM customer_dept
+                      WHERE prt_id IS NOT NULL)
+                     UNION
+                     (SELECT
+                          customer_dept_id,
+                          customer_dept_id AS des_id
+                      FROM customer_dept
+                      WHERE prt_id IS NULL))
+
+                        AS dept_dest_table
+                        ON contacts.customer_dept_id = dept_dest_table.customer_dept_id
+            ) AS r2 ON r1.contacts_id = r2.contacts_id
+        WHERE r2.des_id = #{deptId}
+              AND r1.create_ts &gt;= #{startTime}
+              AND r1.user_id != #{userId}
+        ORDER BY r1.create_ts DESC
+        LIMIT 1;
+    </select>
+
+    <update id="updateEnclosureApplyEndTs">
+        UPDATE enclosure_apply AS ea
+        SET ea.apply_end_ts = date_add(NOW(), INTERVAL 3 MONTH),
+            ea.update_ts    = NOW(),
+            ea.updater_id   = #{userId}
+        WHERE ea.customer_dept_id = #{deptId}
+              AND ea.status_cd = 'PERMITTED';
+    </update>
+
+    <update id="delSchool">
+        UPDATE crm_customer SET is_del = 1
+          WHERE customer_id = #{customerId};
+    </update>
+
+    <update id="updateSchool" parameterType="com.xuebei.crm.customer.CustomerViewModel">
+        UPDATE crm_customer SET
+                                customer_nm = #{name} ,
+                                type_cd = #{schoolType} ,
+                                `profile` = #{profile} ,
+                                website = #{website} ,
+                                customer_from = #{customerFrom} ,
+                                updater_id = #{updaterId} ,
+                                update_ts = NOW(),
+                                region=#{region},
+                                province=#{province},
+                                city=#{city}
+        WHERE customer_id = #{customerId};
+    </update>
+
+
+    <insert id="insertEnclosureDelayApply" parameterType="com.xuebei.crm.customer.EnclosureApply">
+        INSERT INTO enclosure_delay_apply (
+            apply_ts, enclosure_apply_id, plan_end_ts, apply_reason, status_cd
+        )
+        VALUES (
+            NOW(), #{enclosureApplyId}, date_add(NOW(), INTERVAL 3 MONTH), NULL, 'APPLYING'
+        );
+    </insert>
+
+    <select id="searchSchool" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT c.customer_nm
+        FROM crm_customer c
+        WHERE c.customer_nm LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+
+
+    <select id="queryContactsDept" resultMap="contactsDeptMap">
+        SELECT
+            ta.contacts_id,
+            ta.real_nm,
+            tb.*,
+            tc.type_name
+        FROM contacts AS ta LEFT JOIN
+            (SELECT
+                 A.customer_dept_id,
+                 A.department_nm,
+                 B.customer_dept_id AS prt_dept_id,
+                 B.department_nm    AS prt_dept_name,
+                 A.customer_id,
+                 U.customer_nm
+             FROM customer_dept AS A LEFT JOIN customer_dept AS B ON A.prt_id = B.customer_dept_id
+                 LEFT JOIN crm_customer AS U ON A.customer_id = U.customer_id
+            ) AS tb
+                ON ta.customer_dept_id = tb.customer_dept_id
+            LEFT JOIN contacts_type AS tc
+                ON ta.contacts_type_id=tc.contacts_type_id
+        WHERE contacts_id = #{contactsId};
+    </select>
+
+    <select id="queryContactsById" resultMap="contactsDetailMap">
+        SELECT c.*, d.type_name
+        FROM contacts c LEFT JOIN contacts_type d ON c.contacts_type_id = d.contacts_type_id
+        WHERE contacts_id = #{contactsId};
+    </select>
+
+    <select id="queryFollowUpRecordsByContactsId" resultMap="followUpRecordMap">
+        SELECT
+            journal.create_ts,
+            user_view.real_nm,
+            visit_log.visit_log_id,
+            visit_log.visit_type,
+            visit_log.visit_result
+        FROM visit_contacts
+            LEFT JOIN visit_log ON visit_contacts.visit_log_id = visit_log.visit_log_id
+            LEFT JOIN journal ON visit_log.journal_id = journal.journal_id
+            LEFT JOIN user_view ON journal.user_id = user_view.user_id
+        WHERE contacts_id = #{contactsId}
+        ORDER BY (journal.create_ts) DESC;
+    </select>
+
+    <insert id="insertCustomerCompanyRelation">
+        INSERT INTO company_customer
+        (company_id, customer_id)
+        VALUES( #{companyId}, #{customerId});
+    </insert>
+
+    <insert id="insertContactsType">
+        INSERT INTO contacts_type
+        (customer_id, type_name)
+        VALUES( #{customerId}, #{contactsTypeName} );
+    </insert>
+    
+    <select id="queryOpportunityDetail"  resultMap="opportunityDetailMap">
+         SELECT
+            c.contacts_id,
+            c.customer_dept_id,
+            c.real_nm,
+            ct.type_name,
+            cd.department_nm,
+            cu.customer_nm,
+            cu.customer_id
+        FROM contacts c
+            LEFT JOIN customer_dept cd ON c.customer_dept_id = cd.customer_dept_id
+            LEFT JOIN contacts_type ct ON ct.contacts_type_id = c.contacts_type_id
+            LEFT JOIN crm_customer cu ON cd.customer_id = cu.customer_id
+        WHERE
+        c.customer_dept_id = (select c.customer_dept_id from contacts c where c.contacts_id =
+        (select oc.contacts_id from opportunity_contacts oc where oc.sales_opportunity_id = #{opportunityId} ))
+         and c.contacts_id = (select oc.contacts_id from opportunity_contacts oc where oc.sales_opportunity_id = #{opportunityId} )
+    </select>
+
+    <select id="queryFollowUpRecordsByProjectId" resultMap="followUpRecordMap">
+        SELECT C.visit_log_id, C.visit_type, C.visit_result, D.create_ts, E.sales_opportunity_id AS project, U.real_nm
+        FROM visit_log C LEFT JOIN journal D ON C.journal_id = D.journal_id
+            LEFT JOIN sales_opportunity E ON C.sales_opportunity_id = E.sales_opportunity_id LEFT JOIN user_view U ON D.user_id = U.user_id
+        WHERE C.sales_opportunity_id = #{projectId};
+    </select>
+
+    <select id="checkCrmAgentExistByName" resultType="int">
+        select count(*) from crm_agent
+        where company_name = #{agentName} and is_del=0;
+    </select>
+
+    <select id="getAgentByAgentName" resultMap="crmAgentMap">
+        select * from crm_agent
+        where company_name = #{agentName} and is_del=0 limit 1;
+    </select>
+
+    <select id="getAgentByAgentIdAndName" resultMap="crmAgentLinkMap">
+        select * from crm_agent_link where agent_id =#{agentId}
+                                       and link_name =#{linkName} and is_del=0 limit 1;
+    </select>
+
+    <select id="getCrmCustomerByName" resultMap="customerMap">
+        select * from crm_customer where customer_nm=#{customerName}
+                                     and is_del = 0 limit 1;
+    </select>
+
+    <select id="getCrmCustomerById" resultMap="customerMap">
+        select *
+        from crm_customer
+        where customer_id = #{customerId}
+        limit 1;
+    </select>
+
+    <select id="getCrmDepartmentByName" resultMap="deptMap">
+        select * from customer_dept where  customer_id=#{customerId}
+                                     and department_nm = #{departName} limit 1;
+    </select>
+
+    <select id="getContactsByName" resultMap="contactsMap">
+        select * from contacts where customer_dept_id = #{departId} and real_nm=#{name} limit 1;
+    </select>
+
+
+    <select id="getAllContacts" resultMap="contactsMap">
+        select *
+        from contacts
+        where create_ts is null;
+    </select>
+
+    <select id="getAllDeparts" resultMap="deptMap">
+        select *
+        from customer_dept
+        where create_ts is null;
+    </select>
+
+    <update id="updateContactsType">
+        update contacts set  contacts_type_id=#{typeId} where contacts_id=#{contactsId};
+    </update>
+
+    <select id="truncateContactsType">
+        truncate contacts_type;
+    </select>
+
+    <insert id="addContactsType">
+        insert into contacts_type
+        values (#{id}, #{typeName});
+    </insert>
+
+    <update id="repairCustomerDept">
+        update customer_dept
+        set create_id   = #{createId},
+            create_name = #{createName},
+            create_ts   = #{createTs}
+        where customer_dept_id = #{deptId};
+    </update>
+
+    <update id="repairContacts">
+        update contacts
+        set create_id   = #{createId},
+            create_name = #{createName},
+            create_ts   = #{createTs}
+        where contacts_id = #{contactsId};
+    </update>
+
+    <select id="getCrmAgentByParam" resultMap="crmAgentMap">
+        select *
+        from crm_agent where create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and create_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="getNameAndPosition" resultMap="crmAgentLinkMap">
+        select distinct agent_id, link_name, link_position, link_user_id
+        from crm_agent_link
+        where agent_id in
+        <foreach collection="agentIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getCollegeNameById" resultMap="customerMap">
+        select customer_id, customer_nm from crm_customer
+        where customer_id in
+        <foreach collection="collegeIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getAgentNameByAgentId" resultType="string">
+        select company_name from crm_agent where agent_id = #{agentId}
+    </select>
+</mapper>

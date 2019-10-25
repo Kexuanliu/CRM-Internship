@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.member.MemberMapper">
+
+    <resultMap id="memberMap" type="com.xuebei.crm.member.Member">
+        <id column="user_id" property="memberId"/>
+        <result column="company_id" property="companyId"/>
+        <result column="user_type" property="memberType"/>
+        <result column="real_nm" property="memberName"/>
+        <result column="gender" property="memberGender"/>
+        <result column="leader_id" property="leaderId"/>
+        <association property="leader" javaType="com.xuebei.crm.member.Member">
+            <id column="leader_id" property="memberId" />
+        </association>
+    </resultMap>
+
+    <select id="searchMemberList" resultMap="memberMap">
+        SELECT * FROM company_user AS r1
+        LEFT JOIN crm_user AS r2
+            ON r1.crm_user_id = r2.crm_user_id
+        WHERE r1.company_id = #{companyId}
+        AND r1.is_delete=0;
+    </select>
+    
+    <update id="updateRelationship" parameterType="java.lang.String">
+        UPDATE company_user AS cu
+            SET cu.leader_id = #{upperMemberId}
+        WHERE cu.user_id = #{lowerMemberId}
+        AND cu.is_delete=0;
+    </update>
+    
+    <select id="searchSiblingsList" resultMap="memberMap">
+        SELECT * FROM company_user AS r1
+        LEFT JOIN crm_user AS r2
+            ON r1.crm_user_id = r2.crm_user_id
+        WHERE r1.company_id IN (
+            SELECT company_id FROM company_user
+            WHERE company_user.user_id = #{memberId}
+            AND company_user.is_delete=0
+        );
+    </select>
+
+    <select id="getCompanyIdByMemberId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT company_id FROM company_user
+        WHERE user_id = #{memberId}
+        AND is_delete=0;
+    </select>
+    
+    <update id="deleteLeader" parameterType="java.lang.String">
+        UPDATE company_user
+        SET leader_id=NULL, rels_fullpath = user_id
+        WHERE user_id=#{memberId}
+        AND is_delete=0;
+    </update>
+    
+    <select id="getCompanyNameById" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT com_nm FROM company
+        WHERE company_id = #{companyId};
+    </select>
+
+    <update id="deleteMember" parameterType="java.lang.String">
+        UPDATE company_user
+        SET is_delete=1
+        WHERE user_id=#{memberId};
+    </update>
+
+    <update id="deleteLeaderId" parameterType="java.lang.String">
+        UPDATE company_user
+        SET leader_id=NULL , rels_fullpath = user_id
+        WHERE leader_id=#{memberId};
+    </update>
+
+
+    <select id="getMemberBySet" resultMap="memberMap">
+        SELECT * FROM company_user a
+        inner join crm_user b on a.crm_user_id=b.crm_user_id
+        WHERE a.user_id in
+        <foreach collection="ids" item="sender" index="i" open="(" close=")" separator=",">
+            #{sender}
+        </foreach>
+        AND is_delete=0;
+    </select>
+
+    <select id="getAllMember" resultMap="memberMap">
+        SELECT * FROM company_user a
+        inner join crm_user b on a.crm_user_id=b.crm_user_id
+        WHERE is_delete=0 and company_id ='daa1f077296941899eed69e76370d3ad';
+    </select>
+</mapper>

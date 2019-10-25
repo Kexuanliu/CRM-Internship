@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.statistics.StatisticsMapper">
+
+    <resultMap id="oppoStat" type="com.xuebei.crm.statistics.KeyValue">
+        <id property="key" column="sales_status"/>
+        <result property="value" column="count"/>
+    </resultMap>
+
+    <resultMap id="enclosureMap" type="com.xuebei.crm.statistics.Enclosure">
+        <result property="deptId" column="customer_dept_id"/>
+        <result property="whetherEnclosure" column="status_cd"/>
+    </resultMap>
+
+    <resultMap id="contactsMap" type="com.xuebei.crm.statistics.ContactStatisticsViewModel">
+        <result property="createTime" column="create_ts"/>
+        <result property="employeeName" column="create_name"/>
+        <result property="school" column="customer_nm"/>
+        <result property="schoolId" column="customer_id"/>
+        <result property="subDept" column="department_nm"/>
+        <result property="linker" column="real_nm"/>
+        <result property="linkerId" column="contacts_id"/>
+        <result property="position" column="type_name"/>
+        <result property="gender" column="gender"/>
+        <result property="mobile" column="tel"/>
+        <result property="phone" column="phone"/>
+        <result property="weiChat" column="weichat"/>
+        <result property="QQ" column="QQ"/>
+        <result property="mail" column="email"/>
+    </resultMap>
+
+
+    <select id="getAgentCount" resultType="integer">
+        select count(1)
+        from crm_agent where create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and create_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        ;
+    </select>
+
+    <select id="getCoreAgent" resultType="integer">
+        select count(1)
+        from crm_agent where create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and create_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and customer_level = "CORE"
+    </select>
+
+    <select id="getOppoStat" resultMap="oppoStat">
+        SELECT
+        sales_status,
+        count(*) as count
+        FROM sales_opportunity
+        WHERE create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and user_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and sales_status in ('A','B1','B2','B3','B4','C','D')
+        GROUP BY sales_status
+    </select>
+
+    <select id="getDMoney" resultType="integer">
+        select sum(amount) from sales_opportunity
+        where create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and user_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and sales_status="D"
+    </select>
+
+
+    <select id="getContactsCount" resultType="integer">
+        select count(1) from contacts
+        where create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and create_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        and (tel !='' or phone !='') and (wechat !='' or qq !='');
+    </select>
+
+    <select id="getAllContacatsCount" resultType="integer">
+        select count(1) from contacts
+        where create_ts <![CDATA[ >= ]]> #{beginTime} and create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and create_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>;
+    </select>
+
+    <select id="getEnclosureStatus" resultMap="enclosureMap">
+        select customer_dept_id, status_cd from enclosure_apply
+        where customer_dept_id in
+        <foreach collection="deptIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getContactStatisticsViewModelList" resultMap="contactsMap">
+        select c.*, cd.department_nm, cc.website, cc.customer_nm,cc.customer_id,ct.type_name
+        from contacts c
+                 inner join customer_dept cd on c.customer_dept_id = cd.customer_dept_id
+                 inner join crm_customer cc on cd.customer_id = cc.customer_id
+        inner join contacts_type ct on c.contacts_type_id=ct.contacts_type_id
+        where c.create_ts <![CDATA[ >= ]]> #{beginTime} and c.create_ts <![CDATA[ <= ]]> #{endTime}
+        <if test="userIds !=null and userIds.size >0">
+            and c.create_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test='level=="A"'>
+            and (tel !='' or phone !='') and (wechat !='' or qq !='');
+        </if>
+    </select>
+</mapper>

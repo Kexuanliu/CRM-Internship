@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.message.MsgMapper">
+    <resultMap id="enclosureApplyMap" type="com.xuebei.crm.message.Apply">
+        <id property="applyId" column="enclosure_apply_id"/>
+        <result property="applyTime" column="apply_ts"/>
+        <result property="applyUserId" column="user_id"/>
+        <result property="applyUserName" column="real_nm"/>
+        <result property="deptName" column="department_nm"/>
+        <result property="deptId" column="customer_dept_id"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="applyDetails" column="apply_reason"/>
+    </resultMap>
+
+    <resultMap id="enclosureDelayApplyMap" type="com.xuebei.crm.message.Apply">
+        <id property="applyId" column="enclosure_delay_apply_id"/>
+        <result property="applyTime" column="apply_ts"/>
+        <result property="applyUserId" column="user_id"/>
+        <result property="applyUserName" column="real_nm"/>
+        <result property="customerName" column="department_nm"/>
+        <result property="customerId" column="customer_dept_id"/>
+        <result property="applyDetails" column="apply_reason"/>
+    </resultMap>
+
+    <resultMap id="projectApplyMap" type="com.xuebei.crm.message.ProjectApply">
+        <id column="start_project_id" property="applyId"/>
+        <result column="apply_content" property="content"/>
+        <result column="sales_opportunity_id" property="projectId"/>
+        <result column="user_id" property="applyerId"/>
+        <result column="real_nm" property="applyerName"/>
+        <result property="applyTime" column="create_ts"/>
+        <result property="customerName" column="customer_nm"/>
+        <result property="deptName" column="prt_dept_nm"/>
+        <result column="opportunity_nm" property="projectName"/>
+    </resultMap>
+
+    <select id="getProjectApply" resultMap="projectApplyMap">
+        SELECT p.start_project_id, p.sales_opportunity_id, p.apply_content, p.user_id, date_format(p.create_ts, '%Y年%c月%e日 %H:%i') AS create_ts, A.opportunity_nm, D.customer_nm, F.department_nm AS prt_dept_nm, U.real_nm AS real_nm
+          from project_start p
+        LEFT JOIN sales_opportunity A ON p.sales_opportunity_id = A.sales_opportunity_id
+        LEFT JOIN opportunity_contacts B ON a.sales_opportunity_id = B.sales_opportunity_id
+        LEFT JOIN contacts_view C ON B.contacts_id = C.contacts_id
+        LEFT JOIN crm_customer D ON C.customer_id = D.customer_id
+        LEFT JOIN customer_dept F ON c.prt_id = F.customer_dept_id
+        LEFT JOIN user_view U ON p.user_id = U.user_id
+              LEFT JOIN company_user cu ON A.user_id = cu.user_id
+              LEFT JOIN company_user cc ON p.user_id = cc.user_id
+        WHERE p.status = 'applying' AND cu.company_id = cc.company_id
+        AND cc.company_id = (SELECT d.company_id FROM company_user d WHERE d.user_id = #{userId})
+    </select>
+
+    <select id="searchEnclosureApply" resultMap="enclosureApplyMap">
+        select h1.*,h2.customer_nm from
+            (select t1.*,t2.department_nm,t2.customer_id from
+            (select t.* from
+                (select r1.enclosure_apply_id,r1.customer_dept_id,r1.apply_ts,r1.apply_reason,r2.*
+                 from enclosure_apply as r1
+                     inner join
+                     (select a.user_id,b.real_nm
+                      from company_user as a
+                          left join crm_user as b
+                              on a.crm_user_id = b.crm_user_id
+                      where a.company_id =
+                            (select company_id from company_user
+                            where company_user.user_id = #{userId}
+                                  and company_user.is_delete = 0)
+                            and a.is_delete = 0
+                            and a.`status` = 'PERMITTED') as r2
+                         on r1.user_id = r2.user_id
+                 where r1.status_cd='APPLYING'
+                 order by r1.update_ts desc) as t
+            group by t.customer_dept_id) as t1
+            left join customer_dept as t2
+                on t1.customer_dept_id = t2.customer_dept_id) as h1
+        left join crm_customer as h2
+            on h1.customer_id = h2.customer_id;
+    </select>
+    
+    <select id="searchEnclosureDelayApply" resultMap="enclosureDelayApplyMap">
+        select h1.*,h2.customer_nm from
+        (select p1.*,p2.department_nm,p2.customer_id from
+            (select p.* from
+                (select t1.enclosure_delay_apply_id,t1.apply_ts,t1.apply_reason,
+                     t2.*
+                 from enclosure_delay_apply as t1
+                     inner join
+                     (select r1.enclosure_apply_id,r1.customer_dept_id,r2.*
+                      from enclosure_apply as r1
+                          inner join
+                          (select a.user_id,b.real_nm
+                           from company_user as a
+                               left join crm_user as b
+                                   on a.crm_user_id = b.crm_user_id
+                           where a.company_id =
+                                 (select company_id from company_user
+                                 where user_id = #{userId})
+                                 and a.is_delete = 0
+                                 and a.`status` = 'PERMITTED') as r2
+                              on r1.user_id = r2.user_id) as t2
+                         on t1.enclosure_apply_id = t2.enclosure_apply_id
+                 where t1.status_cd = 'APPLYING'
+                 order by t1.apply_ts) as p
+            group by p.customer_dept_id) as p1
+            left join customer_dept as p2
+                on p1.customer_dept_id = p2.customer_dept_id) as h1
+        left join crm_customer as h2
+            on h1.customer_id = h2.customer_id;
+    </select>
+
+
+    <update id="enclosureApplyAgree" parameterType="java.lang.String">
+        UPDATE enclosure_apply
+        SET status_cd='PERMITTED',update_ts=NOW(),updater_id=#{userId},apply_end_ts=adddate(NOW(),INTERVAL 3 MONTH )
+        WHERE enclosure_apply_id = #{enclosureApplyId};
+    </update>
+
+    <update id="enclosureApplyDecline" >
+        UPDATE enclosure_apply
+        SET status_cd='REJECTED',update_ts=NOW(),updater_id=#{userId}
+        WHERE enclosure_apply_id = #{enclosureApplyId};
+    </update>
+    
+    <update id="enclosureDelayApplyAgree">
+        UPDATE enclosure_delay_apply
+        SET status_cd='PERMITTED'
+        WHERE enclosure_delay_apply_id = #{enclosureDelayApplyId};
+    </update>
+    
+    <update id="enclosureApplyEndTsExtend" >
+        UPDATE enclosure_apply
+        SET updater_id=#{userId},update_ts=NOW(),apply_end_ts=adddate(NOW(),INTERVAL 3 MONTH)
+        WHERE enclosure_apply_id = (
+            SELECT a.enclosure_apply_id
+            FROM enclosure_delay_apply as a
+            WHERE a.enclosure_delay_apply_id = #{enclosureDelayApplyId}
+        )
+    </update>
+
+    <update id="enclosureDelayApplyDecline" >
+        UPDATE enclosure_delay_apply
+        SET status_cd='REJECTED'
+        WHERE enclosure_delay_apply_id = #{enclosureDelayApplyId};
+    </update>
+
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.excelImport.ExcelImportMapper">
+
+    <resultMap id="excelImportLogMap" type="com.xuebei.crm.excelImport.ExcelImportBatchLog">
+        <id column="batch_log_id" property="batchLogId" jdbcType="BIGINT"/>
+        <result column="create_id" property="createId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <collection property="excelImportDetailList" resultMap="excelImportDetailMap"/>
+    </resultMap>
+
+    <resultMap id="excelImportDetailMap" type="com.xuebei.crm.excelImport.ExcelImportDetail">
+        <id column="log_id" property="logId" jdbcType="INTEGER"/>
+        <result column="batch_log_id" property="batchLogId" jdbcType="BIGINT"/>
+        <result column="result" property="result" jdbcType="INTEGER"/>
+        <result column="show_info" property="showInfo" jdbcType="VARCHAR"/>
+        <result column="execute_code" property="executeCode" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insertExcelBatchLog" parameterType="com.xuebei.crm.excelImport.ExcelImportBatchLog">
+        insert into excel_import_batch_log (batch_log_id, create_id, create_time, import_type)
+        values (#{batchLogId}, #{createId}, now(), #{importType});
+    </insert>
+
+    <insert id="insertExcelImportDetail" parameterType="com.xuebei.crm.excelImport.ExcelImportDetail">
+        INSERT INTO `excel_import_deail` (`log_id`, `batch_log_id`, `result`, `show_info`, `create_id`, `execute_code`)
+        VALUES (#{logId}, #{batchLogId}, #{result}, #{showInfo}, #{createId}, #{executeCode});
+
+    </insert>
+
+    <select id="getExcelImportBatchLogList" resultMap="excelImportLogMap">
+        SELECT a.batch_log_id, a.create_time, b.show_info, b.execute_code, b.result, b.log_id
+        FROM excel_import_batch_log a
+                 INNER JOIN excel_import_deail b ON a.batch_log_id = b.batch_log_id
+        WHERE a.create_id = #{userId} and import_type = #{type}
+          and b.result = 1;
+    </select>
+</mapper>

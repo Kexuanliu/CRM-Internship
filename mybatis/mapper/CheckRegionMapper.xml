@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.xuebei.crm.excelImport.CheckRegionMapper">
+
+	<insert id="insertProvince" parameterType="com.xuebei.crm.excelImport.Province">
+        insert into province (id, name, province_id)
+        values (#{id}, #{name}, #{provinceId});
+    </insert>
+    
+    <insert id="insertCity" parameterType="com.xuebei.crm.excelImport.City">
+        insert into city (id, name, city_id, province_id)
+        values (#{id}, #{name}, #{cityId}, #{provinceId});
+    </insert>
+	
+	<select id="getPidByCName" resultType="java.lang.String">
+		select city.province_id
+		from city
+		where city.name = #{cityName}
+	</select>
+	
+	<select id="getPidByPName" resultType="java.lang.String">
+		select province.province_id
+		from province
+		where province.name = #{provinceName}
+	</select>
+
+</mapper>

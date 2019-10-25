@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.journal.JournalMapper">
+    <resultMap id="journalMap" type="com.xuebei.crm.journal.Journal">
+        <id property="journalId" column="journal_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type_cd"/>
+        <result property="summary" column="summary"/>
+        <result property="plan" column="plan"/>
+        <result property="other" column="other"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="createTime" column="create_time"/>
+        <result property="hasSubmitted" column="has_submitted"/>
+        <result property="readNum" javaType="java.lang.Integer" column="read_num"/>
+        <association property="user" javaType="com.xuebei.crm.user.User">
+            <id property="userId" column="user_id"/>
+            <result column="real_nm" property="realName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="journalComment" type="com.xuebei.crm.journal.JournalComment">
+        <id property="commentId" column="comment_id"/>
+        <result property="comment" column="content"/>
+        <result property="journalId" column="journal_id"/>
+        <result property="createTs" column="create_ts"/>
+        <association property="creator" javaType="com.xuebei.crm.user.User">
+            <id property="userId" column="create_id"/>
+            <result column="real_nm" property="realName"/>
+        </association>
+    </resultMap>
+    <resultMap id="visitLogComment" type="com.xuebei.crm.journal.VisitLogComment">
+        <id property="commentId" column="comment_id"/>
+        <result property="content" column="content"/>
+        <result property="visitLogId" column="visit_log_id"/>
+        <result property="createTs" column="create_ts"/>
+        <association property="creator" javaType="com.xuebei.crm.user.User">
+            <id property="userId" column="create_id"/>
+            <result column="real_nm" property="realName"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="deptMap" type="com.xuebei.crm.customer.Department">
+        <id property="deptId" column="customer_dept_id"/>
+        <result property="deptName" column="department_nm"/>
+        <result property="statusCd" column="status_cd"/>
+        <result property="applyByOthers" column="ap_by_others"/>
+        <association property="enclosureApply" javaType="com.xuebei.crm.customer.EnclosureApply">
+            <id property="enclosureApplyId" column="enclosure_apply_id"/>
+            <result property="userId" column="user_id"/>
+            <result property="startTime" column="apply_start_ts"/>
+            <result property="endTime" column="apply_end_ts"/>
+            <result property="statusCd" column="status_cd"/>
+            <result property="updateTime" column="update_ts"/>
+            <result property="enclosureByOthers" column="en_by_others"/>
+            <result property="applyByOthers" column="ap_by_others"/>
+        </association>
+    </resultMap>
+    <resultMap id="visitMap" type="com.xuebei.crm.journal.VisitRecord">
+        <id property="visitId" column="visit_log_id"/>
+        <result property="visitType" column="visit_type"/>
+        <result property="visitResult" column="visit_result"/>
+        <result property="contactType" column="contact_type"/>
+        <result property="journalId" column="journal_id"/>
+        <result property="opportunityId" column="sales_opportunity_id"/>
+        <result property="outType" column="out_type"/>
+        <result property="outReason" column="out_reason"/>
+    </resultMap>
+
+    <resultMap id="userMap" type="com.xuebei.crm.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="CRMUserId" column="crm_user_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="userType" column="user_type"/>
+        <result property="realName" column="real_nm"/>
+        <result property="tel" column="TEL"/>
+        <result property="avatarUrl" column="avatar_url"/>
+    </resultMap>
+
+    <resultMap id="journalCustomerMap" type="com.xuebei.crm.journal.JournalCustomer">
+        <id property="customerId" column="customer_id"/>
+        <result property="name" column="customer_nm"/>
+    </resultMap>
+
+    <resultMap id="repairJournalMap" type="com.xuebei.crm.journal.RepairJournal">
+        <id property="journalId" column="journal_id"/>
+        <result property="repairTs" column="repair_ts"/>
+    </resultMap>
+
+    <resultMap id="contactsMap" type="com.xuebei.crm.customer.Contacts">
+        <id property="contactsId" column="contacts_id"/>
+        <result property="realName" column="real_nm"/>
+        <result property="visitLogId" column="visit_log_id"/>
+        <association property="contactsDept" javaType="com.xuebei.crm.customer.ContactsDept">
+            <id property="contactsId" column="contacts_id"/>
+            <result property="customerName" column="customer_nm"/>
+            <result property="deptName" column="department_nm"/>
+            <result property="prtDeptName" column="prt_dept_name"/>
+            <result property="realName" column="real_nm"/>
+            <result property="contactsType" column="type_name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="contacts2Map" type="com.xuebei.crm.customer.Contacts">
+        <id property="visitLogId" column="visit_log_id"/>
+        <result property="contactsId" column="contacts_id"/>
+        <result property="realName" column="real_nm"/>
+        <association property="contactsDept" javaType="com.xuebei.crm.customer.ContactsDept">
+            <id property="contactsId" column="contacts_id"/>
+            <result property="customerName" column="customer_nm"/>
+            <result property="deptName" column="department_nm"/>
+            <result property="prtDeptName" column="prt_dept_name"/>
+            <result property="realName" column="real_nm"/>
+            <result property="contactsType" column="type_name"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="manageJournalMap" type="com.xuebei.crm.journal.ManageJournal">
+        <id property="tagertDate" column="create_ts"/>
+        <result property="repairDate" column="repair_ts"/>
+    </resultMap>
+
+    <resultMap id="journalPatchMap" type="com.xuebei.crm.journal.JournalPatch">
+        <id property="journalPatchId" column="journal_patch_id"/>
+        <result property="journalId" column="journal_id"/>
+        <result property="content" column="content"/>
+        <result property="createTs" column="create_ts"/>
+    </resultMap>
+
+    <resultMap id="agentViewModel" type="com.xuebei.crm.journal.VisitAgentViewModel">
+        <result property="createName" column="create_name"/>
+        <result property="visitType" column="visit_type"/>
+        <result property="visitResult" column="visit_result"/>
+        <result property="showInfo" column="show_info"/>
+        <result property="createTs" column="create_ts"/>
+    </resultMap>
+
+    <resultMap id="visitAgents" type="com.xuebei.crm.journal.VisitAgents">
+        <result property="visitAgentsId" column="visit_agents_id"/>
+        <result property="visitLogId" column="visit_log_id"/>
+        <result property="agentLinkId" column="agent_link_id"/>
+        <result property="agentId" column="agent_id"/>
+        <result property="createTs" column="create_ts"/>
+        <result property="createId" column="create_id"/>
+        <result property="createName" column="create_name"/>
+        <result property="showInfo" column="show_info"/>
+    </resultMap>
+
+    <insert id="insertRepairDate" parameterType="map">
+        INSERT INTO repair_journal
+        (journal_id, repair_ts)
+        VALUES
+            (#{journalId}, NOW())
+    </insert>
+
+    <select id="queryRepairDate" resultType="java.util.Date">
+        SELECT repair_ts
+        FROM repair_journal
+        WHERE journal_id = #{journalId}
+    </select>
+
+    <select id="getJournalState" resultMap="manageJournalMap">
+        SELECT a.create_ts,b.repair_ts
+        FROM journal a Left JOIN repair_journal b
+        ON a.journal_id=b.journal_id
+        WHERE a.user_id= #{userId}
+        AND a.create_ts &gt; #{monthStart}
+        AND a.create_ts &lt;
+        <choose>
+            <when test="endTs != null">
+                #{endTs}
+            </when>
+            <otherwise>
+                NOW()
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="createJournal" parameterType="com.xuebei.crm.journal.Journal" useGeneratedKeys="true"
+            keyColumn="journal_id" keyProperty="journalId">
+        INSERT INTO journal (
+        user_id,
+        type_cd,
+        plan,
+        other,
+        create_ts,
+        update_ts,
+        has_submitted,
+        create_time
+        )
+        VALUES (
+        #{userId},
+        #{type},
+        #{plan},
+        #{other},
+        <choose>
+            <when test="createTs != null">
+                #{createTs}, #{createTs},
+            </when>
+            <otherwise>
+                NOW(),  NOW(),
+            </otherwise>
+        </choose>
+        #{hasSubmitted},
+        <choose>
+            <when test="createTs != null">
+                DATE_FORMAT(#{createTs},'%Y%m%d')
+            </when>
+            <otherwise>
+                DATE_FORMAT(Now(),'%Y%m%d')
+            </otherwise>
+        </choose>
+        );
+        <selectKey resultType="java.lang.Integer" keyProperty="journalId" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <select id="queryJournalById" resultMap="journalMap">
+        SELECT *
+        FROM journal
+        WHERE journal_id = #{journalId}
+    </select>
+
+    <select id="userHasJournal" resultType="java.lang.Boolean">
+        SELECT COUNT(journal_id)
+        FROM journal
+        WHERE journal_id = #{journalId} AND user_id = #{userId}
+    </select>
+
+    <update id="updateJournal" parameterType="com.xuebei.crm.journal.Journal">
+        UPDATE journal
+        SET plan          = #{plan},
+            summary       = #{summary},
+            has_submitted = #{hasSubmitted},
+            update_ts     = NOW()
+        WHERE journal_id = #{journalId} AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteJournal">
+        DELETE FROM journal
+        WHERE user_id = #{userId} AND journal_id = #{journalId}
+    </delete>
+
+    <delete id="deleteVisitLog">
+        DELETE FROM visit_log
+        WHERE journal_id = #{journalId}
+    </delete>
+
+    <insert id="insertVisitLog" parameterType="com.xuebei.crm.journal.VisitRecord" useGeneratedKeys="true"
+            keyColumn="visit_log_id" keyProperty="visitId">
+        INSERT INTO visit_log (visit_result,
+                               visit_type,
+                               journal_id,
+                               sales_opportunity_id,
+                               contact_type,
+                               out_type,
+                               out_reason,
+                               is_excel_import)
+        VALUES (#{visitResult},
+                #{visitType},
+                #{journalId},
+                #{opportunityId},
+                #{contactType},
+                #{outType},
+                #{outReason},
+                #{isExcelImport})
+    </insert>
+
+    <select id="queryVisitLogs" resultMap="visitMap">
+        SELECT *
+        FROM visit_log
+        WHERE journal_id = #{journalId}
+    </select>
+
+    <delete id="deleteVisitContacts">
+        DELETE FROM visit_contacts
+        WHERE visit_log_id = #{visitId}
+    </delete>
+
+    <insert id="insertVisitContacts">
+        INSERT INTO visit_contacts
+        (visit_log_id, contacts_id)
+        VALUES
+            (#{visitId}, #{contactsId})
+    </insert>
+
+    <select id="queryVisitContacts" resultMap="contactsMap">
+        SELECT
+            vc.contacts_id,
+            c.real_nm,
+            ct.type_name,
+            A.customer_id,
+            A.customer_dept_id,
+            A.department_nm,
+            B.customer_dept_id AS prt_dept_id,
+            B.department_nm    AS prt_dept_name,
+            U.customer_nm
+        FROM visit_contacts vc
+            INNER JOIN contacts c ON vc.contacts_id = c.contacts_id
+            INNER JOIN contacts_type ct ON c.contacts_type_id = ct.contacts_type_id
+            INNER JOIN customer_dept A ON c.customer_dept_id = A.customer_dept_id
+            INNER JOIN crm_customer AS U ON A.customer_id = U.customer_id
+            LEFT JOIN customer_dept AS B ON A.prt_id = B.customer_dept_id
+        WHERE vc.visit_log_id = #{visitId}
+    </select>
+
+    <delete id="deleteJournalReceiver">
+        DELETE FROM journal_receiver
+        WHERE journal_id = #{journalId};
+    </delete>
+
+    <insert id="insertJournalReceiver" parameterType="map">
+        INSERT INTO journal_receiver
+        (journal_id, receiver_id)
+        VALUES
+            (#{journalId}, #{receiverId})
+    </insert>
+
+    <select id="queryJournalReceiver" resultMap="userMap">
+        SELECT *
+        FROM journal_receiver
+            LEFT JOIN user_view ON journal_receiver.receiver_id = user_view.user_id
+        WHERE journal_id = #{journalId}
+    </select>
+
+    <select id="isUserSameCompany" resultType="java.lang.Boolean">
+        SELECT COUNT(A.user_id)
+        FROM user_view AS A, user_view AS B
+        WHERE A.user_id = #{userIdA} AND B.user_id = #{userIdB} AND A.company_id = B.company_id
+    </select>
+
+    <select id="queryColleagues" resultMap="userMap">
+        SELECT
+            B.user_id,
+            B.real_nm,
+            B.avatar_url
+        FROM user_view AS A, user_view AS B
+        WHERE A.company_id = B.company_id AND A.user_id = #{userId} AND B.user_id != #{userId}
+    </select>
+
+    <select id="searchMyJournal" resultMap="journalMap">
+        SELECT DISTINCT j.*, u.real_nm FROM journal j
+        LEFT JOIN user_view u ON j.user_id = u.user_id
+        LEFT JOIN visit_log vl ON j.journal_id = vl.journal_id
+        LEFT JOIN visit_contacts vc ON vl.visit_log_id = vc.visit_log_id
+        LEFT JOIN contacts c ON vc.contacts_id = c.contacts_id
+        LEFT JOIN contacts_type ct ON c.contacts_type_id = ct.contacts_type_id
+        WHERE has_submitted = 1
+        <if test="userId != null">
+            AND j.user_id = #{userId}
+        </if>
+        <if test="contactsId != null">
+            AND c.contacts_id = #{contactsId}
+        </if>
+        <if test="journalType != null">
+            AND j.type_cd = #{journalType}
+        </if>
+        <if test="journalType != null">
+            AND j.type_cd = #{journalType}
+        </if>
+        <if test="startTime != null">
+            AND j.create_ts &gt; #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND j.create_ts &lt; #{endTime}
+        </if>
+        <if test="customer != null and customer != ''">
+            AND ct.customer_id = #{customer}
+        </if>
+        <if test="project != null and project != ''">
+            AND vl.sales_opportunity_id = #{project}
+        </if>
+    </select>
+
+    <select id="searchJournal" resultMap="journalMap">
+        SELECT
+            j.*,
+            u.real_nm
+        FROM journal j
+            INNER JOIN user_view u ON j.user_id = u.user_id
+        WHERE j.journal_id = #{journalId}
+    </select>
+
+    <select id="searchUnread" resultMap="userMap">
+        SELECT *
+        FROM user_view u
+        WHERE u.crm_user_id IN (
+            SELECT j.receiver_id
+            FROM journal_receiver j
+            WHERE j.journal_id = #{journalId} AND j.has_read = 0
+        )
+    </select>
+
+    <select id="searchRead" resultMap="userMap">
+        SELECT *
+        FROM user_view u
+        WHERE u.crm_user_id IN (
+            SELECT j.receiver_id
+            FROM journal_receiver j
+            WHERE j.journal_id = #{journalId} AND j.has_read = 1
+        )
+    </select>
+
+
+    <select id="searchJournalForStatistics" resultMap="journalMap">
+        SELECT j.journal_id,j.user_id,j.create_ts,j.update_ts, u.real_nm FROM journal j
+        INNER JOIN user_view u ON j.user_id = u.user_id
+        where j.create_ts <![CDATA[ >= ]]> #{beginTime} and j.create_ts <![CDATA[ <= ]]> #{endTime}
+        and j.type_cd='DAILY'
+        <if test="userIds !=null and userIds.size >0">
+            and j.user_id in
+            <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by create_ts desc
+    </select>
+
+
+    <select id="searchReceivedJournal" resultMap="journalMap">
+        SELECT j.*, u.real_nm FROM journal j
+        INNER JOIN user_view u ON j.user_id = u.user_id
+        <if test="contactsId !=null">
+            inner join visit_log v on j.journal_id=v.journal_id
+            inner join visit_contacts vc on v.visit_log_id=vc.visit_log_id
+        </if>
+        WHERE has_submitted = 1
+        <if test="journalType != null">
+            AND j.type_cd = #{journalType}
+        </if>
+        <if test="startTime != null">
+            AND j.create_ts &gt; #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND j.create_ts &lt; #{endTime}
+        </if>
+        <if test="sdId !=null and sdId.length>0">
+            AND
+            j.user_id IN
+            <foreach collection="sdId" item="sender" index="i" open="(" close=")" separator=",">
+                #{sender}
+            </foreach>
+        </if>
+        <if test="customer != null and customer != ''">
+            AND exists (
+            select ct.customer_id from visit_log vl
+            INNER JOIN visit_contacts vc ON vl.visit_log_id = vc.visit_log_id
+            INNER JOIN contacts c ON vc.contacts_id = c.contacts_id
+            INNER JOIN contacts_type ct ON c.contacts_type_id = ct.contacts_type_id
+            WHERE ct.customer_id = #{customer} AND j.journal_id = vl.journal_id)
+        </if>
+        <if test="project != null and project != ''">
+            AND exists(SELECT vl.sales_opportunity_id FROM visit_log vl WHERE vl.sales_opportunity_id = #{project} AND
+            j.journal_id = vl.journal_id)
+        </if>
+        <if test="contactsId !=null">
+            AND vc.contacts_id = #{contactsId}
+        </if>
+        ORDER BY create_ts desc
+        limit #{offSet},#{pageSize}
+    </select>
+
+    <update id="receiverDeleteJournal">
+        UPDATE journal_receiver
+        SET has_delete = 1
+        WHERE receiver_id = #{receiverId} AND journal_id = #{journalId};
+    </update>
+
+    <insert id="insertJournalPatch">
+        INSERT INTO journal_patch (
+            journal_id,
+            content,
+            create_ts
+        )
+        VALUES
+            (
+                #{journalId},
+                #{content},
+                NOW()
+            );
+    </insert>
+
+    <select id="findJournalDraft" resultMap="journalMap">
+        SELECT *
+        FROM journal
+        WHERE user_id = #{userId} AND has_submitted = 0;
+    </select>
+
+    <select id="queryJournalCustomersByCompanyId" resultMap="journalCustomerMap">
+        SELECT DISTINCT cc.*
+        FROM crm_customer cc
+            INNER JOIN customer_dept cd ON cd.customer_id = cc.customer_id
+            INNER JOIN enclosure_apply e ON e.customer_dept_id = cd.customer_dept_id
+        WHERE e.user_id = #{userId} AND e.status_cd = 'PERMITTED';
+    </select>
+
+    <select id="queryContactsByCustomerId" resultMap="contactsMap">
+        SELECT *
+        FROM contacts_view
+        WHERE customer_dept_id = #{deptId};
+    </select>
+    <select id="searchDepts" resultMap="deptMap">
+        SELECT r2.*
+        FROM
+            (SELECT r.*
+             FROM
+                 (SELECT
+                      d.prt_id,
+                      d.department_nm,
+                      d.customer_id,
+                      a.*,
+                      (SELECT count(*)
+                       FROM enclosure_apply b
+                       WHERE b.customer_dept_id = d.customer_dept_id
+                             AND b.user_id != #{userId}
+                             AND b.status_cd = "PERMITTED"
+                             AND b.apply_end_ts &gt; NOW()) AS en_by_others,
+                      (SELECT count(*)
+                       FROM enclosure_apply b
+                       WHERE b.customer_dept_id = d.customer_dept_id
+                             AND b.user_id != #{userId}
+                             AND b.status_cd = "APPLYING"
+                             AND b.apply_end_ts &gt; NOW()) AS ap_by_others
+                  FROM customer_dept d
+                      INNER JOIN enclosure_apply a ON d.customer_dept_id = a.customer_dept_id
+                  WHERE d.customer_id = #{customerId}
+                        AND a.user_id = #{userId}
+                  ORDER BY a.update_ts DESC) AS r
+             GROUP BY r.customer_dept_id) AS r2
+        WHERE r2.en_by_others = 0;
+    </select>
+    <select id="queryJournalPatch" resultMap="journalPatchMap">
+        SELECT *
+        FROM journal_patch
+        WHERE journal_id = #{journalId};
+    </select>
+
+    <select id="querySubordinatesByUserId" resultType="java.lang.String">
+        SELECT user_id
+        FROM company_user
+        WHERE leader_id = #{userId};
+    </select>
+
+    <select id="querySuberUserIdByFullpath" resultType="string">
+        SELECT user_id
+        FROM company_user
+        WHERE rels_fullpath like CONCAT(#{fullpath}, '%');
+    </select>
+
+    <select id="queryUserFullPathByUserId" resultType="string">
+        SELECT rels_fullpath
+        FROM company_user
+        WHERE user_id = #{userId};
+    </select>
+
+    <select id="queryCompanyUserIds" resultType="java.lang.String">
+        SELECT a.user_id
+        FROM company_user a
+           WHERE a.company_id = #{companyId}
+    </select>
+
+    <select id="queryNameById" resultType="java.lang.String">
+        SELECT a.real_nm
+        FROM crm_user a
+            INNER JOIN company_user b
+                ON a.crm_user_id = b.crm_user_id
+        WHERE b.user_id = #{userId}
+    </select>
+    <select id="queryDeptIdByJournalId" resultType="java.lang.String">
+        SELECT p2.des_id
+        FROM
+            (SELECT t2.contacts_id
+             FROM
+                 (SELECT
+                      r1.journal_id,
+                      r1.user_id,
+                      r2.visit_log_id
+                  FROM journal AS r1
+                      INNER JOIN visit_log AS r2
+                          ON r1.journal_id = r2.journal_id
+                  WHERE r1.journal_id = #{journalId}) AS t1
+                 LEFT JOIN visit_contacts AS t2
+                     ON t1.visit_log_id = t2.visit_log_id) AS p1
+            INNER JOIN
+            (SELECT
+                 t1.contacts_id,
+                 t2.customer_dept_id,
+                 t2.des_id
+             FROM contacts AS t1
+                 LEFT JOIN
+                 ((SELECT
+                       customer_dept_id,
+                       prt_id AS des_id
+                   FROM customer_dept
+                   WHERE prt_id IS NOT NULL)
+                  UNION
+                  (SELECT
+                       customer_dept_id,
+                       customer_dept_id AS des_id
+                   FROM customer_dept
+                   WHERE prt_id IS NULL)) AS t2
+                     ON t1.customer_dept_id = t2.customer_dept_id) AS p2
+                ON p1.contacts_id = p2.contacts_id
+
+    </select>
+
+    <select id="queryDeptId" resultType="java.lang.String">
+        SELECT r2.customer_dept_id
+        FROM enclosure_apply AS r1
+            INNER JOIN
+            ((SELECT
+                  customer_dept_id,
+                  customer_id,
+                  prt_id AS des_id
+              FROM customer_dept
+              WHERE prt_id IS NOT NULL)
+             UNION
+             (SELECT
+                  customer_dept_id,
+                  customer_id,
+                  customer_dept_id AS des_id
+              FROM customer_dept
+              WHERE prt_id IS NULL)) AS r2
+                ON r1.customer_dept_id = r2.des_id
+        WHERE r1.status_cd = 'PERMITTED'
+              AND r1.user_id = #{userId}
+              AND r1.apply_end_ts &gt; NOW()
+              AND r2.customer_id = #{customerId};
+    </select>
+
+    <select id="getComments" resultMap="journalComment">
+        SELECT
+            comment_id,
+            content,
+            journal_id,
+            create_id,
+            create_ts,
+            u.real_nm
+        FROM journal_comment jc
+            INNER JOIN user_view u ON u.user_id = jc.create_id
+        WHERE journal_id = #{journalId}
+    </select>
+    <select id="getVisitLogComments" resultMap="visitLogComment">
+        SELECT
+            comment_id,
+            content,
+            visit_log_id,
+            create_id,
+            create_ts,
+            u.real_nm
+        FROM visit_log_comment vlc
+            INNER JOIN user_view u ON u.user_id = vlc.create_id
+        WHERE visit_log_id = #{visitLogId}
+    </select>
+
+
+    <select id="getVisitAgentViewModelList" resultMap="agentViewModel">
+        SELECT *
+        from visit_agents va
+                 INNER JOIN visit_log vl on va.visit_log_id = vl.visit_log_id
+        where va.agent_id = #{agentId} order by va.create_ts desc;
+    </select>
+
+    <insert id="addVisitAgents">
+        INSERT INTO `visit_agents` (
+                `visit_log_id`,
+                `agent_link_id`,
+                `agent_id`,
+                `create_ts`,
+                `create_id`,
+                `create_name`,
+                `show_info`
+                )
+        VALUES
+               (
+                       #{visitLogId},
+                       #{agentLinkId},
+                       #{agentId},
+                       #{createTs},
+                       #{createId},
+                       #{createName},
+                       #{showInfo}
+                       );
+
+    </insert>
+
+    <delete id="deleteVisitAgents">
+        DELETE FROM visit_agents
+        WHERE visit_log_id = #{visitLogId}
+    </delete>
+
+    <insert id="addComment">
+        INSERT INTO journal_comment (content, journal_id, create_ts, create_id)
+        VALUES (#{comment.comment}, #{comment.journalId}, now(), #{userId})
+    </insert>
+    <insert id="addVisitComment">
+         INSERT INTO visit_log_comment (content,visit_log_id, create_ts, create_id)
+        VALUES (#{visitLogComment.content}, #{visitLogComment.visitLogId}, now(), #{userId})
+    </insert>
+
+    <select id="queryVisitAgents" resultMap="visitAgents">
+        select *
+        from visit_agents
+        where visit_log_id = #{visitLogId};
+    </select>
+
+    <select id="getCommentsByIds" resultMap="journalComment">
+        SELECT
+               comment_id,
+               content,
+               journal_id,
+               create_id,
+               create_ts,
+               u.real_nm
+        FROM journal_comment jc
+                 INNER JOIN user_view u ON u.user_id = jc.create_id
+        WHERE journal_id In
+        <foreach collection="journalIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    
+    <select id="getRepairJournalList" resultMap="repairJournalMap">
+        select *
+        from repair_journal
+        where journal_id in
+        <foreach collection="journalIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>;
+    </select>
+
+    <select id="getJournalPatchByIds" resultMap="journalPatchMap">
+        SELECT *
+        FROM journal_patch
+        WHERE journal_id In
+        <foreach collection="journalIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryVisitLogsByIds" resultMap="visitMap">
+        SELECT *
+        FROM visit_log
+        WHERE journal_id in
+        <foreach collection="journalIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryVisitLogsByIdsSimple" resultMap="visitMap">
+        SELECT visit_log_id,visit_type,journal_id,sales_opportunity_id,contact_type,out_type,out_reason
+        FROM visit_log
+        WHERE journal_id in
+        <foreach collection="journalIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryVisitAgentsByIds" resultMap="visitAgents">
+        select *
+        from visit_agents
+        where visit_log_id in
+        <foreach collection="visitIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getVisitLogCommentsByIds" resultMap="visitLogComment">
+        SELECT
+        comment_id,
+        content,
+        visit_log_id,
+        create_id,
+        create_ts,
+        u.real_nm
+        FROM visit_log_comment vlc
+        INNER JOIN user_view u ON u.user_id = vlc.create_id
+        WHERE visit_log_id in
+        <foreach collection="visitIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="queryVisitContactsByIds" resultMap="contacts2Map">
+        SELECT
+               vc.contacts_id,
+               vc.visit_log_id,
+               c.real_nm,
+               ct.type_name,
+               A.customer_id,
+               A.customer_dept_id,
+               A.department_nm,
+               B.customer_dept_id AS prt_dept_id,
+               B.department_nm    AS prt_dept_name,
+               U.customer_nm
+        FROM visit_contacts vc
+                 INNER JOIN contacts c ON vc.contacts_id = c.contacts_id
+                 INNER JOIN contacts_type ct ON c.contacts_type_id = ct.contacts_type_id
+                 INNER JOIN customer_dept A ON c.customer_dept_id = A.customer_dept_id
+                 INNER JOIN crm_customer AS U ON A.customer_id = U.customer_id
+                 LEFT JOIN customer_dept AS B ON A.prt_id = B.customer_dept_id
+        WHERE vc.visit_log_id in
+        <foreach collection="visitIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getFirstVisitRecord" resultMap="journalMap">
+        select * from journal a inner join
+                              visit_log b on a.journal_id=b.journal_id
+                                inner join visit_contacts c on b.visit_log_id=c.visit_log_id
+        where c.contacts_id = #{contactsId} order by a.create_ts asc limit 1;
+    </select>
+
+</mapper>

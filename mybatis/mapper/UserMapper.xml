@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuebei.crm.user.UserMapper">
+    <resultMap id="userMap" type="com.xuebei.crm.user.User">
+        <id property="userId" column="user_id"/>
+        <result property="realName" column="real_nm"/>
+    </resultMap>
+
+    <resultMap id="userMap2" type="com.xuebei.crm.user.User">
+        <id property="userId" column="crm_user_id"/>
+        <result property="realName" column="real_nm"/>
+    </resultMap>
+    
+    <select id="getCompanyUserById" resultMap="userMap">
+        SELECT user_id, real_nm FROM user_view WHERE user_id = #{userId}
+    </select>
+
+    <select id="getRealNameById" resultMap="userMap2">
+        select cou.user_id as crm_user_id, cru.real_nm from crm_user as cru inner join company_user as cou on cru.crm_user_id=cou.crm_user_id
+        where cou.user_id in
+        <foreach collection="userIds" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>
