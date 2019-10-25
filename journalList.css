@@ -1,0 +1,103 @@
+.center-box {
+    text-align: center;
+}
+
+.center-ele {
+    display: inline-block;
+}
+
+.top-bar, .journal-box, #journalDetail {
+    font-size: 18px;
+    text-align: center;
+    background: #ffffff;
+    border-bottom: solid 1px #DDDDDD;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.journal-box {
+    text-align: left;
+    font-size: 18px;
+    padding: 5px 15px;
+}
+
+#journalDetail {
+    text-align: left;
+    padding: 5px 15px;
+}
+
+.add-journal {
+    position: absolute;
+    top: 30px;
+    right: 20px;
+    z-index: 99999;
+}
+
+.add-journal-item {
+    padding: 10px 10px;
+    font-size: 15px;
+    color: #0D0D0D;
+}
+
+.weui-cells {
+    margin-top: 0;
+    padding: 0px;
+}
+
+.sender-box {
+    width: auto;
+    padding: 5px 15px;
+}
+
+.sender-name {
+    font-size: 12px;
+}
+
+.line-block {
+    height: 10px;
+    border: hidden;
+}
+.narvi-bar {
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+.top-bar{
+    font-size: 18px;
+    text-align: center;
+    background: #ffffff;
+    border-bottom: solid 1px #DDDDDD ;
+    padding: 8px 15px;
+}
+.add-comment .weui-input{
+    border: 1px solid #CCCCCC;
+    font-size: 12px;
+    padding: 3px;
+    width: 76%;
+}
+.add-comment a.weui-btn.weui-btn_default.weui-btn_mini {
+    font-size: 12px;
+    padding: 5px 6px;
+    line-height: 1.2;
+    width: 20%;
+    margin-bottom: -8px;
+}
+.load_more-btn {
+    margin: 8px;
+    font-size: 16px;
+    line-height: 2;
+}
+#journalDetail.detail-div {
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0
+}

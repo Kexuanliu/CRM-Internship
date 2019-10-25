@@ -1,0 +1,103 @@
+@media (min-width:450px) and (max-width:1024px) {*{font-size:18px;}}
+@media (min-width:330px) and (max-width:450px) {*{font-size:15px;}}
+@media (min-width:200px) and (max-width:330px) {*{font-size:12px;}}
+
+.first2 {
+    display: flex;
+}
+
+.newA {
+    display: block;
+    flex: 1;
+}
+
+.ACover {
+    display: block;
+    flex: 1;
+}
+
+.second {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.visi {
+    display: block;
+    flex: 1;
+}
+
+.top-bar {
+    background: #FFFFFF;
+    text-align: center;
+    padding: 0.5em 0.56em;
+    font-size: 1em;
+}
+
+.center-box {
+    text-align: center;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.navi-bar {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.opa {
+    opacity: 0.5;
+}
+
+.smallSize {
+    font-size: 0.61em;
+    margin-top: 1.8em;
+}
+
+.spec {
+    margin-top: 1.1em;
+}
+
+.bigSize {
+    font-size: 1.1em;
+}
+
+.flo {
+    float: left;
+}
+
+.weuiC {
+    width: 1.11em; height: 1.11em; padding: 0.67em; margin-left: 1.11em; margin-top: 3.33em;
+}
+
+.heightC {
+    height: 2.44em;
+}
+
+.topM {
+    font-size: 0.67em;
+    margin-top: 0.67em;
+}
+
+.tite {
+    font-size: 0.8em; position: absolute; margin-top: 1.3em; margin-left: 0.83em
+}
+
+.setH {
+    height: 4.17em;
+}
+
+.smallTitle {
+    float: left; margin-top: 2.22em;
+}
+
+.lines {
+    float:left;margin-top: 3.5em;width: 1px;height: 2.2em; background: lightgray;
+}
+
+.ml {
+    margin-left: 0.56em;
+}

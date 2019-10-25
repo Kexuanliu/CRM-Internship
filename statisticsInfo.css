@@ -1,0 +1,24 @@
+.pull-right {
+    float: right !important;
+}
+
+.blueColor {
+    color: #00A4FF;
+}
+
+.th {
+    white-space: nowrap;
+}
+
+.td {
+    white-space: nowrap;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding-left: 15px;
+    padding-right: 15px;
+}
